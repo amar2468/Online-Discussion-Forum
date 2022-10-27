@@ -19,22 +19,26 @@ def home():
 
 @app.route('/register_account', methods =["GET", "POST"])
 def register_account():
-	if request.method == "POST":
-		fname = request.form.get("first_name")
-		lname = request.form.get("last_name")
-		email = request.form.get("email_address_for_register")
-		passwd = request.form.get("user_password_for_register")
-		check_the_age = request.form.get("check_age_for_register")
-		profile_pic = request.form.get("profile_picture_for_register")
+	if not session.get("name"):
+		if request.method == "POST":
+			fname = request.form.get("first_name")
+			lname = request.form.get("last_name")
+			email = request.form.get("email_address_for_register")
+			passwd = request.form.get("user_password_for_register")
+			check_the_age = request.form.get("check_age_for_register")
+			profile_pic = request.form.get("profile_picture_for_register")
 
-		db.db.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": passwd})
-	return render_template("RegisterAccount.html")
+			db.db.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": passwd})
+		else:
+			return render_template("RegisterAccount.html")
+	else:
+		return 'You are already logged in'
 
 # Route for login account which allows the user to log in
 
 @app.route('/login_account', methods =["GET", "POST"])
 def login_account():
-	if session.get("name"):
+	if not session.get("name"):
 		if request.method == "POST":
 			email_for_login = request.form.get("email_address_for_login")
 			password_for_login = request.form.get("user_password_for_login")
@@ -50,7 +54,15 @@ def login_account():
 		else:
 			return render_template("Login.html")
 	else:
-		return render_template("Login.html")
+		return "You are already logged in"
+
+# Route created so that the user can logout when they want to
+
+@app.route('/logout')
+def logout():
+	if session.get("name"):
+		session["name"] = None
+		return redirect("/")
 
 if __name__ == '__main__':
 	app.run()
