@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, session
 from flask_session import Session
+from werkzeug.security import generate_password_hash, check_password_hash
 import db
 
 app = Flask(__name__)
-app.secret_key = 'super secret key'
+app.secret_key = '32892938832jfdjjkd2993nd'
 app.config["SESSION_TYPE"] = "filesystem"
 
 # Route for homepage which also checks whether the user is logged in or not
@@ -28,7 +29,11 @@ def register_account():
 			check_the_age = request.form.get("check_age_for_register")
 			profile_pic = request.form.get("profile_picture_for_register")
 
-			db.db.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": passwd})
+			encrypted_password = generate_password_hash(passwd)
+
+			db.db.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password})
+
+			return redirect("/login_account")
 		else:
 			return render_template("RegisterAccount.html")
 	else:
@@ -45,12 +50,11 @@ def login_account():
 
 			for document in db.db.RegLoginCollection.find():
 				if email_for_login == document["email"]:
-					if password_for_login == document["password"]:
+					if check_password_hash(document["password"],password_for_login):
 						session["name"] = request.form.get("email_address_for_login")
 						session.permanent = True
 						return redirect("/")
-				elif email_for_login != document["email"] or password_for_login != document["password"]:
-					return 'Incorrect email or password'
+			return redirect("/login_account")
 		else:
 			return render_template("Login.html")
 	else:
@@ -63,6 +67,8 @@ def logout():
 	if session.get("name"):
 		session["name"] = None
 		return redirect("/")
+	else:
+		return 'Cannot logout when you are not logged in'
 
 if __name__ == '__main__':
 	app.run()
