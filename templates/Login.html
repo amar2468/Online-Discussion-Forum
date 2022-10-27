@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Online Discussion Forum | Sign In</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="/login_account">Sign In</a>
+                <a class="nav-item nav-link" href="/register_account">Register</a>
+                </div>
+            </div>
+        </nav>
+
+        <br><br><br><br>
+
+        <div id="container_div_for_login_system">
+            <div id="div_containing_login_account_features">
+                <form action="{{ url_for("login_account")}}" method="post">
+                    <h2 id="heading_in_login_account">Login Page</h2>
+                    <input type="email" id="email_address_for_login" name="email_address_for_login" placeholder="Email" required>
+                    <br><br>
+                    <input type="password" id="user_password_for_login" name="user_password_for_login" placeholder="Enter Password" required>
+                    <br><br>
+                    <input type="submit" value="Login to your Account">
+                    <br><br>
+                    <a href="#">Forgot Password?</a>
+                    <br><br>
+                    <p>Don't have an account? Register <a href="/register_account">here</a></p>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
