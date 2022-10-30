@@ -1,3 +1,4 @@
+import profile
 from flask import Flask, render_template, request, redirect, session
 from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -31,7 +32,7 @@ def register_account():
 
 			encrypted_password = generate_password_hash(passwd)
 
-			db.db.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password})
+			db.db.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password, "profile_picture_link": profile_pic})
 
 			return redirect("/login_account")
 		else:
@@ -53,7 +54,7 @@ def login_account():
 					if check_password_hash(document["password"],password_for_login):
 						session["name"] = request.form.get("email_address_for_login")
 						session.permanent = True
-						return redirect("/")
+						return redirect("/student_profile")
 			return redirect("/login_account")
 		else:
 			return render_template("Login.html")
@@ -70,5 +71,26 @@ def logout():
 	else:
 		return 'Cannot logout when you are not logged in'
 
+# Route created for student profile
+
+@app.route('/student_profile')
+def student_profile():
+	for document in db.db.RegLoginCollection.find():
+		if document["email"] == session["name"]:
+			return render_template("student_profile.html", document = document)
+
+# Route created for changing profile picture
+
+@app.route('/changing_profile_picture', methods =["GET", "POST"])
+def changing_profile_picture():
+	change_profile_pic = request.form.get("change_profile_picture_file_upload")
+
+	db.db.RegLoginCollection.update_one(
+		{ 'email': session.get("name") },
+		{ "$set": { 'profile_picture_link': change_profile_pic } }
+	)
+
+	return redirect("/student_profile")
+
 if __name__ == '__main__':
-	app.run()
+	app.run(debug=True)
