@@ -1,0 +1,87 @@
+#user_profile_image 
+{
+    height: 360px;
+    width:360px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.user_info_table 
+{
+    margin-left: auto;
+    margin-right: auto;
+    border-spacing: 3px;
+    border-collapse: separate;
+}
+
+#paragraphs_containing_user_profile_info
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#followers_tag_in_user_profile
+{
+    display:table-cell;
+    padding: 50px;
+    padding-left:10px;
+}
+
+#following_tag_in_user_profile
+{
+    display:table-cell;
+    padding: 50px;
+    padding-right:1px;
+}
+
+#div_for_followers_and_following_tags_in_user_profile
+{
+    display:table;
+    width:220px;
+    margin-right:auto;
+    margin-left:auto;
+}
+
+#div_for_change_profile_picture_button
+{
+    width:173px;
+    margin-right:auto;
+    margin-left:auto;
+}
+
+#change_profile_pic_button
+{
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#container_div_for_login_system
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#login_account_button
+{
+    width:188.8px;
+}
+
+#container_div_for_register_system
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#register_account_button
+{
+    width:381.99px;
+}
+
+#email_address_for_register
+{
+    width:381.99px;
+}
