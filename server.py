@@ -79,7 +79,7 @@ def student_profile():
 		if document["email"] == session["name"]:
 			return render_template("student_profile.html", document = document)
 
-# Route created for changing the profile picture
+# Route created for changing profile picture
 
 @app.route('/changing_profile_picture', methods =["GET", "POST"])
 def changing_profile_picture():
