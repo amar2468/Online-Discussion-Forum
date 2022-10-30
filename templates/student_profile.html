@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <title>Online Discussion Forum | Profile</title>
+        <link rel="stylesheet" href="/static/css/custom_stylesheet.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    </head>
+
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+            <a class="navbar-brand" href="#">Navbar</a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                
+                <span class="navbar-toggler-icon"></span>
+            
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+                <div class="navbar-nav">
+
+                    <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link" href="/login_account">Sign In</a>
+                    <a class="nav-item nav-link" href="/register_account">Register</a>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+        <div id="div_with_welcome_user_message">
+            <table class="user_info_table">
+                {% for key, value in document.items() %}
+                    {% if key == "profile_picture_link" %}
+                        <tr>
+                            <img id="user_profile_image" src="{{url_for('static', filename=value)}}">
+                        </tr>
+                    {% endif %}
+
+                {% endfor %}
+
+                <tr>
+                {% for key, value in document.items() %}
+                    {% if key != "_id" and key != "password" and key != "profile_picture_link" and key != "email" %}
+                        <td><p id="paragraphs_containing_user_profile_info">{{ value }}</p></td>
+                    {% endif %}
+
+                {% endfor %}
+                </tr>
+
+
+            </table>
+
+            <div id="div_for_followers_and_following_tags_in_user_profile">
+
+                <p id="followers_tag_in_user_profile">Followers</p>
+                <p id="following_tag_in_user_profile">Following</p>
+
+            </div>
+
+            <div id="div_for_change_profile_picture_button">
+
+                <form action = "/changing_profile_picture" method="post">
+
+                    <input type="file" id="change_profile_picture_file_upload" name="change_profile_picture_file_upload" accept = "image/*">
+                    <button type="submit">Change Profile Picture</button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </body>
+</html>
