@@ -2,6 +2,7 @@ import profile
 from flask import Flask, render_template, request, redirect, session
 from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 import db
 
 app = Flask(__name__)
@@ -67,7 +68,7 @@ def login_account():
 def logout():
 	if session.get("name"):
 		session["name"] = None
-		return redirect("/")
+		return redirect("/login_account")
 	else:
 		return 'Cannot logout when you are not logged in'
 
@@ -90,6 +91,29 @@ def changing_profile_picture():
 		{ "$set": { 'profile_picture_link': change_profile_pic } }
 	)
 
+	return redirect("/student_profile")
+
+
+# Route created to render the forgot password html template
+
+@app.route('/render_forgot_password_template', methods =["GET", "POST"])
+def render_forgot_password_template():
+	return render_template("forgot_password.html")
+
+# Route created for forgot password
+
+@app.route('/forgot_password', methods =["GET", "POST"])
+def forgot_password():
+	pwd_reset = request.form.get("password_reset")
+	confirm_pwd_reset = request.form.get("confirm_password_reset")
+
+	encrypted_pwd = generate_password_hash(pwd_reset)
+
+	if pwd_reset == confirm_pwd_reset:
+		db.db.RegLoginCollection.update_one(
+			{ 'email': session.get("name") },
+			{ "$set": { 'password': encrypted_pwd } }
+		)
 	return redirect("/student_profile")
 
 if __name__ == '__main__':
