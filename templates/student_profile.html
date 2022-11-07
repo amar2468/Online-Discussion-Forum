@@ -13,7 +13,7 @@
 
     <body>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
             <a class="navbar-brand" href="#">Navbar</a>
             
@@ -30,6 +30,7 @@
                     <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
                     <a class="nav-item nav-link" href="/login_account">Sign In</a>
                     <a class="nav-item nav-link" href="/register_account">Register</a>
+                    <a class="nav-item nav-link" href="/logout">Log Out</a>
 
                 </div>
 
@@ -74,6 +75,14 @@
                     <input type="file" id="change_profile_picture_file_upload" name="change_profile_picture_file_upload" accept = "image/*">
                     <button type="submit">Change Profile Picture</button>
 
+                </form>
+
+            </div>
+
+            <div id="div_for_change_password_button">
+            
+                <form action="/render_forgot_password_template" method="POST">
+                    <button type="submit">Change Password</button>
                 </form>
 
             </div>
