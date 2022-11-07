@@ -12,24 +12,30 @@
 
     <body>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
             <a class="navbar-brand" href="#">Navbar</a>
+
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link" href="/login_account">Sign In</a>
-                <a class="nav-item nav-link" href="/register_account">Register</a>
+                    <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link" href="/login_account">Sign In</a>
+                    <a class="nav-item nav-link" href="/register_account">Register</a>
                 </div>
             </div>
+
         </nav>
 
         <br><br><br><br>
 
         <div id="container_div_for_register_system">
+
             <div id="div_containing_register_account_features">
+
                 <form action="{{ url_for("register_account")}}" method="post">
                     <h2 id="heading_in_register_account">Create Your Account</h2>
                     <input type="text" id="first_name" name="first_name" placeholder="First Name" required>
@@ -47,7 +53,10 @@
                     <br><br>
                     <button id="register_account_button" type="submit">Create Account</button>
                 </form>
+
             </div>
+
         </div>
+        
     </body>
 </html>
