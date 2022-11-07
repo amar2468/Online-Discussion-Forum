@@ -85,3 +85,23 @@
 {
     width:381.99px;
 }
+
+#container_div_for_password_reset
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top:150px;
+}
+
+#change_password_button
+{
+    width:188.8px;
+}
+
+#div_for_change_password_button
+{
+    width:173px;
+    margin-right:auto;
+    margin-left:auto;
+}
