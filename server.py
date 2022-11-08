@@ -116,5 +116,14 @@ def forgot_password():
 		)
 	return redirect("/student_profile")
 
+# Route for forum post
+
+@app.route('/forum_post')
+def forum_post():
+	if session.get("name"):
+		return render_template("forum_post.html")
+	elif not session.get("name"):
+		return render_template("home.html")
+
 if __name__ == '__main__':
 	app.run(debug=True)
