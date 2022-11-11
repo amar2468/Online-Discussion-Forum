@@ -15,6 +15,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <style>
 
@@ -52,6 +53,13 @@
             .container
             {
                 margin-top:40px;
+            }
+
+            .fa 
+            {
+              font-size: 30px;
+              cursor: pointer;
+              user-select: none;
             }
 
         </style>
@@ -93,7 +101,7 @@
                     </select>
                   </div>
                 </div>
-                
+
                 {% if collection_info.count() == 0 %}
                 {% endif %}
 
@@ -116,9 +124,9 @@
                             {% if session.get("name") == document.author_of_post %}
                               <a href="{{url_for('delete_topic', id_delete = document._id)}}"><button>Delete</button></a>
                             {% endif %}
-                            <div class="col px-1"> <i class="ion-connection-bars icon-1x"></i> <span class="d-block text-sm">200 Likes</span> </div>
-                            <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">20 Dislikes</span> </div>
-                            <div class="col px-1"> <i class="ion-ios-eye-outline icon-1x"></i> <span class="d-block text-sm">98 Shares</span> </div>
+                            <div class="col px-1"> <i class="ion-connection-bars icon-1x"></i> <span class="d-block text-sm"><i class="fa fa-thumbs-up"></i></span> </div>
+                            <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"><i class="fa fa-thumbs-down"></i></span> </div>
+                            <div class="col px-1"> <i class="ion-ios-eye-outline icon-1x"></i> <span class="d-block text-sm"><i class="fa fa-share"></i></span> </div>
                           </div>
                         </div>
                       </div>
