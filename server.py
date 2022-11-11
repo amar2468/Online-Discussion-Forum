@@ -146,6 +146,18 @@ def delete_topic(id_delete):
 
 	return redirect("/")
 
+# Route for like functionality
+
+@app.route('/like_post/<like_post_id>')
+def like_post(like_post_id):
+
+	db.forum_database.ForumPostCollection.update_one(
+		{ '_id':  ObjectId(like_post_id) },
+		{ "$inc": { 'number_of_likes':  1} }
+	)
+
+	return redirect("/")
+
 # Route for dealing with forum post form
 
 @app.route('/forum_post', methods =["GET", "POST"])
@@ -154,7 +166,7 @@ def forum_post():
 		title = request.form.get("title_of_post")
 		content = request.form.get("post_content")
 
-		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post":content})
+		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0 })
 		collection_info = db.forum_database.ForumPostCollection.find()
 		return render_template("home.html", collection_info=collection_info)
 	elif not session.get("name"):
