@@ -62,6 +62,11 @@
               user-select: none;
             }
 
+            .fa-trash
+            {
+              color: #708090;;
+            }
+
         </style>
 
     </head>
@@ -121,15 +126,16 @@
                         </div>
                         <div class="col-md-4 op-7">
                           <div class="row text-center op-7">
-                            {% if session.get("name") == document.author_of_post %}
-                              <a href="{{url_for('delete_topic', id_delete = document._id)}}"><button>Delete</button></a>
-                            {% endif %}
                             <div class="col px-1"> <i class="ion-connection-bars icon-1x"></i> <span class="d-block text-sm"><i class="fa fa-thumbs-up"></i></span> </div>
                             <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"><i class="fa fa-thumbs-down"></i></span> </div>
                             <div class="col px-1"> <i class="ion-ios-eye-outline icon-1x"></i> <span class="d-block text-sm"><i class="fa fa-share"></i></span> </div>
                           </div>
                         </div>
                       </div>
+                      <br>
+                      {% if session.get("name") == document.author_of_post %}
+                        <a href="{{url_for('delete_topic', id_delete = document._id)}}"><i class="fa fa-trash"></i></a>
+                      {% endif %}
                     </div>
 
                   {% endfor %}
