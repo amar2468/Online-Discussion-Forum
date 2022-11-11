@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, session
 from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from bson.objectid import ObjectId
 import db
 
 app = Flask(__name__)
@@ -13,10 +14,9 @@ app.config["SESSION_TYPE"] = "filesystem"
 
 @app.route('/')
 def home():
-	if session.get("name"):
-		return 'Welcome ' + session.get("name")
-	elif not session.get("name"):
-		return render_template("home.html")
+	collection_info = db.forum_database.ForumPostCollection.find()
+
+	return render_template("home.html", collection_info=collection_info)
 
 # Route for register account which allows the user to register
 
@@ -33,7 +33,7 @@ def register_account():
 
 			encrypted_password = generate_password_hash(passwd)
 
-			db.db.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password, "profile_picture_link": profile_pic})
+			db.register_login_database.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password, "profile_picture_link": profile_pic})
 
 			return redirect("/login_account")
 		else:
@@ -50,7 +50,7 @@ def login_account():
 			email_for_login = request.form.get("email_address_for_login")
 			password_for_login = request.form.get("user_password_for_login")
 
-			for document in db.db.RegLoginCollection.find():
+			for document in db.register_login_database.RegLoginCollection.find():
 				if email_for_login == document["email"]:
 					if check_password_hash(document["password"],password_for_login):
 						session["name"] = request.form.get("email_address_for_login")
@@ -76,7 +76,7 @@ def logout():
 
 @app.route('/student_profile')
 def student_profile():
-	for document in db.db.RegLoginCollection.find():
+	for document in db.register_login_database.RegLoginCollection.find():
 		if document["email"] == session["name"]:
 			return render_template("student_profile.html", document = document)
 
@@ -86,7 +86,7 @@ def student_profile():
 def changing_profile_picture():
 	change_profile_pic = request.form.get("change_profile_picture_file_upload")
 
-	db.db.RegLoginCollection.update_one(
+	db.register_login_database.RegLoginCollection.update_one(
 		{ 'email': session.get("name") },
 		{ "$set": { 'profile_picture_link': change_profile_pic } }
 	)
@@ -110,20 +110,56 @@ def forgot_password():
 	encrypted_pwd = generate_password_hash(pwd_reset)
 
 	if pwd_reset == confirm_pwd_reset:
-		db.db.RegLoginCollection.update_one(
+		db.register_login_database.RegLoginCollection.update_one(
 			{ 'email': session.get("name") },
 			{ "$set": { 'password': encrypted_pwd } }
 		)
 	return redirect("/student_profile")
 
-# Route for forum post
+# Route for forum post render
 
-@app.route('/forum_post')
-def forum_post():
+@app.route('/render_forum_post')
+def render_forum_post():
 	if session.get("name"):
 		return render_template("forum_post.html")
 	elif not session.get("name"):
-		return render_template("home.html")
+		collection_info = db.forum_database.ForumPostCollection.find()
+		return render_template("home.html", collection_info=collection_info)
+
+# Route for viewing topic
+
+@app.route('/view_topic/<_id>')
+def view_topic(_id):
+	for document in db.forum_database.ForumPostCollection.find():
+		if str(document["_id"]) == _id:
+			content_post = document['content_of_post']
+			collection_info = db.forum_database.ForumPostCollection.find()
+			return render_template("view_forum_post.html", content_post = content_post, collection_info=collection_info)
+	collection_info = db.forum_database.ForumPostCollection.find()
+	return render_template("view_forum_post.html", content_post = content_post, collection_info=collection_info)
+
+# Route for deleting a topic
+
+@app.route('/delete_topic/<id_delete>')
+def delete_topic(id_delete):
+	db.forum_database.ForumPostCollection.delete_one( {"_id": ObjectId(id_delete)})
+
+	return redirect("/")
+
+# Route for dealing with forum post form
+
+@app.route('/forum_post', methods =["GET", "POST"])
+def forum_post():
+	if session.get("name"):
+		title = request.form.get("title_of_post")
+		content = request.form.get("post_content")
+
+		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post":content})
+		collection_info = db.forum_database.ForumPostCollection.find()
+		return render_template("view_forum_post.html", content=content, collection_info=collection_info)
+	elif not session.get("name"):
+		collection_info = db.forum_database.ForumPostCollection.find()
+		return render_template("home.html", collection_info=collection_info)
 
 if __name__ == '__main__':
 	app.run(debug=True)
