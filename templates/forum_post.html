@@ -22,6 +22,7 @@
 			background:#eee;
 			color: #708090;
 		}		
+		
 	</style>
 </head>
 <body>
@@ -29,16 +30,16 @@
 	<div class="row">
 	<div class="col-md-8 col-sm-12">
 	<div class="well"> 
-	 <form role="form" class="form-horizontal">
+	 <form role="form" class="form-horizontal" action="/forum_post" method="POST">
 	  <h4>Topic : Computer Science</h4>
 	  <div style="padding:14px;" class="form-group">
 		<input type="text" id="title_of_post" name="title_of_post" placeholder="Post title..." class="form-control">
 	  </div>
 	  <div style="padding:14px;" class="form-group">
-		<textarea placeholder="Your post goes here..." class="form-control"></textarea>
+		<textarea placeholder="Your post goes here..." id ="post_content" name="post_content" class="form-control"></textarea>
 	  </div>
 	  <div style="padding:14px;" class="form-group">
-		<button type="button" id="post_button" name="post_button" class="btn btn-success pull-left">Post</button>
+		<button type="submit" id="post_button" name="post_button" class="btn btn-success pull-left">Post</button>
 	  </div>
 	  <div style="padding:14px;" class="form-group">
 		<button type="button" id="cancel_button" name="cancel_button" class="btn btn-success pull-left">Cancel</button>
