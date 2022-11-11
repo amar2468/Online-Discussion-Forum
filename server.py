@@ -156,7 +156,7 @@ def forum_post():
 
 		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post":content})
 		collection_info = db.forum_database.ForumPostCollection.find()
-		return render_template("view_forum_post.html", content=content, collection_info=collection_info)
+		return render_template("home.html", collection_info=collection_info)
 	elif not session.get("name"):
 		collection_info = db.forum_database.ForumPostCollection.find()
 		return render_template("home.html", collection_info=collection_info)
