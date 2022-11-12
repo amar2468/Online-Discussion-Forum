@@ -177,6 +177,37 @@ def like_post(like_post_id):
 
 	return redirect("/")
 
+# Route for dislike post functionality
+
+@app.route('/dislike_post/<dislike_post_id>')
+def dislike_post(dislike_post_id):
+
+	for document in db.forum_database.ForumPostCollection.find():
+		if str(document["_id"]) == dislike_post_id:
+
+			if session.get("name") == document["author_of_post"]:
+
+				if document["user_disliked_own_post"] == False:
+
+					db.forum_database.ForumPostCollection.update_one(
+						{ '_id':  ObjectId(dislike_post_id) },
+						{ "$set": { 'user_disliked_own_post':  True} }
+					)
+
+					db.forum_database.ForumPostCollection.update_one(
+						{ '_id':  ObjectId(dislike_post_id) },
+						{ "$inc": { 'number_of_dislikes':  1} }
+					)
+			
+			else:
+				db.forum_database.ForumPostCollection.update_one(
+					{ '_id':  ObjectId(dislike_post_id) },
+					{ "$inc": { 'number_of_dislikes':  1} }
+				)
+
+
+	return redirect("/")
+
 # Route for dealing with forum post form
 
 @app.route('/forum_post', methods =["GET", "POST"])
@@ -185,7 +216,7 @@ def forum_post():
 		title = request.form.get("title_of_post")
 		content = request.form.get("post_content")
 
-		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "user_liked_own_post": False })
+		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False })
 		return redirect('/')
 	elif not session.get("name"):
 		return redirect('/')
