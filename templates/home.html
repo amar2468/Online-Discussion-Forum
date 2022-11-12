@@ -67,6 +67,16 @@
               color: #708090;;
             }
 
+            #like_post_link, #dislike_post_link, #share_post_link
+            {
+              color: #708090;
+            }
+
+            #like_post_link:hover ,#dislike_post_link:hover, #share_post_link:hover
+            {
+              color: blue;
+            }
+
         </style>
 
     </head>
@@ -126,9 +136,9 @@
                         </div>
                         <div class="col-md-4 op-7">
                           <div class="row text-center op-7">
-                            <div class="col px-1"> <i class="ion-connection-bars icon-1x"></i> <span class="d-block text-sm"><a href="{{url_for('like_post', like_post_id=document._id)}}"><i class="fa fa-thumbs-up"></i></a>{{ document.number_of_likes }}</span> </div>
-                            <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"><i class="fa fa-thumbs-down"></i></span> </div>
-                            <div class="col px-1"> <i class="ion-ios-eye-outline icon-1x"></i> <span class="d-block text-sm"><i class="fa fa-share"></i></span></div>
+                            <div class="col px-1"> <i class="ion-connection-bars icon-1x"></i> <span class="d-block text-sm"><a id="like_post_link" href="{{url_for('like_post', like_post_id=document._id)}}"><i class="fa fa-thumbs-up"></i></a>{{ document.number_of_likes }}</span> </div>
+                            <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"><a id="dislike_post_link" href="{{url_for('dislike_post', dislike_post_id=document._id)}}"><i class="fa fa-thumbs-down"></i></a>{{ document.number_of_dislikes }}</span> </div>
+                            <div class="col px-1"> <i class="ion-ios-eye-outline icon-1x"></i> <span class="d-block text-sm"><a id="share_post_link" href="#"><i class="fa fa-share"></i></a></span></div>
                           </div>
                         </div>
                       </div>
