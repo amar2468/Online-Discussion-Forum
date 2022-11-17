@@ -167,12 +167,27 @@ def like_post(like_post_id):
 						{ '_id':  ObjectId(like_post_id) },
 						{ "$inc": { 'number_of_likes':  1} }
 					)
+
+					db.forum_database.ForumPostCollection.update_one(
+						{ '_id':  ObjectId(like_post_id) },
+						{ "$push": { 'all_users_who_liked_post': session.get("name") } }
+					)
+
+					print(document["all_users_who_liked_post"])
 			
 			else:
 				db.forum_database.ForumPostCollection.update_one(
 					{ '_id':  ObjectId(like_post_id) },
 					{ "$inc": { 'number_of_likes':  1} }
 				)
+
+				db.forum_database.ForumPostCollection.update_one(
+					{ '_id':  ObjectId(like_post_id) },
+					{ "$push": { 'all_users_who_liked_post': document["author_of_post"] } }
+				)
+
+
+				print(document["all_users_who_liked_post"])
 
 
 	return redirect("/")
@@ -198,11 +213,21 @@ def dislike_post(dislike_post_id):
 						{ '_id':  ObjectId(dislike_post_id) },
 						{ "$inc": { 'number_of_dislikes':  1} }
 					)
+
+					db.forum_database.ForumPostCollection.update_one(
+						{ '_id':  ObjectId(dislike_post_id) },
+						{ "$push": { 'all_users_who_disliked_post': session.get("name") } }
+					)
 			
 			else:
 				db.forum_database.ForumPostCollection.update_one(
 					{ '_id':  ObjectId(dislike_post_id) },
 					{ "$inc": { 'number_of_dislikes':  1} }
+				)
+
+				db.forum_database.ForumPostCollection.update_one(
+					{ '_id':  ObjectId(dislike_post_id) },
+					{ "$push": { 'all_users_who_liked_post': document["author_of_post"] } }
 				)
 
 
@@ -216,7 +241,8 @@ def forum_post():
 		title = request.form.get("title_of_post")
 		content = request.form.get("post_content")
 
-		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False })
+		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False, "all_users_who_liked_post": [], "all_users_who_disliked_post": [] })
+
 		return redirect('/')
 	elif not session.get("name"):
 		return redirect('/')
