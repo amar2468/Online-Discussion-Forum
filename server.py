@@ -215,15 +215,16 @@ def dislike_post(dislike_post_id):
 					)
 			
 			else:
-				db.forum_database.ForumPostCollection.update_one(
-					{ '_id':  ObjectId(dislike_post_id) },
-					{ "$inc": { 'number_of_dislikes':  1} }
-				)
+				if session.get("name") not in document["all_users_who_disliked_post"]:
+					db.forum_database.ForumPostCollection.update_one(
+						{ '_id':  ObjectId(dislike_post_id) },
+						{ "$inc": { 'number_of_dislikes':  1} }
+					)
 
-				db.forum_database.ForumPostCollection.update_one(
-					{ '_id':  ObjectId(dislike_post_id) },
-					{ "$push": { 'all_users_who_liked_post': document["author_of_post"] } }
-				)
+					db.forum_database.ForumPostCollection.update_one(
+						{ '_id':  ObjectId(dislike_post_id) },
+						{ "$push": { 'all_users_who_disliked_post': session.get("name") } }
+					)
 
 
 	return redirect("/")
