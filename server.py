@@ -153,7 +153,6 @@ def like_post(like_post_id):
 
 	for document in db.forum_database.ForumPostCollection.find():
 		if str(document["_id"]) == like_post_id:
-
 			if session.get("name") == document["author_of_post"]:
 
 				if document["user_liked_own_post"] == False:
@@ -172,22 +171,18 @@ def like_post(like_post_id):
 						{ '_id':  ObjectId(like_post_id) },
 						{ "$push": { 'all_users_who_liked_post': session.get("name") } }
 					)
-
-					print(document["all_users_who_liked_post"])
 			
 			else:
-				db.forum_database.ForumPostCollection.update_one(
-					{ '_id':  ObjectId(like_post_id) },
-					{ "$inc": { 'number_of_likes':  1} }
-				)
+				if session.get("name") not in document["all_users_who_liked_post"]:
+					db.forum_database.ForumPostCollection.update_one(
+						{ '_id':  ObjectId(like_post_id) },
+						{ "$inc": { 'number_of_likes':  1} }
+					)
 
-				db.forum_database.ForumPostCollection.update_one(
-					{ '_id':  ObjectId(like_post_id) },
-					{ "$push": { 'all_users_who_liked_post': document["author_of_post"] } }
-				)
-
-
-				print(document["all_users_who_liked_post"])
+					db.forum_database.ForumPostCollection.update_one(
+						{ '_id':  ObjectId(like_post_id) },
+						{ "$push": { 'all_users_who_liked_post': session.get("name") } }
+					)
 
 
 	return redirect("/")
