@@ -57,35 +57,6 @@
     margin-right:auto;
 }
 
-#container_div_for_login_system
-{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#login_account_button
-{
-    width:188.8px;
-}
-
-#container_div_for_register_system
-{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#register_account_button
-{
-    width:381.99px;
-}
-
-#email_address_for_register
-{
-    width:381.99px;
-}
-
 #container_div_for_password_reset
 {
     display: flex;
