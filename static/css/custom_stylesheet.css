@@ -20,6 +20,7 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
+    color:black;
 }
 
 #followers_tag_in_user_profile
@@ -27,6 +28,7 @@
     display:table-cell;
     padding: 50px;
     padding-left:10px;
+    color:black;
 }
 
 #following_tag_in_user_profile
@@ -34,6 +36,7 @@
     display:table-cell;
     padding: 50px;
     padding-right:1px;
+    color:black;
 }
 
 #div_for_followers_and_following_tags_in_user_profile
@@ -55,19 +58,6 @@
 {
     margin-left:auto;
     margin-right:auto;
-}
-
-#container_div_for_password_reset
-{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top:150px;
-}
-
-#change_password_button
-{
-    width:188.8px;
 }
 
 #div_for_change_password_button
