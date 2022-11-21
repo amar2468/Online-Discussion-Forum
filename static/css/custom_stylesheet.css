@@ -1,7 +1,7 @@
 #user_profile_image 
 {
     height: 360px;
-    width:360px;
+    width:427.99px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -43,26 +43,6 @@
 {
     display:table;
     width:220px;
-    margin-right:auto;
-    margin-left:auto;
-}
-
-#div_for_change_profile_picture_button
-{
-    width:173px;
-    margin-right:auto;
-    margin-left:auto;
-}
-
-#change_profile_pic_button
-{
-    margin-left:auto;
-    margin-right:auto;
-}
-
-#div_for_change_password_button
-{
-    width:173px;
     margin-right:auto;
     margin-left:auto;
 }
