@@ -173,7 +173,7 @@ def like_post(like_post_id):
 					)
 			
 			else:
-				if session.get("name") not in document["all_users_who_liked_post"]:
+				if session.get("name") not in document["all_users_who_liked_post"] and session.get("name") != None:
 					db.forum_database.ForumPostCollection.update_one(
 						{ '_id':  ObjectId(like_post_id) },
 						{ "$inc": { 'number_of_likes':  1} }
@@ -215,7 +215,7 @@ def dislike_post(dislike_post_id):
 					)
 			
 			else:
-				if session.get("name") not in document["all_users_who_disliked_post"]:
+				if session.get("name") not in document["all_users_who_disliked_post"] and session.get("name") != None:
 					db.forum_database.ForumPostCollection.update_one(
 						{ '_id':  ObjectId(dislike_post_id) },
 						{ "$inc": { 'number_of_dislikes':  1} }
