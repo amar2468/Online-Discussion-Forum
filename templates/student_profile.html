@@ -63,58 +63,69 @@
 
 
 
-        <section class="vh-100">
-
-            <div class="container py-5 h-80">
-                <table class="user_info_table">
-                    {% for key, value in document.items() %}
-                        {% if key == "profile_picture_link" %}
-                            <tr>
-                                <img id="user_profile_image" src="{{url_for('static', filename=value)}}">
-                            </tr>
-                        {% endif %}
-
-                    {% endfor %}
-
+    <div class="container py-5 h-80">
+        
+        <table class="user_info_table">
+            {% for key, value in document.items() %}
+                {% if key == "profile_picture_link" %}
                     <tr>
-                    {% for key, value in document.items() %}
-                        {% if key != "_id" and key != "password" and key != "profile_picture_link" and key != "email" %}
-                            <td><p id="paragraphs_containing_user_profile_info">{{ value }}</p></td>
-                        {% endif %}
-
-                    {% endfor %}
+                        <img id="user_profile_image" src="{{url_for('static', filename=value)}}">
                     </tr>
+                {% endif %}
+
+            {% endfor %}
+
+            <tr>
+            {% for key, value in document.items() %}
+                {% if key != "_id" and key != "password" and key != "profile_picture_link" and key != "email" %}
+                    <td><p class="form-control-lg px-1" id="paragraphs_containing_user_profile_info">{{ value }}</p></td>
+                {% endif %}
+
+            {% endfor %}
+            </tr>
 
 
-                </table>
+        </table>
+
+        <section class="vh-100">
+            <div class="container py-5 h-80">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div class="card shadow-2-strong" style="border-radius: 1rem;">
+            <div class="card-body p-4 text-center">
+
 
                 <div id="div_for_followers_and_following_tags_in_user_profile">
 
-                    <p id="followers_tag_in_user_profile">Followers</p>
-                    <p id="following_tag_in_user_profile">Following</p>
+                    <p class="form-control-lg" id="followers_tag_in_user_profile">Followers</p>
+                    <p class="form-control-lg" id="following_tag_in_user_profile">Following</p>
 
                 </div>
-
-                <div id="div_for_change_profile_picture_button">
-
+    
+                <div class="form-outline mb-4">
                     <form action = "/changing_profile_picture" method="post">
-
-                        <input type="file" id="change_profile_picture_file_upload" name="change_profile_picture_file_upload" accept = "image/*">
-                        <button type="submit">Change Profile Picture</button>
+                        <input class="btn btn-primary btn-lg btn-block" type="file" id="change_profile_picture_file_upload" name="change_profile_picture_file_upload" accept = "image/*"><br>
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">Change Profile Picture</button>
 
                     </form>
-
                 </div>
 
-                <div id="div_for_change_password_button">
-                
+
+                <div class="form-outline mb-4">
+            
                     <form action="/render_forgot_password_template" method="POST">
-                        <button type="submit">Change Password</button>
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">Change Password</button>
                     </form>
 
                 </div>
+
 
             </div>
+            </div>
+            </div>
+            </div>
+            </div>
         </section>
+    </div>
     </body>
 </html>
