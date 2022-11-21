@@ -59,7 +59,7 @@
         
                         <h3 class="mb-5">Create Your Account</h3>
 
-                        <form action="{{ url_for("register_account")}}" method="post">
+                        <form id="register_account_form" action="{{ url_for("register_account")}}" method="post">
 
                             <div class="form-outline mb-4">
                                 <input type="text" id="first_name" name="first_name" class="form-control form-control-lg" placeholder="First Name" required>
@@ -90,7 +90,7 @@
                                 <input type="checkbox" id="check_age_for_register" name="check_age_for_register" class="form-control form-control-lg" value="Age">
                             </div>
 
-                            <button class="btn btn-primary btn-lg btn-block" type="submit">Create Account</button>
+                            <button id="create_account_button" class="btn btn-primary btn-lg btn-block" type="submit" onclick="validate_form()">Create Account</button>
                             
                         </form>
         
@@ -100,5 +100,6 @@
             </div>
             </div>
         </section>
+        <script src="{{url_for('static', filename='main.js')}}"></script>
     </body>
 </html>
