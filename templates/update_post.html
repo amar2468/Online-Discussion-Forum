@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!--  This file has been downloaded from bootdey.com @bootdey on twitter -->
+    <!--  All snippets are MIT license http://bootdey.com/license -->
+    <!--  Edited by : Amar Plakalo -->
+    <!--  Date: 07/11/2022 -->
+
+
+    <title>Online Discussion Forum | Update Forum Post</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/css/custom_stylesheet.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	
+	<style type="text/css">
+									
+		body
+		{
+			background:#eee;
+			color: #708090;
+		}	
+		
+		.bootdey
+		{
+			margin-top:20px;
+		}
+		
+	</style>
+</head>
+<body>
+
+
+	{% if session.get("name") %}
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+			<a class="navbar-brand" href="#">Forum</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+					<a class="nav-item nav-link" href="/student_profile">Profile</a>
+					<a class="nav-item nav-link" href="/logout">Log Out</a>
+				</div>
+			</div>
+
+		</nav>
+
+	{% else %}
+
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+		<a class="navbar-brand" href="#">Forum</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+				<a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+				<a class="nav-item nav-link" href="/login_account">Sign In</a>
+				<a class="nav-item nav-link" href="/register_account">Register</a>
+			</div>
+		</div>
+
+		</nav>
+	{% endif %}
+
+
+
+
+	<div class="container bootdey">
+		<div class="row justify-content-center align-items-center">
+			<div class="col-md-8 col-sm-12">
+				<div class="well"> 
+					<form role="form" class="form-horizontal" action="{{url_for('edit_forum_topic', id_edit=id_edit)}}" method="POST">
+
+                        <h4>Topic : Computer Science</h4>
+                        <div style="padding:14px;" class="form-group">
+                            <input type="text" value="{{ document.title_of_post }}" id="title_of_post" name="title_of_post" placeholder="Post title..." class="form-control">
+                        </div>
+                        <div style="padding:14px;" class="form-group">
+                            <textarea placeholder="Your post goes here..." id ="post_content" name="post_content" class="form-control">{{ document.content_of_post }}</textarea>
+                        </div>
+                        <div style="padding:14px;" class="form-group">
+                            <button type="submit" id="post_button" name="post_button" class="btn btn-success pull-left">Update Topic</button>
+                        </div>
+                        <div style="padding:14px;" class="form-group">
+                            <a class="btn btn-success pull-left" href="/">Cancel</a>
+                        </div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+
+	</script>
+</body>
+</html>
