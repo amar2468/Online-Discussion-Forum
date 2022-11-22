@@ -146,6 +146,7 @@
                     <br>
                     {% if session.get("name") == document.author_of_post %}
                       <a href="{{url_for('delete_topic', id_delete = document._id)}}"><i class="fa fa-trash"></i></a>
+                      <a href="{{url_for('edit_topic', id_edit = document._id)}}"><i class="fa fa-edit"></i></i></a>
                     {% endif %}
                   </div>
 
@@ -219,9 +220,6 @@
                       </div>
                     </div>
                     <br>
-                    {% if session.get("name") == document.author_of_post %}
-                      <a href="{{url_for('delete_topic', id_delete = document._id)}}"><i class="fa fa-trash"></i></a>
-                    {% endif %}
                   </div>
 
                 {% endfor %}
