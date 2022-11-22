@@ -138,6 +138,34 @@ def view_topic(_id):
 	collection_info = db.forum_database.ForumPostCollection.find()
 	return render_template("view_forum_post.html", content_post = content_post, collection_info=collection_info)
 
+
+# Route for rendering template that allows the user to re-enter the information that they want to update
+
+@app.route('/edit_topic/<id_edit>')
+def edit_topic(id_edit):
+	for document in db.forum_database.ForumPostCollection.find():
+		if str(document["_id"]) == id_edit:
+			return render_template("update_post.html", document=document ,id_edit=id_edit)
+
+# Route for edit topic
+@app.route('/edit_forum_topic/<id_edit>', methods =["GET", "POST"])
+def edit_forum_topic(id_edit):
+
+	topic_title = request.form.get("title_of_post")
+	topic_content = request.form.get("post_content")
+
+	db.forum_database.ForumPostCollection.update_one(
+		{ '_id':  ObjectId(id_edit) },
+		{ "$set": { 'title_of_post': topic_title } }
+	)
+
+	db.forum_database.ForumPostCollection.update_one(
+		{ '_id':  ObjectId(id_edit) },
+		{ "$set": { 'content_of_post': topic_content } }
+	)
+
+	return redirect("/")
+
 # Route for deleting a topic
 
 @app.route('/delete_topic/<id_delete>')
