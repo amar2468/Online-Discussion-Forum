@@ -68,9 +68,15 @@
         <table class="user_info_table">
             {% for key, value in document.items() %}
                 {% if key == "profile_picture_link" %}
-                    <tr>
-                        <img id="user_profile_image" src="{{url_for('static', filename=value)}}">
-                    </tr>
+                    {% if value == "" %}
+                        <tr>
+                            <img id="user_profile_image" src="{{url_for('static', filename='360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg')}}">
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <img id="user_profile_image" src="{{url_for('static', filename=value)}}">
+                        </tr>
+                    {% endif %}
                 {% endif %}
 
             {% endfor %}
