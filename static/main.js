@@ -2,7 +2,13 @@ function validate_register_form()
 {
     var password_user = document.getElementById("user_password_for_register").value;
     var confirm_password_user = document.getElementById("confirm_password_for_register").value;
+    var check_age_for_register = document.getElementById("check_age_for_register");
 
+    if (check_age_for_register.checked == false)
+    {
+        alert("You must be at least 16, in order to register an account: ");
+        return false;
+    }
     if(password_user.length < 10)
     {
         alert("Password must be at least 10 characters. Enter a new password. ");
