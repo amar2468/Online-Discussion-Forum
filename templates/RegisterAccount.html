@@ -62,27 +62,27 @@
                         <form id="register_account_form" action="{{ url_for("register_account")}}" onsubmit="return validate_register_form()" method="post">
 
                             <div class="form-outline mb-4">
-                                <input type="text" id="first_name" name="first_name" class="form-control form-control-lg" placeholder="First Name" required>
+                                <input type="text" id="first_name" name="first_name" class="form-control form-control-lg" placeholder="First Name" autocomplete="off" required>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="text" id="last_name" name="last_name" class="form-control form-control-lg" placeholder="Last Name" required>
+                                <input type="text" id="last_name" name="last_name" class="form-control form-control-lg" placeholder="Last Name" autocomplete="off" required>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="email" id="email_address_for_register" name="email_address_for_register" class="form-control form-control-lg" placeholder="Email" required>
+                                <input type="email" id="email_address_for_register" name="email_address_for_register" class="form-control form-control-lg" placeholder="Email" autocomplete="off" required>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="password" id="user_password_for_register" name="user_password_for_register" class="form-control form-control-lg" placeholder="Enter Password" required>
+                                <input type="password" id="user_password_for_register" name="user_password_for_register" class="form-control form-control-lg" placeholder="Enter Password" autocomplete="off" required>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="password" id="confirm_password_for_register" name="confirm_password_for_register" class="form-control form-control-lg" placeholder="Confirm Password" required>
+                                <input type="password" id="confirm_password_for_register" name="confirm_password_for_register" class="form-control form-control-lg" placeholder="Confirm Password" autocomplete="off" required>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="file" id="profile_picture_for_register" name="profile_picture_for_register" class="form-control form-control-lg" accept = "image/*">
+                                <input type="file" id="profile_picture_for_register" name="profile_picture_for_register" class="form-control form-control-lg" autocomplete="off" accept = "image/*">
                             </div>
 
                             <div class="form-outline mb-4">
