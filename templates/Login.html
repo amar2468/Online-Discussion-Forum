@@ -63,11 +63,11 @@
                         <form action="{{ url_for("login_account")}}" method="post">
             
                             <div class="form-outline mb-4">
-                                <input type="email" id="email_address_for_login" name="email_address_for_login" class="form-control form-control-lg" placeholder="Email" />
+                                <input type="email" id="email_address_for_login" name="email_address_for_login" class="form-control form-control-lg" autocomplete="off" placeholder="Email" />
                             </div>
                 
                             <div class="form-outline mb-4">
-                                <input type="password" id="user_password_for_login" name="user_password_for_login" class="form-control form-control-lg" placeholder="Password" />
+                                <input type="password" id="user_password_for_login" name="user_password_for_login" class="form-control form-control-lg" autocomplete="off" placeholder="Password" />
                             </div>
                 
                             <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
