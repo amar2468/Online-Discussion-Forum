@@ -34,8 +34,11 @@ def register_account():
 			encrypted_password = generate_password_hash(passwd)
 
 			db.register_login_database.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password, "profile_picture_link": profile_pic})
-
-			return redirect("/login_account")
+			
+			session["name"] = request.form.get("email_address_for_register")
+			session.permanent = True
+			
+			return redirect("/student_profile")
 		else:
 			return render_template("RegisterAccount.html")
 	else:
