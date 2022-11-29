@@ -1,6 +1,6 @@
 import profile
+from datetime import date
 from flask import Flask, render_template, request, redirect, session
-from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from bson.objectid import ObjectId
@@ -33,7 +33,11 @@ def register_account():
 
 			encrypted_password = generate_password_hash(passwd)
 
-			db.register_login_database.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password, "profile_picture_link": profile_pic})
+			date_registered = date.today()
+
+			date_registered = date_registered.strftime("%d/%m/%Y")
+
+			db.register_login_database.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password, "profile_picture_link": profile_pic,'user_registered': date_registered})
 			
 			session["name"] = request.form.get("email_address_for_register")
 			session.permanent = True
@@ -133,13 +137,20 @@ def render_forum_post():
 
 @app.route('/view_topic/<_id>')
 def view_topic(_id):
+	user_info = db.register_login_database.RegLoginCollection.find()
+
 	for document in db.forum_database.ForumPostCollection.find():
 		if str(document["_id"]) == _id:
 			content_post = document['content_of_post']
 			collection_info = db.forum_database.ForumPostCollection.find()
-			return render_template("view_forum_post.html", content_post = content_post, collection_info=collection_info)
+
+			for user in user_info:
+				if user['email'] == document['author_of_post']:
+					registration_date_user = user['user_registered']
+					break
+			return render_template("view_forum_post.html", registration_date_user=registration_date_user, user_info=user_info,content_post = content_post, collection_info=collection_info)
 	collection_info = db.forum_database.ForumPostCollection.find()
-	return render_template("view_forum_post.html", content_post = content_post, collection_info=collection_info)
+	return render_template("view_forum_post.html", user_info=user_info, content_post = content_post, collection_info=collection_info)
 
 
 # Route for rendering template that allows the user to re-enter the information that they want to update
