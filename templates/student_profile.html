@@ -83,7 +83,7 @@
 
             <tr>
             {% for key, value in document.items() %}
-                {% if key != "_id" and key != "password" and key != "profile_picture_link" and key != "email" %}
+                {% if key != "_id" and key != "password" and key != "profile_picture_link" and key != "email" and key != "user_registered" %}
                     <td><p class="form-control-lg px-1" id="paragraphs_containing_user_profile_info">{{ value }}</p></td>
                 {% endif %}
 
