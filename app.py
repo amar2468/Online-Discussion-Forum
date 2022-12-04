@@ -1,4 +1,4 @@
-import profile
+import os
 from datetime import date
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -28,21 +28,27 @@ def register_account():
 			lname = request.form.get("last_name")
 			email = request.form.get("email_address_for_register")
 			passwd = request.form.get("user_password_for_register")
-			check_the_age = request.form.get("check_age_for_register")
-			profile_pic = request.form.get("profile_picture_for_register")
+			profile_pic = request.files['profile_picture_for_register']
 
-			encrypted_password = generate_password_hash(passwd)
+			if db.register_login_database.RegLoginCollection.find_one({"email": {"$eq": email}}):
+				return redirect("/register_account")
+			else:
+				encrypted_password = generate_password_hash(passwd)
 
-			date_registered = date.today()
+				saving_profile_picture = secure_filename(profile_pic.filename)
+				profile_pic.save(os.path.join("static/", saving_profile_picture))
 
-			date_registered = date_registered.strftime("%d/%m/%Y")
+				date_registered = date.today()
 
-			db.register_login_database.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password, "profile_picture_link": profile_pic,'user_registered': date_registered})
-			
-			session["name"] = request.form.get("email_address_for_register")
-			session.permanent = True
-			
-			return redirect("/student_profile")
+				date_registered = date_registered.strftime("%d/%m/%Y")
+
+				db.register_login_database.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password, "profile_picture_link": saving_profile_picture,'user_registered': date_registered})
+				
+				session["name"] = request.form.get("email_address_for_register")
+
+				session.permanent = True
+				
+				return redirect("/student_profile")
 		else:
 			return render_template("RegisterAccount.html")
 	else:
@@ -91,11 +97,14 @@ def student_profile():
 
 @app.route('/changing_profile_picture', methods =["GET", "POST"])
 def changing_profile_picture():
-	change_profile_pic = request.form.get("change_profile_picture_file_upload")
 
+	profile_picture = request.files['change_profile_picture_file_upload']
+	changing_profile_picture = secure_filename(profile_picture.filename)
+	profile_picture.save(os.path.join("static/", changing_profile_picture))
+	
 	db.register_login_database.RegLoginCollection.update_one(
 		{ 'email': session.get("name") },
-		{ "$set": { 'profile_picture_link': change_profile_pic } }
+		{ "$set": { 'profile_picture_link': changing_profile_picture } }
 	)
 
 	return redirect("/student_profile")
