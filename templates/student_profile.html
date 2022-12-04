@@ -26,8 +26,8 @@
 
         {% if session.get("name") %}
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
-                <a class="navbar-brand" href="#">Forum</a>
+                <img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
+                <a class="navbar-brand" href="#">Student Discussion</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -44,8 +44,8 @@
         {% else %}
 
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
-            <a class="navbar-brand" href="#">Forum</a>
+            <img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
+            <a class="navbar-brand" href="#">Student Discussion</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -109,7 +109,7 @@
                 </div>
     
                 <div class="form-outline mb-4">
-                    <form action = "/changing_profile_picture" method="post">
+                    <form action = "/changing_profile_picture" method="post" enctype="multipart/form-data">
                         <input class="btn btn-primary btn-lg btn-block" type="file" id="change_profile_picture_file_upload" name="change_profile_picture_file_upload" accept = "image/*"><br>
                         <button class="btn btn-primary btn-lg btn-block" type="submit">Change Profile Picture</button>
 
@@ -133,5 +133,6 @@
             </div>
         </section>
     </div>
+    <script src="{{url_for('static', filename='main.js')}}"></script>
     </body>
 </html>
