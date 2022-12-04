@@ -15,8 +15,8 @@
 
         {% if session.get("name") %}
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
-                <a class="navbar-brand" href="#">Forum</a>
+                <img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
+                <a class="navbar-brand" href="#">Student Discussion</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -33,8 +33,8 @@
         {% else %}
 
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
-            <a class="navbar-brand" href="#">Forum</a>
+            <img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
+            <a class="navbar-brand" href="#">Student Discussion</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -59,7 +59,7 @@
         
                         <h3 class="mb-5">Create Your Account</h3>
 
-                        <form id="register_account_form" action="{{ url_for("register_account")}}" onsubmit="return validate_register_form()" method="post">
+                        <form id="register_account_form" action="{{ url_for("register_account")}}" onsubmit="return validate_register_form()" method="post" enctype="multipart/form-data">
 
                             <div class="form-outline mb-4">
                                 <input type="text" id="first_name" name="first_name" class="form-control form-control-lg" placeholder="First Name" autocomplete="off" required>
