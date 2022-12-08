@@ -36,7 +36,11 @@ def register_account():
 				encrypted_password = generate_password_hash(passwd)
 
 				saving_profile_picture = secure_filename(profile_pic.filename)
-				profile_pic.save(os.path.join("static/", saving_profile_picture))
+
+				if profile_pic.filename == "":
+					saving_profile_picture = secure_filename('360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg')
+				else:
+					profile_pic.save(os.path.join("static/", saving_profile_picture))
 
 				date_registered = date.today()
 
