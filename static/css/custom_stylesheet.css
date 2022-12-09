@@ -1,3 +1,22 @@
+body
+{
+    background:#eee !important;
+    color: #708090 !important;
+}
+
+.error
+{
+    color: #af0c0c;
+    background-color: #ffe0e0;
+    padding: 8px;
+    display: none;
+}
+
+.bootdey
+{
+    margin-top:20px;
+}
+
 #user_profile_image 
 {
     height: 360px;
@@ -45,4 +64,31 @@
     width:220px;
     margin-right:auto;
     margin-left:auto;
+}
+
+#like_post_link, #dislike_post_link, #share_post_link
+{
+  color: #708090;
+}
+
+#like_post_link:hover ,#dislike_post_link:hover, #share_post_link:hover
+{
+  color: blue;
+}
+
+.icon-1x 
+{
+    font-size: 24px !important;
+}
+
+.fa 
+{
+  font-size: 30px !important;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fa-trash
+{
+  color: #708090;;
 }
