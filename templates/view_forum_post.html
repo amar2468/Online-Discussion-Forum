@@ -15,9 +15,6 @@
 									
 		body
 		{
-			font-size: .88rem;
-			font-weight: 400;
-			line-height: 1.5;
 			text-align: left;
 			background:#eee;
 			color: #708090;
@@ -64,7 +61,6 @@
 		.btn
 		{
 			font-size: 0.8rem;
-			font-weight: 500;
 			outline: none !important;
 			position: relative;
 			transition: color 0.15s,background-color 0.15s,border-color 0.15s,box-shadow 0.15s
@@ -99,8 +95,8 @@
 
 	{% if session.get("name") %}
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
-			<a class="navbar-brand" href="#">Student Discussion</a>
+			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+			<a class="navbar-brand" href="/">Student Discussion</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -117,8 +113,8 @@
 	{% else %}
 
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
-		<a class="navbar-brand" href="#">Student Discussion</a>
+		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+		<a class="navbar-brand" href="/">Student Discussion</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -133,8 +129,8 @@
 		</nav>
 	{% endif %}
 
-
-	<div class="container-fluid mt-100">
+	<div class="container-fluid mt-95">
+		<h1>{{ post_title }}</h1><br>
 		 <div class="row">
 			 <div class="col-md-12">
 				 <div class="card mb-4">
@@ -160,7 +156,7 @@
 					 </div>
 					 <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
 						 <div class="px-4 pt-3"> <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">0</span> </a> <span class="text-muted d-inline-flex align-items-center align-middle ml-4"> <i class="fa fa-eye text-muted fsize-3"></i>&nbsp; <span class="align-middle">0</span> </span> </div>
-						 <div class="px-4 pt-3"> <button type="button" class="btn btn-primary"><i class="ion ion-md-create"></i>&nbsp; Reply</button> </div>
+						 <div class="px-4 pt-3"> <button type="button" class="btn btn-primary"><i class="ion ion-md-create"></i>Reply</button> </div>
 					 </div>
 				 </div>
 			 </div>
