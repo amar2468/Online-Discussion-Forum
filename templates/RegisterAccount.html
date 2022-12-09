@@ -2,6 +2,7 @@
 <html>
 
     <head>
+        
         <title>Online Discussion Forum | Register</title>
         <link rel="icon" type="image/x-icon" href="static/favicon-logo.png">
         <link rel="stylesheet" href="/static/css/custom_stylesheet.css">
@@ -10,18 +11,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-
-        <style>
-
-            .error
-            {
-                color: #af0c0c;
-                background-color: #ffe0e0;
-                padding: 8px;
-                display: none;
-            }
-            
-        </style>
     </head>
 
     <body style="background-color:#eee;">
@@ -29,8 +18,8 @@
 
         {% if session.get("name") %}
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
-                <a class="navbar-brand" href="#">Student Discussion</a>
+                <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+                <a class="navbar-brand" href="/">Student Discussion</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -47,8 +36,8 @@
         {% else %}
 
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
-            <a class="navbar-brand" href="#">Student Discussion</a>
+            <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+            <a class="navbar-brand" href="/">Student Discussion</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
