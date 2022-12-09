@@ -154,6 +154,7 @@ def view_topic(_id):
 
 	for document in db.forum_database.ForumPostCollection.find():
 		if str(document["_id"]) == _id:
+			post_title = document['title_of_post']
 			content_post = document['content_of_post']
 			collection_info = db.forum_database.ForumPostCollection.find()
 
@@ -161,9 +162,9 @@ def view_topic(_id):
 				if user['email'] == document['author_of_post']:
 					registration_date_user = user['user_registered']
 					break
-			return render_template("view_forum_post.html", registration_date_user=registration_date_user, user_info=user_info,content_post = content_post, collection_info=collection_info)
+			return render_template("view_forum_post.html", registration_date_user=registration_date_user, user_info=user_info, post_title=post_title ,content_post = content_post, collection_info=collection_info)
 	collection_info = db.forum_database.ForumPostCollection.find()
-	return render_template("view_forum_post.html", user_info=user_info, content_post = content_post, collection_info=collection_info)
+	return render_template("view_forum_post.html", user_info=user_info, post_title = post_title, content_post = content_post, collection_info=collection_info)
 
 
 # Route for rendering template that allows the user to re-enter the information that they want to update
