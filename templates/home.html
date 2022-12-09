@@ -19,17 +19,6 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <style>
-
-            body
-            {
-                background:#eee;
-                color: #708090;
-            }
-            
-            .icon-1x 
-            {
-                font-size: 24px !important;
-            }
             
             a
             {
@@ -56,28 +45,6 @@
                 margin-top:40px;
             }
 
-            .fa 
-            {
-              font-size: 30px;
-              cursor: pointer;
-              user-select: none;
-            }
-
-            .fa-trash
-            {
-              color: #708090;;
-            }
-
-            #like_post_link, #dislike_post_link, #share_post_link
-            {
-              color: #708090;
-            }
-
-            #like_post_link:hover ,#dislike_post_link:hover, #share_post_link:hover
-            {
-              color: blue;
-            }
-
         </style>
 
     </head>
@@ -85,8 +52,8 @@
     <body>
       {% if session.get("name") %}
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
-            <a class="navbar-brand" href="#">Student Discussion</a>
+            <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+            <a class="navbar-brand" href="/">Student Discussion</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -146,7 +113,7 @@
                     </div>
                     <br>
                     {% if session.get("name") == document.author_of_post %}
-                      <a href="{{url_for('delete_topic', id_delete = document._id)}}"><i class="fa fa-trash"></i></a>
+                      <a href="{{url_for('delete_topic', id_delete = document._id)}}" onclick="return delete_topic()"><i class="fa fa-trash"></i></a>
                       <a href="{{url_for('edit_topic', id_edit = document._id)}}"><i class="fa fa-edit"></i></i></a>
                     {% endif %}
                   </div>
@@ -162,8 +129,8 @@
       {% else %}
 
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-          <img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
-          <a class="navbar-brand" href="#">Student Discussion</a>
+          <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+          <a class="navbar-brand" href="/">Student Discussion</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
           </button>
