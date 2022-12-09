@@ -16,29 +16,15 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-	
-	<style type="text/css">
-									
-		body
-		{
-			background:#eee;
-			color: #708090;
-		}	
-		
-		.bootdey
-		{
-			margin-top:20px;
-		}
-		
-	</style>
+
 </head>
 <body>
 
 
 	{% if session.get("name") %}
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
-			<a class="navbar-brand" href="#">Student Discussion</a>
+			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+			<a class="navbar-brand" href="/">Student Discussion</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -55,8 +41,8 @@
 	{% else %}
 
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;
-		<a class="navbar-brand" href="#">Student Discussion</a>
+		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+		<a class="navbar-brand" href="/">Student Discussion</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
