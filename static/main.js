@@ -143,3 +143,63 @@ function validate_reset_password_form()
         return false;
     }
 }
+
+function validate_profile_picture()
+{
+    let check_profile_picture = document.getElementById("change_profile_picture_file_upload").value;
+
+    if (check_profile_picture == "")
+    {
+        document.querySelector(".profilepicture-error").innerHTML = "You have not selected a profile picture";
+        document.querySelector(".profilepicture-error").style.display = "block";
+        return false;
+    }
+}
+
+function delete_topic()
+{
+    const response_to_delete_prompt = confirm("Are you sure you want to delete the topic?");
+
+    if (response_to_delete_prompt) 
+    {
+        return;
+    }
+
+    else
+    {
+        return false;
+    }
+}
+
+function validate_login_form()
+{
+    login_email = document.getElementById("email_address_for_login").value;
+    login_password = document.getElementById("user_password_for_login").value;
+
+    // Referencing all the error paragraphs
+    let all_errors = document.querySelectorAll(".error");
+
+    // Iterate through each error
+    for(let error of all_errors)
+    {
+        // Hide the error message
+        error.style.display = "none";
+    }
+
+    // If the user does not enter the email
+    if (login_email == "")
+    {
+        // Show the relevant error message as a block
+        document.querySelector(".email-error").innerHTML = "Please enter an email";
+        document.querySelector(".email-error").style.display = "block";
+        return false;
+    }
+
+    if (login_password == "")
+    {
+        // Show the relevant error message as a block
+        document.querySelector(".password-error").innerHTML = "Please enter a password";
+        document.querySelector(".password-error").style.display = "block";
+        return false;
+    }
+}
