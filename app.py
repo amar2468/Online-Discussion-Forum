@@ -1,5 +1,5 @@
 import os
-from datetime import date
+from datetime import date, datetime
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -46,7 +46,7 @@ def register_account():
 
 				date_registered = date_registered.strftime("%d/%m/%Y")
 
-				db.register_login_database.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password, "profile_picture_link": saving_profile_picture,'user_registered': date_registered})
+				db.register_login_database.RegLoginCollection.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password, "profile_picture_link": saving_profile_picture,'user_registered': date_registered, "list_of_followers": [], "number_of_followers":0, "list_of_following": [], "number_of_following":0})
 				
 				session["name"] = request.form.get("email_address_for_register")
 
@@ -95,6 +95,13 @@ def logout():
 def student_profile():
 	for document in db.register_login_database.RegLoginCollection.find():
 		if document["email"] == session["name"]:
+			return render_template("student_profile.html", document = document)
+# Route created for student profile
+
+@app.route('/viewing_profile/<student_profile_email>')
+def viewing_profile(student_profile_email):
+	for document in db.register_login_database.RegLoginCollection.find():
+		if document["email"] == student_profile_email:
 			return render_template("student_profile.html", document = document)
 
 # Route created for changing profile picture
@@ -292,8 +299,64 @@ def forum_post():
 	if session.get("name"):
 		title = request.form.get("title_of_post")
 		content = request.form.get("post_content")
+		date_and_time_post_created = datetime.now()
+		
+		formatted_date_and_time_post_created = date_and_time_post_created.strftime("%d/%m/%Y %H:%M:%S")
 
-		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False, "all_users_who_liked_post": [], "all_users_who_disliked_post": [] })
+		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False, "all_users_who_liked_post": [], "all_users_who_disliked_post": [], "time_stamp_when_post_created": formatted_date_and_time_post_created})
+
+		return redirect('/')
+	elif not session.get("name"):
+		return redirect('/')
+
+# Route for dealing with following user
+
+@app.route('/follow_user/<student_profile_email>', methods =["GET", "POST"])
+def follow_user(student_profile_email):
+	if session.get("name"):
+		follow_button = request.form.get("follow_button");
+		
+		if follow_button == "Follow":
+			db.register_login_database.RegLoginCollection.update_one(
+				{ 'email': student_profile_email },
+				{ "$push": { 'list_of_followers': session.get("name") } }
+			)
+
+			db.register_login_database.RegLoginCollection.update_one(
+				{ 'email': student_profile_email },
+				{ "$inc": { 'number_of_followers':  1} }
+			)
+
+			db.register_login_database.RegLoginCollection.update_one(
+				{ 'email': session.get("name") },
+				{ "$push": { 'list_of_following': student_profile_email } }
+			)
+
+			db.register_login_database.RegLoginCollection.update_one(
+				{ 'email': session.get("name") },
+				{ "$inc": { 'number_of_following':  1} }
+			)
+
+		elif follow_button == "Following":
+			db.register_login_database.RegLoginCollection.update_one(
+				{ 'email': student_profile_email },
+				{ "$pull": { 'list_of_followers': session.get("name") } }
+			)
+
+			db.register_login_database.RegLoginCollection.update_one(
+				{ 'email': student_profile_email },
+				{ "$inc": { 'number_of_followers':  -1} }
+			)
+
+			db.register_login_database.RegLoginCollection.update_one(
+				{ 'email': session.get("name") },
+				{ "$pull": { 'list_of_following': student_profile_email } }
+			)
+
+			db.register_login_database.RegLoginCollection.update_one(
+				{ 'email': session.get("name") },
+				{ "$inc": { 'number_of_following':  -1} }
+			)
 
 		return redirect('/')
 	elif not session.get("name"):
