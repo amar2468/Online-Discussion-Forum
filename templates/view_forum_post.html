@@ -139,7 +139,7 @@
 							{% if collection_info.count() > 0 %}
 								{% for document in collection_info %} 
 									{% if content_post == document.content_of_post %}
-										<div class="media-body ml-3"> <a href="javascript:void(0)" data-abc="true">{{ document.author_of_post }}</a>
+										<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}" data-abc="true">{{ document.author_of_post }}</a>
 											<div class="text-muted small">0 days ago</div>
 										</div>
 									{% endif %}
