@@ -100,7 +100,7 @@
                         <h5>
                           <a href="{{url_for('view_topic', _id=document._id)}}" class="text-primary">{{ document.title_of_post }}</a>
                         </h5>
-                        <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">0 minutes</a> <span class="op-6">ago by</span> <a class="text-black" href="#">{{ document.author_of_post }}</a></p>
+                        <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">0 minutes</a> <span class="op-6">ago by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}">{{ document.author_of_post }}</a></p>
                         <div class="text-sm op-5"> <a class="text-black mr-2" href="#">Forum: Computer Science</a> </div>
                       </div>
                       <div class="col-md-4 op-7">
@@ -176,7 +176,7 @@
                         <h5>
                           <a href="{{url_for('view_topic', _id=document._id)}}" class="text-primary">{{ document.title_of_post }}</a>
                         </h5>
-                        <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">20 minutes</a> <span class="op-6">ago by</span> <a class="text-black" href="#">{{ document.author_of_post }}</a></p>
+                        <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">20 minutes</a> <span class="op-6">ago by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}">{{ document.author_of_post }}</a></p>
                         <div class="text-sm op-5"> <a class="text-black mr-2" href="#">Forum: Computer Science</a> </div>
                       </div>
                       <div class="col-md-4 op-7">
