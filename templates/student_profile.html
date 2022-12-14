@@ -52,8 +52,6 @@
         {% endif %}
 
 
-
-
     <div class="container py-5 h-80">
         
         <table class="user_info_table">
@@ -74,7 +72,7 @@
 
             <tr>
             {% for key, value in document.items() %}
-                {% if key != "_id" and key != "password" and key != "profile_picture_link" and key != "email" and key != "user_registered" %}
+                {% if key != "_id" and key != "password" and key != "profile_picture_link" and key != "email" and key != "user_registered" and key != "list_of_followers" and key != "number_of_followers" and key != "number_of_following" and key != "list_of_following" %}
                     <td><p class="form-control-lg px-1" id="paragraphs_containing_user_profile_info">{{ value }}</p></td>
                 {% endif %}
 
@@ -84,46 +82,99 @@
 
         </table>
 
-        <section class="vh-100">
-            <div class="container py-5 h-80">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div class="card shadow-2-strong" style="border-radius: 1rem;">
-            <div class="card-body p-4 text-center">
+        {% for key, value in document.items() %}
+
+            {% if key == 'email' %}
+
+                {% if value == session.get("name") %}
+
+                    <section class="vh-100">
+                        <div class="container py-5 h-80">
+                        <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                        <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-4 text-center">
 
 
-                <div id="div_for_followers_and_following_tags_in_user_profile">
+                            <div id="div_for_followers_and_following_tags_in_user_profile">
 
-                    <p class="form-control-lg" id="followers_tag_in_user_profile">Followers</p>
-                    <p class="form-control-lg" id="following_tag_in_user_profile">Following</p>
+                                <p class="form-control-lg" id="followers_tag_in_user_profile"><a href="#">Followers {{document.number_of_followers}}</a></p>
+                                <p class="form-control-lg" id="following_tag_in_user_profile"><a href="#">Following {{document.number_of_following}}</a></p>
 
-                </div>
-    
-                <div class="form-outline mb-4">
-                    <form action = "/changing_profile_picture" onsubmit="return validate_profile_picture()" method="post" enctype="multipart/form-data">
-                        <input class="btn btn-primary btn-lg btn-block" type="file" id="change_profile_picture_file_upload" name="change_profile_picture_file_upload" accept = "image/*"><br>
-                        <p class="error profilepicture-error"></p>
-                        <button class="btn btn-primary btn-lg btn-block" type="submit">Change Profile Picture</button>
+                            </div>
+                
+                            <div class="form-outline mb-4">
+                                <form action = "/changing_profile_picture" onsubmit="return validate_profile_picture()" method="post" enctype="multipart/form-data">
+                                    <input class="btn btn-primary btn-lg btn-block" type="file" id="change_profile_picture_file_upload" name="change_profile_picture_file_upload" accept = "image/*"><br>
+                                    <p class="error profilepicture-error"></p>
+                                    <button class="btn btn-primary btn-lg btn-block" type="submit">Change Profile Picture</button>
 
-                    </form>
-                </div>
-
-
-                <div class="form-outline mb-4">
-            
-                    <form action="/render_forgot_password_template" method="POST">
-                        <button class="btn btn-primary btn-lg btn-block" type="submit">Change Password</button>
-                    </form>
-
-                </div>
+                                </form>
+                            </div>
 
 
-            </div>
-            </div>
-            </div>
-            </div>
-            </div>
-        </section>
+                            <div class="form-outline mb-4">
+                        
+                                <form action="/render_forgot_password_template" method="POST">
+                                    <button class="btn btn-primary btn-lg btn-block" type="submit">Change Password</button>
+                                </form>
+
+                            </div>
+
+
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                    </section>
+
+                {% else %}
+
+                    <section class="vh-100">
+                        <div class="container py-5 h-80">
+                        <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                        <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                        <div class="card-body p-4 text-center">
+
+
+                            <div id="div_for_followers_and_following_tags_in_user_profile">
+
+                                <p class="form-control-lg" id="followers_tag_in_user_profile"><a href="#">Followers {{document.number_of_followers}}</a></p>
+                                <p class="form-control-lg" id="following_tag_in_user_profile"><a href="#">Following {{document.number_of_following}}</a></p>
+
+                            </div>
+
+                            {% if session.get("name") in document.list_of_followers %}
+                                <div class="form-outline mb-4">
+                            
+                                    <form action="{{url_for('follow_user', student_profile_email=value)}}" method="POST">
+                                        <button id="follow_button" name="follow_button" class="btn btn-primary btn-lg btn-block" value="Following" type="submit">Following</button>
+                                    </form>
+
+                                </div>
+                            {% else %}
+                                <div class="form-outline mb-4">
+                            
+                                    <form action="{{url_for('follow_user', student_profile_email=value)}}" method="POST">
+                                        <button id="follow_button" name="follow_button" class="btn btn-primary btn-lg btn-block" value="Follow" type="submit">Follow</button>
+                                    </form>
+
+                                </div>
+                            {% endif %}
+
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                    </section>
+
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
     </div>
     <script src="{{url_for('static', filename='main.js')}}"></script>
     </body>
