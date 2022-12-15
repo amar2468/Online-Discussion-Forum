@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <title>Online Discussion Forum | Followers</title>
+	<link rel="icon" type="image/x-icon" href="{{url_for('static', filename= 'favicon-logo.png')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/static/css/custom_stylesheet.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+
+	{% if session.get("name") %}
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+			<a class="navbar-brand" href="/">Student Discussion</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+					<a class="nav-item nav-link" href="/student_profile">Profile</a>
+					<a class="nav-item nav-link" href="/logout">Log Out</a>
+				</div>
+			</div>
+
+		</nav>
+
+	{% else %}
+
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+		<a class="navbar-brand" href="/">Student Discussion</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+				<a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+				<a class="nav-item nav-link" href="/login_account">Sign In</a>
+				<a class="nav-item nav-link" href="/register_account">Register</a>
+			</div>
+		</div>
+
+		</nav>
+	{% endif %}
+
+	<section class="vh-100">
+		{% for document in registration_info %}
+		{% if student_email == document.email %}
+		{% for following in document.list_of_following %}
+		<div class="container py-5 h-80">
+		<div class="row d-flex justify-content-center align-items-center h-100">
+		<div class="col-12 col-md-8 col-lg-6 col-xl-5">
+		<div class="card shadow-2-strong" style="border-radius: 1rem;">
+		<div class="card-body p-2 text-center">
+
+			<p><a href="{{url_for('viewing_profile', student_profile_email=following)}}">{{ following }}</a></p>
+
+		</div>
+		</div>
+		</div>
+		</div>
+		</div>
+		{% endfor %}
+		{% endif %}
+		{% endfor %}
+	</section>
+
+	<script src="{{url_for('static', filename='main.js')}}"></script>
+</body>
+</html>
