@@ -98,8 +98,8 @@
 
                             <div id="div_for_followers_and_following_tags_in_user_profile">
 
-                                <p class="form-control-lg" id="followers_tag_in_user_profile"><a href="#">Followers {{document.number_of_followers}}</a></p>
-                                <p class="form-control-lg" id="following_tag_in_user_profile"><a href="#">Following {{document.number_of_following}}</a></p>
+                                <p class="form-control-lg" id="followers_tag_in_user_profile"><a href="{{url_for('list_of_followers', student_email=value)}}">Followers {{document.number_of_followers}}</a></p>
+                                <p class="form-control-lg" id="following_tag_in_user_profile"><a href="{{url_for('list_of_following', student_email=value)}}">Following {{document.number_of_following}}</a></p>
 
                             </div>
                 
@@ -141,8 +141,8 @@
 
                             <div id="div_for_followers_and_following_tags_in_user_profile">
 
-                                <p class="form-control-lg" id="followers_tag_in_user_profile"><a href="#">Followers {{document.number_of_followers}}</a></p>
-                                <p class="form-control-lg" id="following_tag_in_user_profile"><a href="#">Following {{document.number_of_following}}</a></p>
+                                <p class="form-control-lg" id="followers_tag_in_user_profile"><a href="{{url_for('list_of_followers', student_email=document.email)}}">Followers {{document.number_of_followers}}</a></p>
+                                <p class="form-control-lg" id="following_tag_in_user_profile"><a href="{{url_for('list_of_following', student_email=value)}}">Following {{document.number_of_following}}</a></p>
 
                             </div>
 
