@@ -362,5 +362,26 @@ def follow_user(student_profile_email):
 	elif not session.get("name"):
 		return redirect('/')
 
+
+# Route to redirect to the list of followers page
+
+@app.route('/list_of_followers/<student_email>', methods =["GET", "POST"])
+def list_of_followers(student_email):
+	if session.get("name"):
+		registration_info = db.register_login_database.RegLoginCollection.find()
+		return render_template("list_of_followers.html", student_email=student_email, registration_info=registration_info)
+	elif not session.get("name"):
+		return redirect('/')
+
+# Route to redirect to the list of following page
+
+@app.route('/list_of_following/<student_email>', methods =["GET", "POST"])
+def list_of_following(student_email):
+	if session.get("name"):
+		registration_info = db.register_login_database.RegLoginCollection.find()
+		return render_template("list_of_following.html", student_email=student_email, registration_info=registration_info)
+	elif not session.get("name"):
+		return redirect('/')
+
 if __name__ == '__main__':
 	app.run(debug=True)
