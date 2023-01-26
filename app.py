@@ -16,7 +16,13 @@ app.config["SESSION_TYPE"] = "filesystem"
 def home():
 	collection_info = db.forum_database.ForumPostCollection.find()
 
-	return render_template("home.html", collection_info=collection_info)
+	date_and_time_post_created = datetime.now()
+		
+	formatted_date_and_time_post_created = date_and_time_post_created.strftime("%d/%m/%Y %H:%M:%S")
+
+	current_date_and_time = datetime.strptime(formatted_date_and_time_post_created, "%d/%m/%Y %H:%M:%S")
+	
+	return render_template("home.html", formatted_date_and_time_post_created=formatted_date_and_time_post_created, collection_info=collection_info)
 
 # Route for register account which allows the user to register
 
@@ -163,15 +169,15 @@ def view_topic(_id):
 		if str(document["_id"]) == _id:
 			post_title = document['title_of_post']
 			content_post = document['content_of_post']
-			collection_info = db.forum_database.ForumPostCollection.find()
+			collection_info = list(db.forum_database.ForumPostCollection.find())
 
 			for user in user_info:
 				if user['email'] == document['author_of_post']:
 					registration_date_user = user['user_registered']
 					break
-			return render_template("view_forum_post.html", registration_date_user=registration_date_user, user_info=user_info, post_title=post_title ,content_post = content_post, collection_info=collection_info)
-	collection_info = db.forum_database.ForumPostCollection.find()
-	return render_template("view_forum_post.html", user_info=user_info, post_title = post_title, content_post = content_post, collection_info=collection_info)
+			return render_template("view_forum_post.html", _id=_id ,registration_date_user=registration_date_user, user_info=user_info, post_title=post_title ,content_post = content_post, collection_info=collection_info)
+	collection_info = list(db.forum_database.ForumPostCollection.find())
+	return render_template("view_forum_post.html", _id=_id, user_info=user_info, post_title = post_title, content_post = content_post, collection_info=collection_info)
 
 
 # Route for rendering template that allows the user to re-enter the information that they want to update
@@ -303,7 +309,7 @@ def forum_post():
 		
 		formatted_date_and_time_post_created = date_and_time_post_created.strftime("%d/%m/%Y %H:%M:%S")
 
-		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False, "all_users_who_liked_post": [], "all_users_who_disliked_post": [], "time_stamp_when_post_created": formatted_date_and_time_post_created})
+		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False, "all_users_who_liked_post": [], "all_users_who_disliked_post": [], "time_stamp_when_post_created": formatted_date_and_time_post_created, "comments":[]})
 
 		return redirect('/')
 	elif not session.get("name"):
@@ -382,6 +388,18 @@ def list_of_following(student_email):
 		return render_template("list_of_following.html", student_email=student_email, registration_info=registration_info)
 	elif not session.get("name"):
 		return redirect('/')
+
+@app.route('/reply_to_the_post/<post_id>', methods =["GET", "POST"])
+def reply_to_the_post(post_id):
+	if request.method == "POST":
+		reply_content = request.form.get("reply_content")
+
+	db.forum_database.ForumPostCollection.update_one(
+		{ '_id': ObjectId(post_id) },
+		{ "$push": { 'comments': ({"author_of_post":session.get("name"), "content_of_post": reply_content}) } }
+	)
+
+	return redirect('/')
 
 if __name__ == '__main__':
 	app.run(debug=True)
