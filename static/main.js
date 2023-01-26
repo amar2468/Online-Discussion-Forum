@@ -203,3 +203,14 @@ function validate_login_form()
         return false;
     }
 }
+
+function reply_to_post()
+{
+    let reply_content = document.getElementById("reply_content").value;
+
+    if(reply_content == "")
+    {
+        alert("No comment has been made. Not submitted");
+        return false;
+    }
+}
