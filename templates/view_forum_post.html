@@ -12,6 +12,16 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	
 	<style type="text/css">
+
+		#reply_content
+		{
+			margin:auto;
+			min-width:200px;
+			max-width:100%;
+			min-height:50px;
+			height:100%;
+			width:100%;
+		}
 									
 		body
 		{
@@ -136,7 +146,7 @@
 				 <div class="card mb-4">
 					 <div class="card-header">
 						 <div class="media flex-wrap w-100 align-items-center"> <img src="/static/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" class="d-block ui-w-40 rounded-circle" alt="">
-							{% if collection_info.count() > 0 %}
+							{% if collection_info|length > 0 %}
 								{% for document in collection_info %} 
 									{% if content_post == document.content_of_post %}
 										<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}" data-abc="true">{{ document.author_of_post }}</a>
@@ -144,11 +154,14 @@
 										</div>
 									{% endif %}
 								{% endfor %}
-						 	{% endif %}
-							 <div class="text-muted small ml-3">
+							{% endif %}
+	 	
+
+
+							<div class="text-muted small ml-3">
 								 <div>Member since <strong>{{ registration_date_user }}</strong></div>
 								 <div><strong>1</strong> posts</div>
-							 </div>
+							</div>
 						 </div>
 					 </div>
 					 <div class="card-body">
@@ -156,12 +169,72 @@
 					 </div>
 					 <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
 						 <div class="px-4 pt-3"> <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">0</span> </a> <span class="text-muted d-inline-flex align-items-center align-middle ml-4"> <i class="fa fa-eye text-muted fsize-3"></i>&nbsp; <span class="align-middle">0</span> </span> </div>
-						 <div class="px-4 pt-3"> <button type="button" class="btn btn-primary"><i class="ion ion-md-create"></i>Reply</button> </div>
 					 </div>
 				 </div>
 			 </div>
 		 </div>
 	 </div>
+	
+	
+	{% if collection_info|length > 0 %}
+		{% for document in collection_info %}
+			{% if content_post == document.content_of_post %}
+				{% if document.comments != [] %}
+	 				{% for reply in document.comments %}
+
+						<div class="container-fluid mt-95">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card mb-4">
+										<div class="card-header">
+											<div class="media flex-wrap w-100 align-items-center"> <img src="/static/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" class="d-block ui-w-40 rounded-circle" alt="">
+
+												<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}" data-abc="true">{{ reply.author_of_post }}</a>
+													<div class="text-muted small">0 days ago</div>
+												</div>
+
+											<div class="text-muted small ml-3">
+													<div>Member since <strong>{{ registration_date_user }}</strong></div>
+													<div><strong>1</strong> posts</div>
+											</div>
+											</div>
+										</div>
+										<div class="card-body">
+											{{ reply.content_of_post }}
+										</div>
+										<div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
+											<div class="px-4 pt-3"> <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">0</span> </a> <span class="text-muted d-inline-flex align-items-center align-middle ml-4"> <i class="fa fa-eye text-muted fsize-3"></i>&nbsp; <span class="align-middle">0</span> </span> </div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+
+				{% endif %}
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	
+	{% if session.get("name") %}
+	 <div class="container-fluid mt-95">
+		<form id="replying_to_post" action="{{url_for('reply_to_the_post', post_id=_id)}}" onsubmit="return reply_to_post()" method="post" enctype="multipart/form-data">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card mb-4">
+					<div class="card-body">
+					   <textarea name="reply_content" id="reply_content"></textarea>
+					</div>
+					<div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
+						<div class="px-4 pt-3"> <button type="submit" class="btn btn-primary" onclick="return reply_to_post()"><i class="ion ion-md-create"></i>Reply</button> </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</form>
+	 </div>
+
+	 {% endif %}
 	 <script src="{{url_for('static', filename='main.js')}}"></script>
 </body>
 </html>
