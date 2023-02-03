@@ -13,6 +13,17 @@
 	
 	<style type="text/css">
 
+		h1
+		{
+			color:black;
+		}
+
+
+		hr
+		{
+			background-color:black;
+		}
+
 		#reply_content
 		{
 			margin:auto;
@@ -140,7 +151,8 @@
 	{% endif %}
 
 	<div class="container-fluid mt-95">
-		<h1>{{ post_title }}</h1><br>
+		<h1>{{ post_title }}</h1>
+		<hr></hr>
 		 <div class="row">
 			 <div class="col-md-12">
 				 <div class="card mb-4">
@@ -150,7 +162,7 @@
 								{% for document in collection_info %} 
 									{% if content_post == document.content_of_post %}
 										<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}" data-abc="true">{{ document.author_of_post }}</a>
-											<div class="text-muted small">0 days ago</div>
+											<div class="text-muted small">{{ document.time_stamp_when_post_created }}</div>
 										</div>
 									{% endif %}
 								{% endfor %}
@@ -190,7 +202,7 @@
 											<div class="media flex-wrap w-100 align-items-center"> <img src="/static/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" class="d-block ui-w-40 rounded-circle" alt="">
 
 												<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}" data-abc="true">{{ reply.author_of_post }}</a>
-													<div class="text-muted small">0 days ago</div>
+													<div class="text-muted small">{{ reply.timestamp_for_reply }}</div>
 												</div>
 
 											<div class="text-muted small ml-3">
