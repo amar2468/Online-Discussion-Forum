@@ -214,3 +214,50 @@ function reply_to_post()
         return false;
     }
 }
+
+function share_to_social_media()
+{
+    var social_media_share_div = document.getElementById("social_media_share_div");
+
+    social_media_share_div.style.display = "block";
+
+    var span = document.getElementsByClassName("close")[0];
+
+    span.onclick = function() {
+        social_media_share_div.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == social_media_share_div) {
+            social_media_share_div.style.display = "none";
+        }
+    }
+
+}
+
+function search_for_specific_post()
+{
+    let input_from_user = document.getElementById("search_for_topic_in_subforum");
+    let input_switched_to_uppercase = input_from_user.value.toUpperCase();
+    let cards = document.getElementsByClassName("card");
+    
+
+    for(i = 0; i < cards.length; i++)
+    {
+        forum_post_title = (cards[i].querySelector(".row")
+                                    .querySelector("#col_div_for_card")
+                                    .querySelector("h5")
+                                    .querySelector("a"))
+                                    .innerHTML
+
+        if (forum_post_title.toUpperCase().indexOf(input_switched_to_uppercase) > -1) 
+        {
+            cards[i].style.display = "";
+        }
+        else
+        {
+            cards[i].style.display = "none";
+        }
+    }
+
+}
