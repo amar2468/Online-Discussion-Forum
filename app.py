@@ -4,16 +4,26 @@ from flask import Flask, render_template, request, redirect, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from bson.objectid import ObjectId
+from flask_share import Share
 import db
+
+share = Share()
 
 app = Flask(__name__)
 app.secret_key = '32892938832jfdjjkd2993nd'
 app.config["SESSION_TYPE"] = "filesystem"
 
+share.init_app(app)
+
 # Route for homepage which also checks whether the user is logged in or not
 
 @app.route('/')
 def home():
+	subforum_info = db.subforum_database.SubforumList.find()
+	return render_template("home.html", subforum_info=subforum_info)
+
+@app.route('/visit_subforum/<subforum_name>')
+def visit_subforum(subforum_name):
 	collection_info = db.forum_database.ForumPostCollection.find()
 
 	date_and_time_post_created = datetime.now()
@@ -22,7 +32,8 @@ def home():
 
 	current_date_and_time = datetime.strptime(formatted_date_and_time_post_created, "%d/%m/%Y %H:%M:%S")
 	
-	return render_template("home.html", formatted_date_and_time_post_created=formatted_date_and_time_post_created, collection_info=collection_info)
+	return render_template("subforum.html", subforum_name=subforum_name ,formatted_date_and_time_post_created=formatted_date_and_time_post_created, collection_info=collection_info)
+
 
 # Route for register account which allows the user to register
 
@@ -151,13 +162,13 @@ def forgot_password():
 
 # Route for forum post render
 
-@app.route('/render_forum_post')
-def render_forum_post():
+@app.route('/render_forum_post/<subforum_name>')
+def render_forum_post(subforum_name):
 	if session.get("name"):
-		return render_template("forum_post.html")
+		return render_template("forum_post.html", subforum_name=subforum_name)
 	elif not session.get("name"):
 		collection_info = db.forum_database.ForumPostCollection.find()
-		return render_template("home.html", collection_info=collection_info)
+		return render_template("subforum.html", collection_info=collection_info)
 
 # Route for viewing topic
 
@@ -177,6 +188,7 @@ def view_topic(_id):
 					break
 			return render_template("view_forum_post.html", _id=_id ,registration_date_user=registration_date_user, user_info=user_info, post_title=post_title ,content_post = content_post, collection_info=collection_info)
 	collection_info = list(db.forum_database.ForumPostCollection.find())
+
 	return render_template("view_forum_post.html", _id=_id, user_info=user_info, post_title = post_title, content_post = content_post, collection_info=collection_info)
 
 
@@ -303,13 +315,14 @@ def dislike_post(dislike_post_id):
 @app.route('/forum_post', methods =["GET", "POST"])
 def forum_post():
 	if session.get("name"):
+		subforum_name = request.form.get("name_of_subforum")
 		title = request.form.get("title_of_post")
 		content = request.form.get("post_content")
 		date_and_time_post_created = datetime.now()
 		
 		formatted_date_and_time_post_created = date_and_time_post_created.strftime("%d/%m/%Y %H:%M:%S")
 
-		db.forum_database.ForumPostCollection.insert_one({"author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False, "all_users_who_liked_post": [], "all_users_who_disliked_post": [], "time_stamp_when_post_created": formatted_date_and_time_post_created, "comments":[]})
+		db.forum_database.ForumPostCollection.insert_one({"subforum":subforum_name, "author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False, "all_users_who_liked_post": [], "all_users_who_disliked_post": [], "time_stamp_when_post_created": formatted_date_and_time_post_created, "comments":[]})
 
 		return redirect('/')
 	elif not session.get("name"):
@@ -394,9 +407,13 @@ def reply_to_the_post(post_id):
 	if request.method == "POST":
 		reply_content = request.form.get("reply_content")
 
+	date_and_time_of_reply = datetime.now()
+		
+	date_and_time_of_reply_formatted = date_and_time_of_reply.strftime("%d/%m/%Y %H:%M:%S")
+
 	db.forum_database.ForumPostCollection.update_one(
 		{ '_id': ObjectId(post_id) },
-		{ "$push": { 'comments': ({"author_of_post":session.get("name"), "content_of_post": reply_content}) } }
+		{ "$push": { 'comments': ({"author_of_post":session.get("name"), "content_of_post": reply_content, "timestamp_for_reply":date_and_time_of_reply_formatted}) } }
 	)
 
 	return redirect('/')
