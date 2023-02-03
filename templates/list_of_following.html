@@ -54,6 +54,11 @@
 	<section class="vh-100">
 		{% for document in registration_info %}
 		{% if student_email == document.email %}
+		{% if document.list_of_following|length == 0 %}
+
+		The following user is not following anyone
+
+		{% else %}
 		{% for following in document.list_of_following %}
 		<div class="container py-5 h-80">
 		<div class="row d-flex justify-content-center align-items-center h-100">
@@ -69,6 +74,7 @@
 		</div>
 		</div>
 		{% endfor %}
+		{% endif %}
 		{% endif %}
 		{% endfor %}
 	</section>
