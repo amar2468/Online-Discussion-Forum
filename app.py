@@ -162,7 +162,7 @@ def forgot_password():
 
 # Route for forum post render
 
-@app.route('/render_forum_post/<subforum_name>')
+@app.route('/render_forum_post/<subforum_name>', methods =["GET", "POST"])
 def render_forum_post(subforum_name):
 	if session.get("name"):
 		return render_template("forum_post.html", subforum_name=subforum_name)
