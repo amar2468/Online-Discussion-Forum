@@ -61,6 +61,17 @@
                 <div class="navbar-nav">
                     <a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                     <a class="nav-item nav-link" href="/student_profile">Profile</a>
+                    <a class="nav-item nav-link" href="#" onclick="clicked_on_notifications()">Notifications
+                    {% if notifications_info.count() > 0 %}
+                      <ul id="list_of_notifications" class="list-group" style="display:none;">
+                        {% for notification in notifications_info %}
+                          {% if notification.username == session.get("name") %}
+                              <li class="list-group-item" style="color:black;">{{ notification.content }}</li>
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                    </a>
                     <a class="nav-item nav-link" href="/logout">Log Out</a>
                 </div>
             </div>
