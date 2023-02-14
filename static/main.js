@@ -1,3 +1,19 @@
+function clicked_on_notifications()
+{
+    let list_of_notifications = document.getElementById("list_of_notifications");
+
+    if (list_of_notifications.style.display === "none") 
+    {
+        list_of_notifications.style.display = "block";
+    } 
+    
+    else 
+    {
+        list_of_notifications.style.display = "none";
+    }
+
+}
+
 function validate_register_form()
 {
     // Declaring variables that will be used to validate the register form
