@@ -20,7 +20,8 @@ share.init_app(app)
 @app.route('/')
 def home():
 	subforum_info = db.subforum_database.SubforumList.find()
-	return render_template("home.html", subforum_info=subforum_info)
+	notifications_info = db.notifications_database.NotificationsList.find()
+	return render_template("home.html", subforum_info=subforum_info, notifications_info=notifications_info)
 
 @app.route('/visit_subforum/<subforum_name>')
 def visit_subforum(subforum_name):
@@ -265,6 +266,9 @@ def like_post(like_post_id):
 						{ "$push": { 'all_users_who_liked_post': session.get("name") } }
 					)
 
+					notification_content = document["author_of_post"] + " liked your post"
+					db.notifications_database.NotificationsList.insert_one({"username":session.get("name"),"username_of_follower":document["author_of_post"],"content":notification_content})
+
 
 	return redirect("/")
 
@@ -355,6 +359,10 @@ def follow_user(student_profile_email):
 				{ 'email': session.get("name") },
 				{ "$inc": { 'number_of_following':  1} }
 			)
+
+			# Add in notifications database
+			notification_content = session.get("name") + " followed you"
+			db.notifications_database.NotificationsList.insert_one({"username":student_profile_email,"username_of_follower":session.get("name"),"content":notification_content})
 
 		elif follow_button == "Following":
 			db.register_login_database.RegLoginCollection.update_one(
