@@ -2,6 +2,12 @@ function clicked_on_notifications()
 {
     let list_of_notifications = document.getElementById("list_of_notifications");
 
+    let notification_button = document.getElementById("navbarDropdownMenuLink");
+
+    let number_of_notifications = document.getElementById("number_of_notifications");
+
+    let unseen_notifications = document.getElementById("unseen_notifications");
+
     if (list_of_notifications.style.display === "none") 
     {
         list_of_notifications.style.display = "block";
@@ -11,6 +17,24 @@ function clicked_on_notifications()
     {
         list_of_notifications.style.display = "none";
     }
+
+    notification_button.addEventListener("click", function() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var count = JSON.parse(xhr.responseText).number_of_notifications;
+            number_of_notifications.innerHTML = count;
+
+            if(count == 0)
+            {
+                number_of_notifications.style.display = "none";
+                unseen_notifications.style.backgroundColor = "#fff";
+            }
+          }
+        };
+        xhr.open("POST", "/update_notification_count");
+        xhr.send();
+      });
 
 }
 
