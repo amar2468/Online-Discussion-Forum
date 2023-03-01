@@ -1,6 +1,6 @@
 import os
 from datetime import date, datetime
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from bson.objectid import ObjectId
@@ -21,7 +21,9 @@ share.init_app(app)
 def home():
 	subforum_info = db.subforum_database.SubforumList.find()
 	notifications_info = db.notifications_database.NotificationsList.find()
-	return render_template("home.html", subforum_info=subforum_info, notifications_info=notifications_info)
+	number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
+	
+	return render_template("home.html", subforum_info=subforum_info, notifications_info=notifications_info,number_of_notifications=number_of_notifications)
 
 @app.route('/visit_subforum/<subforum_name>')
 def visit_subforum(subforum_name):
@@ -30,8 +32,6 @@ def visit_subforum(subforum_name):
 	date_and_time_post_created = datetime.now()
 		
 	formatted_date_and_time_post_created = date_and_time_post_created.strftime("%d/%m/%Y %H:%M:%S")
-
-	current_date_and_time = datetime.strptime(formatted_date_and_time_post_created, "%d/%m/%Y %H:%M:%S")
 	
 	return render_template("subforum.html", subforum_name=subforum_name ,formatted_date_and_time_post_created=formatted_date_and_time_post_created, collection_info=collection_info)
 
@@ -266,9 +266,8 @@ def like_post(like_post_id):
 						{ "$push": { 'all_users_who_liked_post': session.get("name") } }
 					)
 
-					notification_content = document["author_of_post"] + " liked your post"
-					db.notifications_database.NotificationsList.insert_one({"username":session.get("name"),"username_of_follower":document["author_of_post"],"content":notification_content})
-
+					notification_content = session.get("name") + " liked your post : " + document["title_of_post"]
+					db.notifications_database.NotificationsList.insert_one({"notification_type":'like' ,"forum_post_id":like_post_id,"username":document["author_of_post"],"username_of_follower":session.get("name"),"content":notification_content,"seen":False })
 
 	return redirect("/")
 
@@ -362,7 +361,7 @@ def follow_user(student_profile_email):
 
 			# Add in notifications database
 			notification_content = session.get("name") + " followed you"
-			db.notifications_database.NotificationsList.insert_one({"username":student_profile_email,"username_of_follower":session.get("name"),"content":notification_content})
+			db.notifications_database.NotificationsList.insert_one({"notification_type":'follow',"username":student_profile_email,"username_of_follower":session.get("name"),"content":notification_content,"seen":False })
 
 		elif follow_button == "Following":
 			db.register_login_database.RegLoginCollection.update_one(
@@ -424,7 +423,22 @@ def reply_to_the_post(post_id):
 		{ "$push": { 'comments': ({"author_of_post":session.get("name"), "content_of_post": reply_content, "timestamp_for_reply":date_and_time_of_reply_formatted}) } }
 	)
 
+	student = db.forum_database.ForumPostCollection.find_one({ '_id': ObjectId(post_id) })
+	student_profile_email = student["author_of_post"]
+	forum_post_title = student["title_of_post"]
+
+	# Add in notifications database
+	notification_content = session.get("name") + " has replied to your post : " + forum_post_title
+	db.notifications_database.NotificationsList.insert_one({"notification_type":'reply',"forum_post_id":post_id,"username":student_profile_email,"username_of_follower":session.get("name"),"content":notification_content,"seen":False})
+
 	return redirect('/')
+
+@app.route('/update_notification_count', methods =["GET", "POST"])
+def update_notification_count():
+	if request.method == "POST":
+		db.notifications_database.NotificationsList.update_many({'username': session.get("name")}, {'$set': {'seen': True}})
+		number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
+		return jsonify(number_of_notifications=number_of_notifications)
 
 if __name__ == '__main__':
 	app.run(debug=True)
