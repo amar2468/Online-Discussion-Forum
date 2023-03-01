@@ -12,13 +12,6 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	
 	<style type="text/css">
-
-		h1
-		{
-			color:black;
-		}
-
-
 		hr
 		{
 			background-color:black;
@@ -151,7 +144,7 @@
 	{% endif %}
 
 	<div class="container-fluid mt-95">
-		<h1>{{ post_title }}</h1>
+		<h1 class="mb-3">{{ post_title }}</h1>
 		<hr></hr>
 		 <div class="row">
 			 <div class="col-md-12">
@@ -201,7 +194,7 @@
 										<div class="card-header">
 											<div class="media flex-wrap w-100 align-items-center"> <img src="/static/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" class="d-block ui-w-40 rounded-circle" alt="">
 
-												<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}" data-abc="true">{{ reply.author_of_post }}</a>
+												<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=reply.author_of_post)}}" data-abc="true">{{ reply.author_of_post }}</a>
 													<div class="text-muted small">{{ reply.timestamp_for_reply }}</div>
 												</div>
 
