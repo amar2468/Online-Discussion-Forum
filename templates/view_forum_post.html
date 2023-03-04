@@ -176,8 +176,6 @@
 
 					 <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
 						 <div class="px-4 pt-3">
-							<a class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-up"></i></span> </a> 
-							<a class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"><span class="text-muted d-inline-flex align-items-center align-middle ml-4"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-down"></i></span> </span></a> 
 						 </div>
 					 </div>
 				 </div>
@@ -214,8 +212,8 @@
 										</div>
 										<div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
 											<div class="px-4 pt-3"> 
-												<a class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-up"></i></span> </a> 
-												<a class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"><span class="text-muted d-inline-flex align-items-center align-middle ml-4"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-down"></i></span> </span></a> 
+												<a href="{{url_for('like_a_reply', reply_id=reply.id)}}" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-up"></i></span> </a>{{ reply.number_of_likes_for_reply }}
+												<a href="{{url_for('dislike_a_reply', reply_id=reply.id)}}" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"><span class="text-muted d-inline-flex align-items-center align-middle ml-4"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-down"></i></span> </span></a>{{ reply.number_of_dislikes_for_reply }}
 											</div>
 										</div>
 									</div>
