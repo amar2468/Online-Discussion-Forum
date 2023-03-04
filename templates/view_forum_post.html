@@ -10,6 +10,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	
 	<style type="text/css">
 		hr
@@ -172,8 +173,12 @@
 					 <div class="card-body">
                         {{ content_post }}
 					 </div>
+
 					 <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
-						 <div class="px-4 pt-3"> <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">0</span> </a> <span class="text-muted d-inline-flex align-items-center align-middle ml-4"> <i class="fa fa-eye text-muted fsize-3"></i>&nbsp; <span class="align-middle">0</span> </span> </div>
+						 <div class="px-4 pt-3">
+							<a class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-up"></i></span> </a> 
+							<a class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"><span class="text-muted d-inline-flex align-items-center align-middle ml-4"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-down"></i></span> </span></a> 
+						 </div>
 					 </div>
 				 </div>
 			 </div>
@@ -208,7 +213,10 @@
 											{{ reply.content_of_post }}
 										</div>
 										<div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
-											<div class="px-4 pt-3"> <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">0</span> </a> <span class="text-muted d-inline-flex align-items-center align-middle ml-4"> <i class="fa fa-eye text-muted fsize-3"></i>&nbsp; <span class="align-middle">0</span> </span> </div>
+											<div class="px-4 pt-3"> 
+												<a class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-up"></i></span> </a> 
+												<a class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"><span class="text-muted d-inline-flex align-items-center align-middle ml-4"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-down"></i></span> </span></a> 
+											</div>
 										</div>
 									</div>
 								</div>
