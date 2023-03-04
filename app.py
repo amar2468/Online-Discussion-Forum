@@ -27,7 +27,7 @@ def home():
 
 @app.route('/visit_subforum/<subforum_name>')
 def visit_subforum(subforum_name):
-	collection_info = db.forum_database.ForumPostCollection.find()
+	collection_info = db.forum_database.ForumPostCollection.find().sort('time_stamp_when_post_created', -1)
 
 	date_and_time_post_created = datetime.now()
 		
@@ -237,6 +237,8 @@ def like_post(like_post_id):
 		if str(document["_id"]) == like_post_id:
 			if session.get("name") == document["author_of_post"]:
 
+				subforum_name = document["subforum"]
+
 				if document["user_liked_own_post"] == False:
 
 					db.forum_database.ForumPostCollection.update_one(
@@ -253,9 +255,13 @@ def like_post(like_post_id):
 						{ '_id':  ObjectId(like_post_id) },
 						{ "$push": { 'all_users_who_liked_post': session.get("name") } }
 					)
+				return redirect("/visit_subforum/" + subforum_name)
 			
 			else:
 				if session.get("name") not in document["all_users_who_liked_post"] and session.get("name") != None:
+
+					subforum_name = document["subforum"]
+
 					db.forum_database.ForumPostCollection.update_one(
 						{ '_id':  ObjectId(like_post_id) },
 						{ "$inc": { 'number_of_likes':  1} }
@@ -268,8 +274,9 @@ def like_post(like_post_id):
 
 					notification_content = session.get("name") + " liked your post : " + document["title_of_post"]
 					db.notifications_database.NotificationsList.insert_one({"notification_type":'like' ,"forum_post_id":like_post_id,"username":document["author_of_post"],"username_of_follower":session.get("name"),"content":notification_content,"seen":False })
+					return redirect("/visit_subforum/" + subforum_name)
+	return redirect("/login_account")
 
-	return redirect("/")
 
 # Route for dislike post functionality
 
@@ -280,6 +287,8 @@ def dislike_post(dislike_post_id):
 		if str(document["_id"]) == dislike_post_id:
 
 			if session.get("name") == document["author_of_post"]:
+
+				subforum_name = document["subforum"]
 
 				if document["user_disliked_own_post"] == False:
 
@@ -297,9 +306,13 @@ def dislike_post(dislike_post_id):
 						{ '_id':  ObjectId(dislike_post_id) },
 						{ "$push": { 'all_users_who_disliked_post': session.get("name") } }
 					)
+				return redirect("/visit_subforum/" + subforum_name)
 			
 			else:
 				if session.get("name") not in document["all_users_who_disliked_post"] and session.get("name") != None:
+
+					subforum_name = document["subforum"]
+
 					db.forum_database.ForumPostCollection.update_one(
 						{ '_id':  ObjectId(dislike_post_id) },
 						{ "$inc": { 'number_of_dislikes':  1} }
@@ -309,9 +322,12 @@ def dislike_post(dislike_post_id):
 						{ '_id':  ObjectId(dislike_post_id) },
 						{ "$push": { 'all_users_who_disliked_post': session.get("name") } }
 					)
+					
+					return redirect("/visit_subforum/" + subforum_name)
 
 
-	return redirect("/")
+	return redirect("/login_account")
+
 
 # Route for dealing with forum post form
 
@@ -327,9 +343,9 @@ def forum_post():
 
 		db.forum_database.ForumPostCollection.insert_one({"subforum":subforum_name, "author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False, "all_users_who_liked_post": [], "all_users_who_disliked_post": [], "time_stamp_when_post_created": formatted_date_and_time_post_created, "comments":[]})
 
-		return redirect('/')
+		return redirect('/visit_subforum/' + subforum_name)
 	elif not session.get("name"):
-		return redirect('/')
+		return redirect('/visit_subforum/' + subforum_name)
 
 # Route for dealing with following user
 
@@ -344,9 +360,12 @@ def follow_user(student_profile_email):
 				{ "$push": { 'list_of_followers': session.get("name") } }
 			)
 
+			user_collection = db.register_login_database.RegLoginCollection.find_one({ 'email': student_profile_email })
+			number_of_followers = len(user_collection["list_of_followers"])
+
 			db.register_login_database.RegLoginCollection.update_one(
 				{ 'email': student_profile_email },
-				{ "$inc": { 'number_of_followers':  1} }
+				{ "$set": { 'number_of_followers':  number_of_followers } }
 			)
 
 			db.register_login_database.RegLoginCollection.update_one(
@@ -354,9 +373,12 @@ def follow_user(student_profile_email):
 				{ "$push": { 'list_of_following': student_profile_email } }
 			)
 
+			user_collection = db.register_login_database.RegLoginCollection.find_one({ 'email': session.get("name") })
+			number_of_following = len(user_collection["list_of_following"])
+
 			db.register_login_database.RegLoginCollection.update_one(
 				{ 'email': session.get("name") },
-				{ "$inc": { 'number_of_following':  1} }
+				{ "$set": { 'number_of_following':  number_of_following } }
 			)
 
 			# Add in notifications database
@@ -369,9 +391,12 @@ def follow_user(student_profile_email):
 				{ "$pull": { 'list_of_followers': session.get("name") } }
 			)
 
+			user_collection = db.register_login_database.RegLoginCollection.find_one({ 'email': student_profile_email })
+			number_of_followers = len(user_collection["list_of_followers"])
+
 			db.register_login_database.RegLoginCollection.update_one(
 				{ 'email': student_profile_email },
-				{ "$inc": { 'number_of_followers':  -1} }
+				{ "$set": { 'number_of_followers':  number_of_followers } }
 			)
 
 			db.register_login_database.RegLoginCollection.update_one(
@@ -379,9 +404,12 @@ def follow_user(student_profile_email):
 				{ "$pull": { 'list_of_following': student_profile_email } }
 			)
 
+			user_collection = db.register_login_database.RegLoginCollection.find_one({ 'email': session.get("name") })
+			number_of_following = len(user_collection["list_of_following"])
+
 			db.register_login_database.RegLoginCollection.update_one(
 				{ 'email': session.get("name") },
-				{ "$inc": { 'number_of_following':  -1} }
+				{ "$set": { 'number_of_following':  number_of_following } }
 			)
 
 		return redirect('/')
@@ -420,7 +448,7 @@ def reply_to_the_post(post_id):
 
 	db.forum_database.ForumPostCollection.update_one(
 		{ '_id': ObjectId(post_id) },
-		{ "$push": { 'comments': ({"author_of_post":session.get("name"), "content_of_post": reply_content, "timestamp_for_reply":date_and_time_of_reply_formatted}) } }
+		{ "$push": { 'comments': ({"author_of_post":session.get("name"), "content_of_post": reply_content, "timestamp_for_reply":date_and_time_of_reply_formatted, "number_of_likes_for_reply":0, "number_of_dislikes_for_reply":0 }) } }
 	)
 
 	student = db.forum_database.ForumPostCollection.find_one({ '_id': ObjectId(post_id) })
