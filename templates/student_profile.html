@@ -107,7 +107,7 @@
                                 <form action = "/changing_profile_picture" onsubmit="return validate_profile_picture()" method="post" enctype="multipart/form-data">
                                     <input class="btn btn-primary btn-lg btn-block" type="file" id="change_profile_picture_file_upload" name="change_profile_picture_file_upload" accept = "image/*"><br>
                                     <p class="error profilepicture-error"></p>
-                                    <button class="btn btn-primary btn-lg btn-block" type="submit">Change Profile Picture</button>
+                                    <button id="submit_picture_after_loaded" class="btn btn-primary btn-lg btn-block" type="submit" style="display:none;">Change Profile Picture</button>
 
                                 </form>
                             </div>
