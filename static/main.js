@@ -1,3 +1,13 @@
+const change_profile_picture_file_upload = document.getElementById("change_profile_picture_file_upload");
+const submit_picture_after_loaded = document.getElementById("submit_picture_after_loaded");
+
+change_profile_picture_file_upload.addEventListener("change", function() {
+  if (change_profile_picture_file_upload.value) 
+  {
+    submit_picture_after_loaded.style.display = "block";
+  }
+});
+
 function clicked_on_notifications()
 {
     let list_of_notifications = document.getElementById("list_of_notifications");
