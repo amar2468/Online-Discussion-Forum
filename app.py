@@ -328,6 +328,33 @@ def dislike_post(dislike_post_id):
 
 	return redirect("/login_account")
 
+# Route for liking a reply
+
+@app.route('/like_a_reply/<reply_id>', methods =["GET", "POST"])
+def like_a_reply(reply_id):
+
+	reply_id = int(reply_id)
+
+	db.forum_database.ForumPostCollection.update_one(
+		{ "comments.id": reply_id, "comments.list_of_users_who_liked": { "$nin": [session.get("name")] } },
+		{ "$push": { "comments.$.list_of_users_who_liked": session.get("name") }, "$inc": { "comments.$.number_of_likes_for_reply": 1 } }
+	)
+
+	return redirect("/")
+
+# Route for disliking a reply
+
+@app.route('/dislike_a_reply/<reply_id>', methods =["GET", "POST"])
+def dislike_a_reply(reply_id):
+
+	reply_id = int(reply_id)
+
+	db.forum_database.ForumPostCollection.update_one(
+		{ "comments.id": reply_id, "comments.list_of_users_who_disliked": { "$nin": [session.get("name")] } },
+		{ "$push": { "comments.$.list_of_users_who_disliked": session.get("name") }, "$inc": { "comments.$.number_of_dislikes_for_reply": 1 } }
+	)
+
+	return redirect("/")
 
 # Route for dealing with forum post form
 
