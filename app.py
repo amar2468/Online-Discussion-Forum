@@ -32,8 +32,11 @@ def visit_subforum(subforum_name):
 	date_and_time_post_created = datetime.now()
 		
 	formatted_date_and_time_post_created = date_and_time_post_created.strftime("%d/%m/%Y %H:%M:%S")
+
+	notifications_info = db.notifications_database.NotificationsList.find()
+	number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
 	
-	return render_template("subforum.html", subforum_name=subforum_name ,formatted_date_and_time_post_created=formatted_date_and_time_post_created, collection_info=collection_info)
+	return render_template("subforum.html", subforum_name=subforum_name ,formatted_date_and_time_post_created=formatted_date_and_time_post_created, collection_info=collection_info,notifications_info=notifications_info,number_of_notifications=number_of_notifications)
 
 
 # Route for register account which allows the user to register
@@ -113,14 +116,18 @@ def logout():
 def student_profile():
 	for document in db.register_login_database.RegLoginCollection.find():
 		if document["email"] == session["name"]:
-			return render_template("student_profile.html", document = document)
+			notifications_info = db.notifications_database.NotificationsList.find()
+			number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
+			return render_template("student_profile.html", document = document, notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 # Route created for student profile
 
 @app.route('/viewing_profile/<student_profile_email>')
 def viewing_profile(student_profile_email):
 	for document in db.register_login_database.RegLoginCollection.find():
 		if document["email"] == student_profile_email:
-			return render_template("student_profile.html", document = document)
+			notifications_info = db.notifications_database.NotificationsList.find()
+			number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
+			return render_template("student_profile.html", document = document, notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 
 # Route created for changing profile picture
 
@@ -143,7 +150,9 @@ def changing_profile_picture():
 
 @app.route('/render_forgot_password_template', methods =["GET", "POST"])
 def render_forgot_password_template():
-	return render_template("forgot_password.html")
+	notifications_info = db.notifications_database.NotificationsList.find()
+	number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
+	return render_template("forgot_password.html", notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 
 # Route created for forgot password
 
@@ -166,7 +175,9 @@ def forgot_password():
 @app.route('/render_forum_post/<subforum_name>', methods =["GET", "POST"])
 def render_forum_post(subforum_name):
 	if session.get("name"):
-		return render_template("forum_post.html", subforum_name=subforum_name)
+		notifications_info = db.notifications_database.NotificationsList.find()
+		number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
+		return render_template("forum_post.html", subforum_name=subforum_name,notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 	elif not session.get("name"):
 		collection_info = db.forum_database.ForumPostCollection.find()
 		return render_template("subforum.html", collection_info=collection_info)
@@ -187,10 +198,14 @@ def view_topic(_id):
 				if user['email'] == document['author_of_post']:
 					registration_date_user = user['user_registered']
 					break
-			return render_template("view_forum_post.html", _id=_id ,registration_date_user=registration_date_user, user_info=user_info, post_title=post_title ,content_post = content_post, collection_info=collection_info)
+			notifications_info = db.notifications_database.NotificationsList.find()
+			number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
+			return render_template("view_forum_post.html", _id=_id ,registration_date_user=registration_date_user, user_info=user_info, post_title=post_title ,content_post = content_post, collection_info=collection_info,notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 	collection_info = list(db.forum_database.ForumPostCollection.find())
 
-	return render_template("view_forum_post.html", _id=_id, user_info=user_info, post_title = post_title, content_post = content_post, collection_info=collection_info)
+	notifications_info = db.notifications_database.NotificationsList.find()
+	number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
+	return render_template("view_forum_post.html", _id=_id, user_info=user_info, post_title = post_title, content_post = content_post, collection_info=collection_info, notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 
 
 # Route for rendering template that allows the user to re-enter the information that they want to update
@@ -199,7 +214,9 @@ def view_topic(_id):
 def edit_topic(id_edit):
 	for document in db.forum_database.ForumPostCollection.find():
 		if str(document["_id"]) == id_edit:
-			return render_template("update_post.html", document=document ,id_edit=id_edit)
+			notifications_info = db.notifications_database.NotificationsList.find()
+			number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
+			return render_template("update_post.html", document=document ,id_edit=id_edit, notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 
 # Route for edit topic
 @app.route('/edit_forum_topic/<id_edit>', methods =["GET", "POST"])
@@ -439,9 +456,9 @@ def follow_user(student_profile_email):
 				{ "$set": { 'number_of_following':  number_of_following } }
 			)
 
-		return redirect('/')
+		return redirect('/student_profile')
 	elif not session.get("name"):
-		return redirect('/')
+		return redirect('/login_account')
 
 
 # Route to redirect to the list of followers page
@@ -450,7 +467,10 @@ def follow_user(student_profile_email):
 def list_of_followers(student_email):
 	if session.get("name"):
 		registration_info = db.register_login_database.RegLoginCollection.find()
-		return render_template("list_of_followers.html", student_email=student_email, registration_info=registration_info)
+		notifications_info = db.notifications_database.NotificationsList.find()
+		number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
+		
+		return render_template("list_of_followers.html", student_email=student_email, registration_info=registration_info, notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 	elif not session.get("name"):
 		return redirect('/')
 
@@ -460,7 +480,10 @@ def list_of_followers(student_email):
 def list_of_following(student_email):
 	if session.get("name"):
 		registration_info = db.register_login_database.RegLoginCollection.find()
-		return render_template("list_of_following.html", student_email=student_email, registration_info=registration_info)
+		db.notifications_database.NotificationsList.update_many({'username': session.get("name")}, {'$set': {'seen': True}})
+		notifications_info = db.notifications_database.NotificationsList.find()
+		number_of_notifications = db.notifications_database.NotificationsList.count_documents({'username': session.get("name"), 'seen': False})
+		return render_template("list_of_following.html", student_email=student_email, registration_info=registration_info, notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 	elif not session.get("name"):
 		return redirect('/')
 
