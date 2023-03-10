@@ -7,6 +7,43 @@ from bson.objectid import ObjectId
 from flask_share import Share
 import db
 
+import nltk
+
+import string
+
+from nltk import pos_tag, word_tokenize
+
+from collections import defaultdict
+
+from nltk.corpus import stopwords, wordnet
+
+from nltk.stem import WordNetLemmatizer
+
+from collections import defaultdict
+
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics import precision_score, recall_score, f1_score
+
+from imblearn.over_sampling import SMOTE
+
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
+lemmatizer = WordNetLemmatizer()
+
+tag_map = defaultdict(lambda : wordnet.NOUN)
+tag_map['J'] = wordnet.ADJ
+tag_map['V'] = wordnet.VERB
+tag_map['R'] = wordnet.ADV
+
+
 share = Share()
 
 app = Flask(__name__)
@@ -241,9 +278,14 @@ def edit_forum_topic(id_edit):
 
 @app.route('/delete_topic/<id_delete>')
 def delete_topic(id_delete):
-	db.forum_database.ForumPostCollection.delete_one( {"_id": ObjectId(id_delete)})
+	# First getting the subforum name so it can redirect to it after the post is deleted
+	topic_to_delete = db.forum_database.ForumPostCollection.find_one({"_id": ObjectId(id_delete) })
+	subforum_name = topic_to_delete["subforum"]
 
-	return redirect("/")
+	# Removing the post from the subforum
+	db.forum_database.ForumPostCollection.delete_one( {"_id": ObjectId(id_delete)} )
+
+	return redirect("/visit_subforum/" + subforum_name)
 
 # Route for like post functionality
 
@@ -382,8 +424,72 @@ def forum_post():
 		title = request.form.get("title_of_post")
 		content = request.form.get("post_content")
 		date_and_time_post_created = datetime.now()
-		
 		formatted_date_and_time_post_created = date_and_time_post_created.strftime("%d/%m/%Y %H:%M:%S")
+
+		# Complexity implemented
+		forum_post = content.lower()
+
+		forum_post = forum_post.translate(str.maketrans('', '', string.punctuation))
+
+		tokenization_of_forum_post = nltk.word_tokenize(forum_post)
+
+		forum_post_tokenized_and_without_stop_words = []
+
+		for word in tokenization_of_forum_post:
+			if word not in stopwords.words('english'):
+				forum_post_tokenized_and_without_stop_words.append(word)
+
+		words_lemmatized = []
+
+		for word, tag in pos_tag(forum_post_tokenized_and_without_stop_words):
+			lemma = lemmatizer.lemmatize(word, tag_map[tag[0]])
+			words_lemmatized.append(lemma)
+
+		suspicious_and_nonsuspicious_words = pd.read_csv(r'Suspicious Communication on Social Platforms.csv')
+
+		# Preprocessing : Cleaning the data so that I get the best form of it
+
+		suspicious_and_nonsuspicious_words['comments'] = suspicious_and_nonsuspicious_words['comments'].str.lower() # turn all text into lowercase
+		suspicious_and_nonsuspicious_words['comments'] = suspicious_and_nonsuspicious_words['comments'].str.replace('[^\w\s]','',regex = True) # remove character that is not a word character or whitespace
+		suspicious_and_nonsuspicious_words['comments'] = suspicious_and_nonsuspicious_words['comments'].str.replace('\d+','', regex = True) # removes digits from data
+		suspicious_and_nonsuspicious_words['comments'] = suspicious_and_nonsuspicious_words.apply(lambda row: nltk.word_tokenize(row['comments']), axis=1) # tokenizing the data so the sentence is divided into words
+
+		suspicious_and_nonsuspicious_words_to_string = suspicious_and_nonsuspicious_words['comments'].astype(str)
+
+		# Training and testing code
+
+		X_train, X_test, y_train, y_test = train_test_split(suspicious_and_nonsuspicious_words_to_string, suspicious_and_nonsuspicious_words['tagging'], test_size=0.2, random_state=42) # splitting data into training and testing
+
+		vectorizer = CountVectorizer(stop_words='english', ngram_range=(1, 2)) # removing stop words from the data
+		X_train_vec = vectorizer.fit_transform(X_train)
+		X_test_vec = vectorizer.transform(X_test)
+
+		smote = SMOTE(random_state=42)
+		X_train_vec_balanced, y_train_balanced = smote.fit_resample(X_train_vec, y_train)
+
+		# vectorizing the post from the forum to see whether it is suspicious or not
+		user_forum_post_vectorized = vectorizer.transform([" ".join(words_lemmatized)])
+
+		# Training Naive Bayes Classifier
+
+		nb = MultinomialNB()
+		nb.fit(X_train_vec, y_train)
+
+		# Evaluate the performance of the model
+		y_pred = nb.predict(X_test_vec)
+
+		probabilities = nb.predict_proba(user_forum_post_vectorized)[0]
+
+		print(probabilities[1])
+		if probabilities[1] > 0.5:
+			print("The example post is suspicious.")
+		else:
+			print("The example post is not suspicious.")
+
+		print("Accuracy:", accuracy_score(y_test, y_pred) * 100)
+		print("Precision:", precision_score(y_test, y_pred, pos_label=1))
+		print("Recall:", recall_score(y_test, y_pred, pos_label=1))
+		print("F1 score:", f1_score(y_test, y_pred, pos_label=1))
 
 		db.forum_database.ForumPostCollection.insert_one({"subforum":subforum_name, "author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False, "all_users_who_liked_post": [], "all_users_who_disliked_post": [], "time_stamp_when_post_created": formatted_date_and_time_post_created, "comments":[]})
 
