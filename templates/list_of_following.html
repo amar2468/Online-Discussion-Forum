@@ -103,7 +103,28 @@
 		{% if student_email == document.email %}
 		{% if document.list_of_following|length == 0 %}
 
-		The following user is not following anyone
+
+		{% if session.get("name") == student_email %}
+
+			<h3 style="color:black;text-align:center;margin-top: 100px;">You have not followed anyone yet</h3>
+
+			<br><br>
+
+			<div id="image_container">
+				<img src="https://media.istockphoto.com/id/172444323/photo/dreams.jpg?s=612x612&w=0&k=20&c=GABvMLtLN7n6au7ASD0cWTCQT1VYgXDDmE5MeGphGf8=" alt="Man standing" style="border-radius: 50%;">
+			</div>
+
+		{% else %}
+
+			<h3 style="color:black;text-align:center;margin-top: 100px;">Sorry, this user has not followed anybody yet</h3>
+			
+			<br><br>
+
+			<div id="image_container">
+				<img src="https://media.istockphoto.com/id/172444323/photo/dreams.jpg?s=612x612&w=0&k=20&c=GABvMLtLN7n6au7ASD0cWTCQT1VYgXDDmE5MeGphGf8=" alt="Man standing" style="border-radius: 50%;">
+			</div>
+		{% endif %}
+
 
 		{% else %}
 		{% for following in document.list_of_following %}
