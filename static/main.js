@@ -265,13 +265,13 @@ function reply_to_post()
     }
 }
 
-function share_to_social_media()
+function share_to_social_media(document_id)
 {
-    var social_media_share_div = document.getElementById("social_media_share_div");
+    var social_media_share_div = document.getElementById("social_media_share_div_" + document_id);
 
     social_media_share_div.style.display = "block";
 
-    var span = document.getElementsByClassName("close")[0];
+    var span = social_media_share_div.getElementsByClassName("close")[0];
 
     span.onclick = function() {
         social_media_share_div.style.display = "none";
@@ -282,8 +282,9 @@ function share_to_social_media()
             social_media_share_div.style.display = "none";
         }
     }
-
 }
+
+
 
 function search_for_specific_post()
 {
@@ -310,4 +311,17 @@ function search_for_specific_post()
         }
     }
 
+}
+
+function file_uploaded(event) 
+{
+    let file_label = document.getElementById("label_for_profile_pic_reg");
+    let fileName = event.target.files[0].name;
+    file_label.innerHTML = fileName;
+
+    if (file_label != "")
+    {
+        document.querySelector(".file-uploaded").innerHTML = "File has been uploaded. Click on the field if you wish to change the picture.";
+        document.querySelector(".file-uploaded").style.display = "block";
+    }
 }
