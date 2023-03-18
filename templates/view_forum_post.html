@@ -103,6 +103,12 @@
 			width: 40px;
 			height: auto
 		}	
+
+		.alert-danger {
+			background-color: #ADD8E6;
+			border-color: #ADD8E6;
+			color: #000000;
+		}
 	</style>
 </head>
 <body>
@@ -191,7 +197,8 @@
 	{% endif %}
 
 	<div class="container-fluid mt-95">
-		<h1 class="mb-3">{{ post_title }}</h1>
+		<h1 style="font-size: 36px; font-weight: bold; color: #333;">{{ post_title }}</h1>
+
 		<hr></hr>
 		 <div class="row">
 			 <div class="col-md-12">
@@ -204,16 +211,15 @@
 										<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}" data-abc="true">{{ document.author_of_post }}</a>
 											<div class="text-muted small">{{ document.time_stamp_when_post_created }}</div>
 										</div>
+
+
+										<div class="text-muted small ml-3">
+											<div>Member since <strong>{{ registration_date_user }}</strong></div>
+									   </div>
 									{% endif %}
 								{% endfor %}
 							{% endif %}
-	 	
-
-
-							<div class="text-muted small ml-3">
-								 <div>Member since <strong>{{ registration_date_user }}</strong></div>
-								 <div><strong>1</strong> posts</div>
-							</div>
+	
 						 </div>
 					 </div>
 					 <div class="card-body">
@@ -246,10 +252,9 @@
 												<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=reply.author_of_post)}}" data-abc="true">{{ reply.author_of_post }}</a>
 													<div class="text-muted small">{{ reply.timestamp_for_reply }}</div>
 												</div>
-
+													
 											<div class="text-muted small ml-3">
 													<div>Member since <strong>{{ registration_date_user }}</strong></div>
-													<div><strong>1</strong> posts</div>
 											</div>
 											</div>
 										</div>
@@ -290,6 +295,23 @@
 		</div>
 		</form>
 	 </div>
+	 {% else %}
+
+	 <div class="container-fluid mt-95">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card mb-4" style="background-color: #ADD8E6;">
+					<div class="alert alert-danger" role="alert" style="text-align: center;">
+						<h4 class="alert-heading">Welcome to Student Discussion!</h4>
+						<p>To have access to more features on Student Discussion, you should sign in or register a new account</p>
+						<hr>
+						<button type="button" class="btn btn-primary" style="background-color: #0B3D91;"><a href="/login_account" style="color:#ffffff;">Sign In</a></button>&nbsp;&nbsp;<button type="button" class="btn btn-primary" style="background-color: #0B3D91;"><a href="/register_account" style="color:#ffffff;">Register</a></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	 </div>
+	  
 
 	 {% endif %}
 	 <script src="{{url_for('static', filename='main.js')}}"></script>
