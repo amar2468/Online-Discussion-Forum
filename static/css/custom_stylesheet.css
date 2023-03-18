@@ -6,8 +6,16 @@ body
 
 .error
 {
-    color: #af0c0c;
-    background-color: #ffe0e0;
+    color: white;
+    background-color: #ff0000;
+    padding: 8px;
+    display: none;
+}
+
+.upload
+{
+    color: white;
+    background-color: #8bc34a;
     padding: 8px;
     display: none;
 }
@@ -45,16 +53,12 @@ body
 #followers_tag_in_user_profile
 {
     display:table-cell;
-    padding: 50px;
-    padding-left:10px;
     color:black;
 }
 
 #following_tag_in_user_profile
 {
     display:table-cell;
-    padding: 50px;
-    padding-right:1px;
     color:black;
 }
 
@@ -91,4 +95,11 @@ body
 .fa-trash
 {
   color: #708090;;
+}
+
+#image_container
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
