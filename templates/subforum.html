@@ -45,7 +45,7 @@
                 margin-top:40px;
             }
 
-            .modal {
+            .modal{
               display: none;
               position: fixed;
               z-index: 1;
@@ -86,18 +86,6 @@
     </head>
 
     <body>
-
-      <div id="social_media_share_div" class="modal">
-
-        <div class="modal-content">
-          <span class="close">&times;</span>
-          {{ share.load() }}
-          {{ share.create(sites='twitter,facebook,linkedin') }}
-        </div>
-
-      </div>
-
-
 
 
       {% if session.get("name") %}
@@ -188,15 +176,36 @@
                           <h5>
                             <a href="{{url_for('view_topic', _id=document._id)}}" class="text-primary" id="subforum_post_title">{{ document.title_of_post }}</a>
                           </h5>
-                          <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">{{ document.time_stamp_when_post_created }}</a> <span class="op-6">ago by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}">{{ document.author_of_post }}</a></p>
-                          <div class="text-sm op-5"> <a class="text-black mr-2" href="#">Forum: {{ subforum_name }}</a> </div><br>
-                          <div class="text-sm op-5"><a class="text-black mr-2" href="#">Number Of Comments: {{ number_of_comments }}</a></div>
+                          <p class="text-sm" style="color:black;"><span class="op-6">Posted</span> {{ document.time_stamp_when_post_created }} <span class="op-6">by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}">{{ document.author_of_post }}</a></p>
+                          <div class="text-sm op-5" style="color:black;"> Forum: {{ subforum_name }} </div><br>
+                          <div class="text-sm op-5" style="color:black;">Number Of Comments: {{ number_of_comments }}</div>
                         </div>
                         <div class="col-md-4 op-7">
                           <div class="row text-center op-7">
                             <div class="col px-1"> <i class="ion-connection-bars icon-1x"></i> <span class="d-block text-sm"><a id="like_post_link" href="{{url_for('like_post', like_post_id=document._id)}}"><i class="fa fa-thumbs-up"></i></a>{{ document.number_of_likes }}</span> </div>
                             <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"><a id="dislike_post_link" href="{{url_for('dislike_post', dislike_post_id=document._id)}}"><i class="fa fa-thumbs-down"></i></a>{{ document.number_of_dislikes }}</span> </div>
-                            <div class="col px-1"> <i class="ion-ios-eye-outline icon-1x"></i> <span class="d-block text-sm"><a id="share_post_link" onclick="share_to_social_media()"><i class="fa fa-share"></i></a></span></div>
+                            <div class="col px-1"> <i class="ion-ios-eye-outline icon-1x"></i> <span class="d-block text-sm"><a id="share_post_link" onclick="share_to_social_media('{{ document._id }}')"><i class="fa fa-share"></i></a></span></div>
+
+
+                            <div id="social_media_share_div_{{ document._id }}" class="modal">
+                              <div class="modal-content">
+                                {% with post_url = url_for('view_topic', _id=document._id, _external=True) %}
+                                  <span class="close">&times;</span>
+                                  {{ share.load() }}
+                                  
+                                  {% set facebook_share_url = 'https://www.facebook.com/sharer/sharer.php?u=' ~ post_url %}
+                                  {% set twitter_share_url = 'https://twitter.com/share?url=' ~ post_url %}
+                                  {% set linkedin_share_url = 'https://www.linkedin.com/shareArticle?url=' ~ post_url %}
+                                  
+                                  {{ share.load() }}
+                                  
+                                  <a href="{{ facebook_share_url }}" target="_blank"><i class="fab fa-facebook-f"></i> Facebook</a>
+                                  <a href="{{ twitter_share_url }}" target="_blank"><i class="fab fa-twitter"></i> Twitter</a>
+                                  <a href="{{ linkedin_share_url }}" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                                {% endwith %}
+                              </div>
+                            </div>
+                            
                           </div>
                         </div>
                       </div>
@@ -239,18 +248,6 @@
           <div class="row justify-content-center align-items-center">
             <!-- Main content -->
             <div class="col-lg-9 mb-3">
-              <div class="row text-left mb-5">
-                <div class="col-lg-6 mb-3 mb-sm-0">
-                  <select class="form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" data-toggle="select" tabindex="-98">
-                    <option> Categories </option>
-                  </select>
-                </div>
-                <div class="col-lg-6 text-lg-right">
-                  <select class="form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" data-toggle="select" tabindex="-98">
-                      <option> Filter by </option>
-                  </select>
-                </div>
-              </div>
 
               {% if collection_info.count() == 0 %}
               {% endif %}
@@ -267,9 +264,9 @@
                           <h5 class="subforum_post_title">
                             <a href="{{url_for('view_topic', _id=document._id)}}" class="text-primary" id="subforum_post_title">{{ document.title_of_post }}</a>
                           </h5>
-                          <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">20 minutes</a> <span class="op-6">ago by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}">{{ document.author_of_post }}</a></p>
-                          <div class="text-sm op-5"> <a class="text-black mr-2" href="#">Forum: Computer Science</a> </div><br>
-                          <div class="text-sm op-5"><a class="text-black mr-2" href="#">Number Of Comments: {{ number_of_comments }}</a></div>
+                          <p class="text-sm" style="color:black;"><span class="op-6">Posted</span> {{ document.time_stamp_when_post_created }} <span class="op-6">by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}">{{ document.author_of_post }}</a></p>
+                          <div class="text-sm op-5" style="color:black;"> Forum: {{ subforum_name }} </div><br>
+                          <div class="text-sm op-5" style="color:black;">Number Of Comments: {{ number_of_comments }}</div>
                         </div>
                         <div class="col-md-4 op-7">
                           <div class="row text-center op-7">
