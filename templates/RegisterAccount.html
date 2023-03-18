@@ -91,8 +91,15 @@
                             </div>
 
                             <div class="form-outline mb-4">
-                                <label for="profile_picture_for_register" class="form-control form-control-lg" style="text-align:left;">Choose your profile picture &nbsp;&nbsp; <span class="bi bi-upload"></span> </label>
-                                <input type="file" id="profile_picture_for_register" name="profile_picture_for_register" class="form-control form-control-lg" autocomplete="off" accept = "image/*" style="display:none;">
+                                <textarea id="bio" name="bio" class="form-control form-control-lg" placeholder="Enter your bio here..." autocomplete="off"></textarea>
+                                <p class="error bio-error"></p>
+                            </div>
+
+
+                            <div class="form-outline mb-4">
+                                <label id="label_for_profile_pic_reg" for="profile_picture_for_register" class="form-control form-control-lg" style="text-align:left;">Choose your profile picture &nbsp;&nbsp; <span class="bi bi-upload"></span> </label>
+                                <input type="file" id="profile_picture_for_register" name="profile_picture_for_register" class="form-control form-control-lg" autocomplete="off" accept = "image/*" style="display:none;" onchange="file_uploaded(event)">
+                                <p class="upload file-uploaded"></p>
                             </div>
 
                             <div class="form-outline mb-4">
