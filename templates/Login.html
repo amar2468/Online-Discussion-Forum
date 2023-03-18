@@ -9,6 +9,21 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <style>
+            .messages 
+            {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .messages li 
+            {
+                color: red;
+                font-weight: bold;
+            }
+        </style>
     </head>
 
     <body style="background-color: #eee;">
@@ -58,6 +73,7 @@
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                 <div class="card shadow-2-strong" style="border-radius: 1rem;">
                     <div class="card-body p-6 text-center">
+
         
                         <h3 class="mb-5">Sign in</h3>
 
@@ -75,7 +91,18 @@
                 
                             <button class="btn btn-primary btn-lg btn-block" type="submit">Sign In</button>
                             <br>
+                            {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class="messages">
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {% endwith %}
+                            <br>
                             <p>Don't have an account? <a href="/register_account">Sign up here</a></p>
+                            
                             
                         </form>
         
