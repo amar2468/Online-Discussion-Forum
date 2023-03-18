@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--  This example/template, chat app, was published on Mar 12th 2021, 09:14 by Bootdey Admin and it is free. -->
+    <!--  Edited by : Amar Plakalo -->
+    <!--  Date: 11/03/2023 -->
+
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Online Discussion Forum | Message User</title>
+	<link rel="shortcut icon" type="image/x-icon" href="/static/favicon-logo.PNG">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="/static/css/custom_stylesheet.css">
+
+	<style>
+		body
+		{
+			background-color: #f4f7f6;
+		}
+		.card 
+		{
+			background: #fff;
+			transition: .5s;
+			border: 0;
+			margin-bottom: 30px;
+			border-radius: .55rem;
+			position: relative;
+			width: 100%;
+			box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+		}
+
+		.chat-app .chat 
+		{
+			border-left: 1px solid #eaeaea
+		}
+
+		.chat .chat-header 
+		{
+			padding: 15px 20px;
+			border-bottom: 2px solid #f4f7f6
+		}
+
+		.chat .chat-header img 
+		{
+			float: left;
+			border-radius: 40px;
+			width: 40px
+		}
+
+		.chat .chat-header .chat-about 
+		{
+			float: left;
+			padding-left: 10px
+		}
+
+		.chat .chat-history 
+		{
+			padding: 20px;
+			border-bottom: 2px solid #fff
+		}
+
+		.chat .chat-history ul 
+		{
+			padding: 0
+		}
+
+		.chat .chat-history ul li 
+		{
+			list-style: none;
+			margin-bottom: 30px
+		}
+
+		.chat .chat-history ul li:last-child 
+		{
+			margin-bottom: 0px
+		}
+
+		.chat .chat-history .message-data 
+		{
+			margin-bottom: 15px
+		}
+
+		.chat .chat-history .message-data img 
+		{
+			border-radius: 40px;
+			width: 40px
+		}
+
+		.chat .chat-history .message-data-time 
+		{
+			color: #434651;
+			padding-left: 6px
+		}
+
+		.chat .chat-history .message 
+		{
+			color: #444;
+			padding: 18px 20px;
+			line-height: 26px;
+			font-size: 16px;
+			border-radius: 7px;
+			display: inline-block;
+			position: relative
+		}
+
+		.chat .chat-history .message:after 
+		{
+			bottom: 100%;
+			left: 7%;
+			border: solid transparent;
+			content: " ";
+			height: 0;
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+			border-bottom-color: #fff;
+			border-width: 10px;
+			margin-left: -10px
+		}
+
+		.chat .chat-history .my-message 
+		{
+			background: #efefef
+		}
+
+		.chat .chat-history .my-message:after 
+		{
+			bottom: 100%;
+			left: 30px;
+			border: solid transparent;
+			content: " ";
+			height: 0;
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+			border-bottom-color: #efefef;
+			border-width: 10px;
+			margin-left: -10px
+		}
+
+		.chat .chat-history .other-message 
+		{
+			background: #e8f1f3;
+			text-align: right
+		}
+
+		.chat .chat-history .other-message:after 
+		{
+			border-bottom-color: #e8f1f3;
+			left: 93%
+		}
+
+		.chat .chat-message 
+		{
+			padding: 20px
+		}
+
+		.online,
+		.offline,
+		.me {
+			margin-right: 2px;
+			font-size: 8px;
+			vertical-align: middle
+		}
+
+		.online 
+		{
+			color: #86c541
+		}
+
+		.offline 
+		{
+			color: #e47297
+		}
+
+		.me 
+		{
+			color: #1d8ecd
+		}
+
+		.float-right 
+		{
+			float: right
+		}
+
+		.clearfix:after 
+		{
+			visibility: hidden;
+			display: block;
+			font-size: 0;
+			content: " ";
+			clear: both;
+			height: 0
+		}
+
+		@media only screen and (max-width: 767px) 
+		{
+			.chat-app .chat 
+			{
+				margin: 0
+			}
+			.chat-app .chat .chat-header 
+			{
+				border-radius: 0.55rem 0.55rem 0 0
+			}
+			.chat-app .chat-history 
+			{
+				height: 300px;
+				overflow-x: auto
+			}
+		}
+
+		@media only screen and (min-width: 768px) and (max-width: 992px) 
+		{
+			.chat-app .chat-list 
+			{
+				height: 650px;
+				overflow-x: auto
+			}
+			.chat-app .chat-history 
+			{
+				height: 600px;
+				overflow-x: auto
+			}
+		}
+
+		@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) 
+		{
+			.chat-app .chat-list 
+			{
+				height: 480px;
+				overflow-x: auto
+			}
+			.chat-app .chat-history 
+			{
+				height: calc(100vh - 350px);
+				overflow-x: auto
+			}
+		}
+	</style>
+
+</head>
+
+<body>
+
+
+	{% if session.get("name") %}
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+			<a class="navbar-brand" href="/">Student Discussion</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+					<a class="nav-item nav-link" href="/student_profile">Profile</a>
+					<a class="nav-item nav-link" href="/logout">Log Out</a>
+
+					<div class="dropdown">
+						<a class="nav-item nav-link" onclick="clicked_on_notifications()" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+							<i class="fas fa-bell small-icon"></i>
+							{% if number_of_notifications > 0 %}
+							<span id="number_of_notifications" class="badge rounded-pill badge-notification bg-danger">{{ number_of_notifications }}</span>
+							{% endif %}
+						</a>
+						{% if notifications_info.count() > 0 %}
+						<ul id="list_of_notifications" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" style="display:none;">
+						{% for notification in notifications_info %}
+							{% if notification.username == session.get("name") %}
+							{% if notification.seen is true %}
+								{% if notification.notification_type == 'follow' %}
+								<li id="seen_notifications">
+									<a class="dropdown-item" href="{{url_for('viewing_profile', student_profile_email=notification.username_of_follower)}}">{{ notification.content }}</a>
+								</li>
+								{% elif notification.notification_type == 'reply' %}
+								<li id="seen_notifications">
+									<a class="dropdown-item" href="{{url_for('view_topic', _id=notification.forum_post_id)}}">{{ notification.content }}</a>
+								</li>
+								{% elif notification.notification_type == 'like' %}
+								<li id="seen_notifications">
+									<a class="dropdown-item" href="{{url_for('view_topic', _id=notification.forum_post_id)}}">{{ notification.content }}</a>
+								</li>
+								{% endif %}
+							{% else %}
+								{% if notification.notification_type == 'follow' %}
+								<li id="unseen_notifications" style="background-color:#ADD8E6;">
+									<a class="dropdown-item" href="{{url_for('viewing_profile', student_profile_email=notification.username_of_follower)}}">{{ notification.content }}</a>
+								</li>
+								{% elif notification.notification_type == 'reply' %}
+								<li id="unseen_notifications" style="background-color:#ADD8E6;">
+									<a class="dropdown-item" href="{{url_for('view_topic', _id=notification.forum_post_id)}}">{{ notification.content }}</a>
+								</li>
+								{% elif notification.notification_type == 'like' %}
+								<li id="unseen_notifications" style="background-color:#ADD8E6;">
+									<a class="dropdown-item" href="{{url_for('view_topic', _id=notification.forum_post_id)}}">{{ notification.content }}</a>
+								</li>
+								{% endif %}
+							{% endif %}
+							{% endif %}
+						{% endfor %}
+						</ul>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+		</nav>
+
+	{% else %}
+
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+		<a class="navbar-brand" href="/">Student Discussion</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+				<a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+				<a class="nav-item nav-link" href="/login_account">Sign In</a>
+				<a class="nav-item nav-link" href="/register_account">Register</a>
+			</div>
+		</div>
+
+		</nav>
+	{% endif %}
+	<br><br>
+	{% if message_list_info.count() > 0 %}
+	<div class="container">
+	<div class="row clearfix">
+		<div class="col-lg-12">
+			<div class="card chat-app">
+				<div class="chat">
+					<div class="chat-header clearfix">
+						<div class="row">
+							<div class="col-lg-12">
+								<a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+									<img id="user_profile_image_chat" src="{{url_for('static', filename=user_details.profile_picture_link)}}">
+								</a>
+
+								{% for conversation in message_list_info %}
+								<div class="chat-about">
+									<h6 class="m-b-0">{{ student_name }}</h6>
+									<small>Last seen: 1 min ago</small>
+								</div>
+								</div>
+								</div>
+							</div>
+							<div class="chat-history">
+								<ul class="m-b-0">
+								{% for message in conversation.messages %}
+									{% if message.sender_email == session.get("name") %}
+										<li class="clearfix">
+											<div class="message-data text-right">
+												<span class="message-data-time">{{ message.timestamp }}</span>
+											</div>
+											<div class="message other-message float-right">{{ message.content }}</div>
+										</li>
+									{% else %}
+										<li class="clearfix">
+											<div class="message-data">
+												<span class="message-data-time">{{ message.timestamp }}</span>
+											</div>
+											<div class="message my-message">{{ message.content }}</div>
+										</li>
+									{% endif %}
+								{% endfor %}
+								</ul>
+							</div>
+							{% endfor %}
+							
+
+					<div class="chat-message clearfix">
+						<form id="send_message_form" action="" method="POST">
+							<div class="input-group mb-0">
+								<input id="logged_in_user" type="hidden" name="logged_in_user" value="{{ logged_in_user }}">
+								<input id="recipient_email" type="hidden" name="recipient_email" value="{{ student_profile_email }}">
+								<input id="recipient_name" type="hidden" name="recipient_name" value="{{ student_name }}">
+								<input id="sender_email_address" type="hidden" name="sender_email_address" value="{{ session.get('name') }}">
+								<input id="message_sent" type="text" class="form-control" placeholder="Message">
+								<div class="input-group-prepend">
+									<button type="submit"><span class="input-group-text"><i class="fa fa-send"></i></span></button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	{% else %}
+
+	<div class="container">
+	<div class="row clearfix">
+		<div class="col-lg-12">
+			<div class="card chat-app">
+				<div class="chat">
+					<div class="chat-header clearfix">
+						<div class="row">
+							<div class="col-lg-12">
+								<a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+									<img id="user_profile_image_chat" src="{{url_for('static', filename=user_details.profile_picture_link)}}">
+								</a>
+								
+								<div class="chat-about">
+									<h6 class="m-b-0">{{ student_name }}</h6>
+									<small>Last seen: 1 min ago</small>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="chat-history">
+						<ul class="m-b-0">
+
+							
+						</ul>
+					</div>
+
+					<div class="chat-message clearfix">
+						<div class="input-group mb-0">
+							<input id="message_sent" type="text" class="form-control" placeholder="Message">
+							<div class="input-group-prepend">
+								<button type="submit"><span class="input-group-text"><i class="fa fa-send"></i></span></button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+
+
+
+	{% endif %}
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
+
+	<script type="text/javascript">
+		var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+		var current_user_email = "{{ session.get('name') }}";
+
+		socket.on('connect', function() {
+			console.log('Connected to server');
+			socket.emit('my event', {
+				data: 'User Connected'
+			});
+
+			var form = $('#send_message_form').on('submit', function(e) {
+				e.preventDefault();
+				let user_input = $('#message_sent').val();
+				let sender_email_address = $('#sender_email_address').val();
+				let recipient_email = $('#recipient_email').val();
+				let recipient_name = $('#recipient_name').val();
+				let logged_in_user = $('#logged_in_user').val();
+				console.log('Sending message:', user_input, 'from', sender_email_address);
+				socket.emit('my event', {
+					message_sent: user_input,
+					sender_email_address: sender_email_address,
+					recipient_email: recipient_email,
+					recipient_name: recipient_name,
+					logged_in_user: logged_in_user
+				});
+				$('input.message_sent').val('').focus();
+			});
+		});
+
+
+		
+
+		socket.on('my response', function(data) {
+			let sender_email_address = data.sender_email_address;
+			console.log('Received message:', data.message_sent, 'from', sender_email_address);
+		});
+	</script>
+
+</body>
+</html>
