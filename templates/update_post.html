@@ -114,6 +114,9 @@
 					<form role="form" class="form-horizontal" action="{{url_for('edit_forum_topic', id_edit=id_edit)}}" method="POST">
 
                         <h4>Topic : Computer Science</h4>
+						<div style="padding:14px;" class="form-group">
+							<input type="text" id="name_of_subforum" name="name_of_subforum" autocomplete="off" value="{{ subforum_name }}" class="form-control" readonly="true">
+						</div>
                         <div style="padding:14px;" class="form-group">
                             <input type="text" value="{{ document.title_of_post }}" id="title_of_post" name="title_of_post" autocomplete="off" placeholder="Post title..." class="form-control">
                         </div>
