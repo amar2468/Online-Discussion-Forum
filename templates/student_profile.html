@@ -13,6 +13,14 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="/static/css/custom_stylesheet.css">
 
+        <style>
+            td 
+            {
+                text-align: center;
+            }
+
+        </style>
+
     </head>
 
     <body>
@@ -120,12 +128,57 @@
             {% endfor %}
 
             <tr>
-            {% for key, value in document.items() %}
-                {% if key != "_id" and key != "password" and key != "profile_picture_link" and key != "email" and key != "user_registered" and key != "list_of_followers" and key != "number_of_followers" and key != "number_of_following" and key != "list_of_following" %}
-                    <td><p class="form-control-lg px-1" id="paragraphs_containing_user_profile_info">{{ value }}</p></td>
-                {% endif %}
+                <td><p class="form-control-lg px-1" id="paragraphs_containing_user_profile_info">{{ student_name }}</p></td>
+            </tr>
 
-            {% endfor %}
+            <tr>
+                {% for key, value in document.items() %}
+                    
+                    {% if key == 'bio' %}
+                        <td>
+                            
+                            <div class="d-flex justify-content-center">
+                                <div class="col-md-10 mx-auto">
+                                    <p class="form-control-lg" id="profile_bio" style="color:black;">{{ value }}&nbsp;&nbsp;
+                                        {% if session.get("name") == document['email'] %}
+                                            <a href="#" class="text-center" data-toggle="modal" data-target="#edit_bio"><i class="fa fa-edit"></i></a></p>
+                                        {% else %}
+                                            </p>
+                                        {% endif %}
+                                </div>
+                            </div>
+
+
+                            <div class="modal fade" id="edit_bio" tabindex="-1" role="dialog" aria-labelledby="edit_bio" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="edit_bio" style="color:black;">Edit Bio</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <form method="POST" action="{{url_for('edit_bio', id_bio=document._id )}}">
+                                      <div class="modal-body">
+                                        <div class="form-group">
+                                          <label for="bio-input" style="color:black;">Enter your new bio here:</label>
+                                          <textarea class="form-control" id="bio_input" name="bio_input"></textarea>
+                                        </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Update bio</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                            
+                        </td>
+                    {% endif %}
+
+                {% endfor %}
             </tr>
 
 
@@ -151,10 +204,17 @@
                                 <p class="form-control-lg" id="following_tag_in_user_profile"><a href="{{url_for('list_of_following', student_email=value)}}">Following {{document.number_of_following}}</a></p>
 
                             </div>
+
+                            <div>
+                                <p class="form-control-lg" id="number_of_posts" style="color:#007bff;">Number of posts: {{ total_number_of_posts_and_comments }}</p>
+                            </div>
                 
                             <div class="form-outline mb-4">
                                 <form action = "/changing_profile_picture" onsubmit="return validate_profile_picture()" method="post" enctype="multipart/form-data">
-                                    <input class="btn btn-primary btn-lg btn-block" type="file" id="change_profile_picture_file_upload" name="change_profile_picture_file_upload" accept = "image/*"><br>
+                                    <label class="btn btn-primary btn-lg btn-block" for="change_profile_picture_file_upload">
+                                        Choose Profile Picture
+                                        <input class="btn btn-primary btn-lg btn-block" type="file" id="change_profile_picture_file_upload" name="change_profile_picture_file_upload" accept = "image/*" style="display:none;"><br>
+                                    </label><br>
                                     <p class="error profilepicture-error"></p>
                                     <button id="submit_picture_after_loaded" class="btn btn-primary btn-lg btn-block" type="submit" style="display:none;">Change Profile Picture</button>
 
@@ -195,22 +255,36 @@
 
                             </div>
 
-                            {% if session.get("name") in document.list_of_followers %}
-                                <div class="form-outline mb-4">
-                                    
-                                    <form action="{{url_for('follow_user', student_profile_email=value)}}" method="POST">
-                                        <button id="follow_button" name="follow_button" class="btn btn-primary btn-lg btn-block" value="Following" type="submit" onclick="return confirm('Are you sure you want to unfollow this user?')">Following</button>
-                                    </form>
+                            <div>
+                                <p class="form-control-lg" id="number_of_posts" style="color:#007bff;">Number of posts: {{ total_number_of_posts_and_comments }}</p>
+                            </div>
 
-                                </div>
-                            {% else %}
-                                <div class="form-outline mb-4">
-                            
-                                    <form action="{{url_for('follow_user', student_profile_email=value)}}" method="POST">
-                                        <button id="follow_button" name="follow_button" class="btn btn-primary btn-lg btn-block" value="Follow" type="submit">Follow</button>
-                                    </form>
+                            {% if session.get("name") %}
 
-                                </div>
+                                {% if session.get("name") in document.list_of_followers %}
+                                    <div class="form-outline mb-4">
+                                        
+                                        <form action="{{url_for('follow_user', student_profile_email=value)}}" method="POST">
+                                            <button id="follow_button" name="follow_button" class="btn btn-primary btn-lg btn-block" value="Following" type="submit" onclick="return confirm('Are you sure you want to unfollow this user?')">Following</button>
+                                        </form><br>
+
+                                        <form action="{{url_for('render_message_user_template', student_profile_email=value)}}" method="POST">
+                                            <button type="submit" id="message_user" name="message_user" class="btn btn-primary btn-lg btn-block" value="Message">Message</button>
+                                        </form>
+
+                                    </div>
+                                {% else %}
+                                    <div class="form-outline mb-4">
+                                
+                                        <form action="{{url_for('follow_user', student_profile_email=value)}}" method="POST">
+                                            <button id="follow_button" name="follow_button" class="btn btn-primary btn-lg btn-block" value="Follow" type="submit">Follow</button>
+                                        </form><br>
+
+                                        <form action="{{url_for('render_message_user_template', student_profile_email=value)}}" method="POST">
+                                            <button type="submit" id="message_user" name="message_user" class="btn btn-primary btn-lg btn-block" value="Message">Message</button>
+                                        </form>
+                                    </div>
+                                {% endif %}
                             {% endif %}
 
                         </div>
