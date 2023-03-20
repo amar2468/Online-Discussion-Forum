@@ -1,6 +1,7 @@
 from flask_socketio import SocketIO
 import os
-from datetime import date, datetime
+import datetime
+from datetime import date
 from flask import Flask, flash, render_template, request, redirect, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -147,6 +148,12 @@ def login_account():
 @app.route('/logout')
 def logout():
 	if session.get("name"):
+
+		db.forum_database.RegLoginList.update_one(
+			{ 'email': session.get("name") },
+			{ "$set": { 'last_seen': datetime.datetime.utcnow() } }
+		)
+
 		session["name"] = None
 		return redirect("/login_account")
 	else:
@@ -480,7 +487,11 @@ def dislike_a_reply(reply_id):
 		{ "$push": { "comments.$.list_of_users_who_disliked": session.get("name") }, "$inc": { "comments.$.number_of_dislikes_for_reply": 1 } }
 	)
 
-	return redirect("/")
+	dislike_reply_document = db.forum_database.ForumPostCollection.find_one({"comments.id": reply_id })
+
+	subforum_name = dislike_reply_document['subforum']
+
+	return redirect('/visit_subforum/' + subforum_name)
 
 # Route for dealing with forum post form
 
@@ -669,9 +680,16 @@ def reply_to_the_post(post_id):
 		
 	date_and_time_of_reply_formatted = date_and_time_of_reply.strftime("%d/%m/%Y %H:%M:%S")
 
+
+	highest_reply_id = 0
+	for document in db.forum_database.ForumPostCollection.find():
+		for obj in document["comments"]:
+			if "id" in obj:
+				highest_reply_id = max(highest_reply_id, obj["id"])
+
 	db.forum_database.ForumPostCollection.update_one(
 		{ '_id': ObjectId(post_id) },
-		{ "$push": { 'comments': ({"author_of_post":session.get("name"), "content_of_post": reply_content, "timestamp_for_reply":date_and_time_of_reply_formatted, "number_of_likes_for_reply":0, "number_of_dislikes_for_reply":0 }) } }
+		{ "$push": { 'comments': ({ 'id':highest_reply_id + 1,"author_of_post":session.get("name"), "content_of_post": reply_content, "timestamp_for_reply":date_and_time_of_reply_formatted, "number_of_likes_for_reply":0, "number_of_dislikes_for_reply":0 }) } }
 	)
 
 	student = db.forum_database.ForumPostCollection.find_one({ '_id': ObjectId(post_id) })
@@ -682,7 +700,7 @@ def reply_to_the_post(post_id):
 	notification_content = session.get("name") + " has replied to your post : " + forum_post_title
 	db.forum_database.NotificationList.insert_one({"notification_type":'reply',"forum_post_id":post_id,"username":student_profile_email,"username_of_follower":session.get("name"),"content":notification_content,"seen":False})
 
-	return redirect('/')
+	return redirect('/view_topic/' + post_id)
 
 # Counts the number of notifications that the user has seen
 @app.route('/update_notification_count', methods =["GET", "POST"])
@@ -706,25 +724,88 @@ def edit_bio(id_bio):
 
 	return redirect("/student_profile")
 
+# Retrieve messages in chat app so they are displayed in real time
+
+@app.route('/retrieve_messages/<student_profile_email>')
+def retrieve_messages(student_profile_email):
+	messages = db.forum_database.MessageList.find({"participants": {"$all": [session.get("name"), student_profile_email]}})
+
+	message_list = []
+
+	for message in messages:
+
+		for individual_message in message["messages"]:
+
+			message_dict = {
+
+				"content" : individual_message["content"],
+				"timestamp" : individual_message["timestamp"],
+				"recipient_email" : individual_message["recipient_email"],
+				"recipient_name" : individual_message["recipient_name"],
+				"sender_email" : individual_message["sender_email"],
+				"sender_name" : individual_message["sender_name"]
+
+			}
+
+			message_list.append(message_dict)
+
+	return jsonify(message_list)
+
 # Chat functionality route
 @app.route('/render_message_user_template/<student_profile_email>', methods =["GET", "POST"])
 def render_message_user_template(student_profile_email):
-	if request.method == "POST":
 
-		user_details = db.forum_database.RegLoginList.find_one({"email": {"$eq": student_profile_email}})
+	user_details = db.forum_database.RegLoginList.find_one({"email": {"$eq": student_profile_email}})
 
-		student_name = user_details["first_name"] + " " + user_details["last_name"]
+	student_name = user_details["first_name"] + " " + user_details["last_name"]
 
-		logged_in_user_details = db.forum_database.RegLoginList.find_one({"email": {"$eq": session.get("name")}})
+	logged_in_user_details = db.forum_database.RegLoginList.find_one({"email": {"$eq": session.get("name")}})
 
-		logged_in_user = logged_in_user_details["first_name"] + " " + logged_in_user_details["last_name"]
+	logged_in_user = logged_in_user_details["first_name"] + " " + logged_in_user_details["last_name"]
 
-		notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-		number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+	notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
+	number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
 
-		message_list_info = db.forum_database.MessageList.find({"participants": {"$all": [session.get("name"), student_profile_email]}})
+	message_list_info = db.forum_database.MessageList.find({"participants": {"$all": [session.get("name"), student_profile_email]}})
 
-		return render_template("message_user_template.html", notifications_info=notifications_info, number_of_notifications=number_of_notifications, message_list_info=message_list_info,user_details=user_details,student_name=student_name,student_profile_email=student_profile_email, logged_in_user=logged_in_user)
+	user_last_seen = user_details.get("last_seen")
+
+	if user_last_seen:
+
+		current_time = datetime.datetime.now()
+		time_diff = current_time - user_last_seen
+
+		if time_diff.days > 0:
+			if time_diff.days == 1:
+				time_since_last_seen = '1 day ago'
+			else:
+				time_since_last_seen = f'{time_diff.days} days ago'
+
+		elif time_diff.seconds < 60:
+			time_since_last_seen = 'just now'
+
+		elif time_diff.seconds < 3600:
+
+			if time_diff.seconds >= 60 and time_diff.seconds <= 120:
+				time_since_last_seen = '1 minute ago'
+			else:
+				minutes = time_diff.seconds // 60
+				time_since_last_seen = f'{minutes} minutes ago'
+			
+		else:
+			if time_diff.seconds >= 3600 and time_diff <= 7200:
+				time_since_last_seen = '1 hour ago'
+
+			else:
+				hours = time_diff.seconds // 3600
+				time_since_last_seen = f'{hours} hours ago'
+	else:
+		time_since_last_seen = 'Online'
+
+
+
+	return render_template("message_user_template.html", notifications_info=notifications_info, number_of_notifications=number_of_notifications, message_list_info=message_list_info,user_details=user_details,student_name=student_name,student_profile_email=student_profile_email, logged_in_user=logged_in_user,time_since_last_seen=time_since_last_seen)
+		
 
 def messageReceived(methods=['GET', 'POST']):
     print('message was received!!!')
@@ -740,28 +821,25 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
 	recipient_email_address = json.get('recipient_email')
 	recipient_name = json.get('recipient_name')
 
-	print(sender_email_address)
-	print(sender_name)
-	print(recipient_email_address)
-	print(recipient_name)
-
-
 
 	specific_conversation = db.forum_database.MessageList.find_one({'participants': {'$all': [sender_email_address, recipient_email_address]}})
 
+	message_sent_time = datetime.datetime.now()
+
+	message_sent_time_in_str = message_sent_time.strftime("%H:%M %p, %d/%m/%Y")
 
 	new_message = {
 		'content': msg,
-		'timestamp': '15:36 PM, 14/03/2023',
+		'timestamp': message_sent_time_in_str,
 		'recipient_email': recipient_email_address,
 		'recipient_name': recipient_name,
 		'sender_email': sender_email_address,
 		'sender_name': sender_name
 	}
+	if specific_conversation is not None:
+		specific_conversation['messages'].append(new_message)
 
-	specific_conversation['messages'].append(new_message)
-
-	db.forum_database.MessageList.update_one({'_id': specific_conversation['_id']}, {'$set': {'messages': specific_conversation['messages']}})
+		db.forum_database.MessageList.update_one({'_id': specific_conversation['_id']}, {'$set': {'messages': specific_conversation['messages']}})
 
 	socketio.emit('my response', json, callback=messageReceived)
 
