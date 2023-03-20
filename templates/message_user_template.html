@@ -348,7 +348,7 @@
 								{% for conversation in message_list_info %}
 								<div class="chat-about">
 									<h6 class="m-b-0">{{ student_name }}</h6>
-									<small>Last seen: 1 min ago</small>
+									<small>Last seen: {{ time_since_last_seen }}</small>
 								</div>
 								</div>
 								</div>
@@ -384,7 +384,7 @@
 								<input id="recipient_email" type="hidden" name="recipient_email" value="{{ student_profile_email }}">
 								<input id="recipient_name" type="hidden" name="recipient_name" value="{{ student_name }}">
 								<input id="sender_email_address" type="hidden" name="sender_email_address" value="{{ session.get('name') }}">
-								<input id="message_sent" type="text" class="form-control" placeholder="Message">
+								<input id="message_sent" type="text" class="form-control" placeholder="Message" autocomplete="off">
 								<div class="input-group-prepend">
 									<button type="submit"><span class="input-group-text"><i class="fa fa-send"></i></span></button>
 								</div>
@@ -412,7 +412,7 @@
 								
 								<div class="chat-about">
 									<h6 class="m-b-0">{{ student_name }}</h6>
-									<small>Last seen: 1 min ago</small>
+									<small>Last seen: {{ time_since_last_seen }}</small>
 								</div>
 							</div>
 						</div>
@@ -442,46 +442,65 @@
 
 	{% endif %}
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
 
-	<script type="text/javascript">
-		var socket = io.connect('http://' + document.domain + ':' + location.port);
+<script type="text/javascript">
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
 
-		var current_user_email = "{{ session.get('name') }}";
+    var current_user_email = "{{ session.get('name') }}";
 
-		socket.on('connect', function() {
-			console.log('Connected to server');
-			socket.emit('my event', {
-				data: 'User Connected'
-			});
+    socket.on('connect', function() {
+        console.log('Connected to server');
+        socket.emit('my event', {
+            data: 'User Connected'
+        });
 
-			var form = $('#send_message_form').on('submit', function(e) {
-				e.preventDefault();
-				let user_input = $('#message_sent').val();
-				let sender_email_address = $('#sender_email_address').val();
-				let recipient_email = $('#recipient_email').val();
-				let recipient_name = $('#recipient_name').val();
-				let logged_in_user = $('#logged_in_user').val();
-				console.log('Sending message:', user_input, 'from', sender_email_address);
-				socket.emit('my event', {
-					message_sent: user_input,
-					sender_email_address: sender_email_address,
-					recipient_email: recipient_email,
-					recipient_name: recipient_name,
-					logged_in_user: logged_in_user
+        var form = $('#send_message_form').on('submit', function(e) {
+            e.preventDefault();
+            let user_input = $('#message_sent').val();
+            let sender_email_address = $('#sender_email_address').val();
+			let recipient_email = $('#recipient_email').val();
+			let recipient_name = $('#recipient_name').val();
+			let logged_in_user = $('#logged_in_user').val();
+
+            console.log('Sending message:', user_input, 'from', sender_email_address);
+            socket.emit('my event', {
+                message_sent: user_input,
+                sender_email_address: sender_email_address,
+				recipient_email: recipient_email,
+				recipient_name: recipient_name,
+				logged_in_user: logged_in_user
+            });
+            $('input.message_sent').val('').focus();
+        });
+
+    });
+
+    socket.on('my response', function(data) {
+		$('#message_sent').val('');
+        let sender_email_address = data.sender_email_address;
+        console.log('Received message:', data.message_sent, 'from', sender_email_address);
+
+		$.ajax({
+			url: '/retrieve_messages/' + $('#recipient_email').val(),
+			success: function(data) {
+				$('div.chat-history ul.m-b-0').empty();
+
+				$.each(data, function(index, message) {
+					if (current_user_email == message.sender_email)
+					{
+						$('div.chat-history ul.m-b-0').append('<li class="clearfix"><div class="message-data text-right"><span class="message-data-time">' + message.timestamp + '</span></div><div class="message other-message float-right"> '+ message.content +' </div></li>');
+					}
+					else
+					{
+						$('div.chat-history ul.m-b-0').append('<li class="clearfix"><div class="message-data"><span class="message-data-time">' + message.timestamp + '</span></div><div class="message my-message"> '+ message.content +' </div></li>');
+					}
 				});
-				$('input.message_sent').val('').focus();
-			});
+			}
 		});
+    });
+</script>
 
-
-		
-
-		socket.on('my response', function(data) {
-			let sender_email_address = data.sender_email_address;
-			console.log('Received message:', data.message_sent, 'from', sender_email_address);
-		});
-	</script>
 
 </body>
 </html>
