@@ -1,7 +1,6 @@
 from flask_socketio import SocketIO
 import os
-import datetime
-from datetime import date
+from datetime import date, datetime
 from flask import Flask, flash, render_template, request, redirect, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -151,7 +150,7 @@ def logout():
 
 		db.forum_database.RegLoginList.update_one(
 			{ 'email': session.get("name") },
-			{ "$set": { 'last_seen': datetime.datetime.utcnow() } }
+			{ "$set": { 'last_seen': datetime.now() } }
 		)
 
 		session["name"] = None
@@ -772,7 +771,7 @@ def render_message_user_template(student_profile_email):
 
 	if user_last_seen:
 
-		current_time = datetime.datetime.now()
+		current_time = datetime.now()
 		time_diff = current_time - user_last_seen
 
 		if time_diff.days > 0:
@@ -793,7 +792,7 @@ def render_message_user_template(student_profile_email):
 				time_since_last_seen = f'{minutes} minutes ago'
 			
 		else:
-			if time_diff.seconds >= 3600 and time_diff <= 7200:
+			if time_diff.seconds >= 3600 and time_diff.seconds <= 7200:
 				time_since_last_seen = '1 hour ago'
 
 			else:
@@ -824,7 +823,7 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
 
 	specific_conversation = db.forum_database.MessageList.find_one({'participants': {'$all': [sender_email_address, recipient_email_address]}})
 
-	message_sent_time = datetime.datetime.now()
+	message_sent_time = datetime.now()
 
 	message_sent_time_in_str = message_sent_time.strftime("%H:%M %p, %d/%m/%Y")
 
