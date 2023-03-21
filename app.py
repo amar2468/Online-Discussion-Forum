@@ -108,7 +108,7 @@ def register_account():
 
 				date_registered = date_registered.strftime("%d/%m/%Y")
 
-				db.forum_database.RegLoginList.insert_one({"first_name": fname, "last_name":lname, "email":email, "password": encrypted_password, "bio": bio ,"profile_picture_link": saving_profile_picture,'user_registered': date_registered, "list_of_followers": [], "number_of_followers":0, "list_of_following": [], "number_of_following":0})
+				db.forum_database.RegLoginList.insert_one({"first_name": fname, "last_name":lname, "email":email, "user_type":'normal' ,"password": encrypted_password, "bio": bio ,"profile_picture_link": saving_profile_picture,'user_registered': date_registered, "list_of_followers": [], "number_of_followers":0, "list_of_following": [], "number_of_following":0})
 				
 				session["name"] = request.form.get("email_address_for_register")
 
@@ -558,17 +558,31 @@ def forum_post():
 		probabilities = nb.predict_proba(user_forum_post_vectorized)[0]
 
 		print(probabilities[1])
-		if probabilities[1] > 0.5:
-			print("The example post is suspicious.")
+		if probabilities[1] > 0.5 and probabilities[1] < 0.8:
+			check_post_dict = {
+				"subforum":subforum_name,
+				"author_of_post":session.get("name"),
+				"title_of_post": title, 
+				"content_of_post": content, 
+				"number_of_likes": 0, 
+				"number_of_dislikes": 0, 
+				"user_liked_own_post": False, 
+				"user_disliked_own_post": False, 
+				"all_users_who_liked_post": [], 
+				"all_users_who_disliked_post": [], 
+				"time_stamp_when_post_created": formatted_date_and_time_post_created, 
+				"comments":[]
+			}
+			print(check_post_dict)
+		elif probabilities[1] >= 0.8:
+			return "This post has not been posted as it has been detected as suspicious"
 		else:
-			print("The example post is not suspicious.")
+			db.forum_database.ForumPostCollection.insert_one({"subforum":subforum_name, "author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False, "all_users_who_liked_post": [], "all_users_who_disliked_post": [], "time_stamp_when_post_created": formatted_date_and_time_post_created, "comments":[]})
 
 		print("Accuracy:", accuracy_score(y_test, y_pred) * 100)
 		print("Precision:", precision_score(y_test, y_pred, pos_label=1))
 		print("Recall:", recall_score(y_test, y_pred, pos_label=1))
 		print("F1 score:", f1_score(y_test, y_pred, pos_label=1))
-
-		db.forum_database.ForumPostCollection.insert_one({"subforum":subforum_name, "author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "number_of_likes": 0, "number_of_dislikes": 0, "user_liked_own_post": False, "user_disliked_own_post": False, "all_users_who_liked_post": [], "all_users_who_disliked_post": [], "time_stamp_when_post_created": formatted_date_and_time_post_created, "comments":[]})
 
 		return redirect('/visit_subforum/' + subforum_name)
 	elif not session.get("name"):
@@ -749,6 +763,24 @@ def retrieve_messages(student_profile_email):
 			message_list.append(message_dict)
 
 	return jsonify(message_list)
+
+# Render admin dashboard template page
+@app.route('/render_admin_dashboard', methods =["GET", "POST"])
+def render_admin_dashboard():
+	if request.method == "POST":
+		notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
+		number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+		return render_template("admin_dashboard.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications)
+	else:
+		return redirect("/")
+
+# Sending post to the admin so they can perform a check
+@app.route('/admin_check_post', methods =["GET", "POST"])
+def admin_check_post():
+	if request.method == "POST":
+		return render_template("admin_dashboard.html")
+	else:
+		return redirect("/")
 
 # Chat functionality route
 @app.route('/render_message_user_template/<student_profile_email>', methods =["GET", "POST"])
