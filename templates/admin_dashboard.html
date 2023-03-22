@@ -105,18 +105,24 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% for post in suspicious_posts %}
-                        <tr>
-                          <td>{{ post.subforum }}</td>
-                          <td>{{ post.author_of_post }}</td>
-                          <td>{{ post.title_of_post }}</td>
-                          <td>{{ post.content_of_post }}</td>
-                          <td>{{ post.time_stamp_when_post_created }}</td>
-                          <td><a href="{{url_for('admin_approve_post', post_id=post._id)}}"><i class="fa fa-check" aria-hidden="true"></i></a></td>
-                          <td><a href="{{url_for('admin_delete_post', post_id=post._id)}}"><i class="fa fa-trash small-icon" aria-hidden="true"></i></a></td>
-                        </tr>
-        
-                        {% endfor %}
+						{% if suspicious_posts.count() > 0 %}
+							{% for post in suspicious_posts %}
+							<tr>
+							<td>{{ post.subforum }}</td>
+							<td>{{ post.author_of_post }}</td>
+							<td>{{ post.title_of_post }}</td>
+							<td>{{ post.content_of_post }}</td>
+							<td>{{ post.time_stamp_when_post_created }}</td>
+							<td><a href="{{url_for('admin_approve_post', post_id=post._id)}}"><i class="fa fa-check" aria-hidden="true"></i></a></td>
+							<td><a href="{{url_for('admin_delete_post', post_id=post._id)}}"><i class="fa fa-trash small-icon" aria-hidden="true"></i></a></td>
+							</tr>
+			
+							{% endfor %}
+						{% else %}
+							<tr>
+								<td colspan="7">No data available</td>
+							</tr>
+						{% endif %}
                         
                       </tbody>
                     </table>
