@@ -559,21 +559,9 @@ def forum_post():
 
 		print(probabilities[1])
 		if probabilities[1] > 0.5 and probabilities[1] < 0.8:
-			check_post_dict = {
-				"subforum":subforum_name,
-				"author_of_post":session.get("name"),
-				"title_of_post": title, 
-				"content_of_post": content, 
-				"number_of_likes": 0, 
-				"number_of_dislikes": 0, 
-				"user_liked_own_post": False, 
-				"user_disliked_own_post": False, 
-				"all_users_who_liked_post": [], 
-				"all_users_who_disliked_post": [], 
-				"time_stamp_when_post_created": formatted_date_and_time_post_created, 
-				"comments":[]
-			}
-			print(check_post_dict)
+
+			db.forum_database.SuspiciousPostsList.insert_one({"subforum":subforum_name, "author_of_post":session.get("name"), "title_of_post": title, "content_of_post": content, "time_stamp_when_post_created": formatted_date_and_time_post_created})
+
 		elif probabilities[1] >= 0.8:
 			return "This post has not been posted as it has been detected as suspicious"
 		else:
@@ -767,20 +755,28 @@ def retrieve_messages(student_profile_email):
 # Render admin dashboard template page
 @app.route('/render_admin_dashboard', methods =["GET", "POST"])
 def render_admin_dashboard():
-	if request.method == "POST":
-		notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-		number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
-		return render_template("admin_dashboard.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications)
-	else:
-		return redirect("/")
+	suspicious_posts = db.forum_database.SuspiciousPostsList.find()
+	notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
+	number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+	return render_template("admin_dashboard.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications,suspicious_posts=suspicious_posts)
 
-# Sending post to the admin so they can perform a check
-@app.route('/admin_check_post', methods =["GET", "POST"])
-def admin_check_post():
-	if request.method == "POST":
-		return render_template("admin_dashboard.html")
-	else:
-		return redirect("/")
+# Render admin dashboard template page
+@app.route('/admin_delete_post/<post_id>', methods =["GET", "POST"])
+def admin_delete_post(post_id):
+	db.forum_database.SuspiciousPostsList.delete_one({"_id": ObjectId(post_id) })
+	return redirect("/render_admin_dashboard")
+
+# Render admin dashboard template page
+@app.route('/admin_approve_post/<post_id>', methods =["GET", "POST"])
+def admin_approve_post(post_id):
+	suspicious_post = db.forum_database.SuspiciousPostsList.find({"_id": ObjectId(post_id) })
+
+	for post in suspicious_post:
+		db.forum_database.ForumPostCollection.insert_one(post)
+
+		db.forum_database.SuspiciousPostsList.delete_one(post)
+
+	return redirect("/render_admin_dashboard")
 
 # Chat functionality route
 @app.route('/render_message_user_template/<student_profile_email>', methods =["GET", "POST"])
