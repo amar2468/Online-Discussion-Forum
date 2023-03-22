@@ -81,21 +81,53 @@
 
 	{% endif %}
 
-	<section class="vh-100">
-		<div class="container py-5 h-80">
-		<div class="row d-flex justify-content-center align-items-center h-100">
-		<div class="col-12 col-md-8 col-lg-6 col-xl-5">
-		<div class="card shadow-2-strong" style="border-radius: 1rem;">
-		<div class="card-body p-2 text-center">
-			
-			<h1>Admin Dashboard</h1>
-
-		</div>
-		</div>
-		</div>
-		</div>
-		</div>
-	</section>
+    <section class="vh-100">
+        <div class="container py-5 h-80">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-8">
+              <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                <div class="card-body p-2 text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
+                  <div class="table-wrapper" style="flex: 1; overflow: auto; width: 100%;">
+                    <h1>Admin Dashboard</h1>
+                    <br><br>
+                    <h5>These are the posts that the system has detected as potentially suspicious</h5>
+                    <br>
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th scope="col">Subforum</th>
+                          <th scope="col">Author</th>
+                          <th scope="col">Title</th>
+                          <th scope="col">Content</th>
+                          <th scope="col">Time</th>
+                          <th scope="col">Approve</th>
+                          <th scope="col">Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for post in suspicious_posts %}
+                        <tr>
+                          <td>{{ post.subforum }}</td>
+                          <td>{{ post.author_of_post }}</td>
+                          <td>{{ post.title_of_post }}</td>
+                          <td>{{ post.content_of_post }}</td>
+                          <td>{{ post.time_stamp_when_post_created }}</td>
+                          <td><a href="{{url_for('admin_approve_post', post_id=post._id)}}"><i class="fa fa-check" aria-hidden="true"></i></a></td>
+                          <td><a href="{{url_for('admin_delete_post', post_id=post._id)}}"><i class="fa fa-trash small-icon" aria-hidden="true"></i></a></td>
+                        </tr>
+        
+                        {% endfor %}
+                        
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
 
 	<script src="{{url_for('static', filename='main.js')}}"></script>
 </body>
