@@ -12,6 +12,23 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="/static/css/custom_stylesheet.css">
 
+	<style>
+		img {
+			height: auto;
+		}
+
+		@media (max-width: 768px) {
+			div {
+			flex-direction: column;
+			}
+
+			img {
+			margin-bottom: 10px;
+			}
+		}
+
+	</style>
+
 </head>
 <body>
 
@@ -134,7 +151,22 @@
 		<div class="card shadow-2-strong" style="border-radius: 1rem;">
 		<div class="card-body p-2 text-center">
 
-			<p><a href="{{url_for('viewing_profile', student_profile_email=following)}}">{{ following }}</a></p>
+
+			{% for collection in registration_info_for_following %}
+				{% if collection.email == following %}
+				<div class="d-flex justify-content-center align-items-center">
+					<div class="mr-auto">
+						<img id="following_image" src="{{url_for('static', filename=collection.profile_picture_link)}}" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/CCCCCC/000000?text=Image+Not+Found';" width="120" height="60" style="border-radius: 50%; margin-right: 10px;">
+					</div>
+					<div class="ml-auto">
+						<p><a href="{{url_for('viewing_profile', student_profile_email=following)}}">{{ following }}</a></p>
+						{{ collection.bio }}
+					</div>
+				</div>
+
+				{% endif %}
+			{% endfor %}
+
 
 		</div>
 		</div>
