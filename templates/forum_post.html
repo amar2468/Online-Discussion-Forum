@@ -112,7 +112,7 @@
 			<div class="col-md-8 col-sm-12">
 				<div class="well"> 
 					<form role="form" class="form-horizontal" action="/forum_post" method="POST">
-						<h4>Topic : Computer Science</h4>
+						<h4>Topic : {{ subforum_name }}</h4>
 						<div style="padding:14px;" class="form-group">
 							<input type="text" id="name_of_subforum" name="name_of_subforum" autocomplete="off" value="{{ subforum_name }}" class="form-control" readonly="true">
 						</div>
@@ -128,7 +128,7 @@
 							<button type="submit" id="post_button" name="post_button" class="btn btn-success pull-left">Post</button>
 						</div>
 						<div style="padding:14px;" class="form-group">
-							<a class="btn btn-success pull-left" href="/">Cancel</a>
+							<a class="btn btn-success pull-left" href="{{url_for('visit_subforum', subforum_name=subforum_name)}}">Cancel</a>
 						</div>
 					</form>
 				</div>
