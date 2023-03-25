@@ -54,15 +54,19 @@ app.config["SESSION_TYPE"] = "filesystem"
 share.init_app(app)
 
 socketio = SocketIO(app)
+	
+def getting_notification_details():
+	notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
+	number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+
+	return notifications_info,number_of_notifications
 
 # Route for homepage which also checks whether the user is logged in or not
 
 @app.route('/')
 def home():
 	subforum_info = db.forum_database.SubforumList.find()
-	notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-	number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
-	
+	notifications_info,number_of_notifications = getting_notification_details()
 	return render_template("home.html", subforum_info=subforum_info, notifications_info=notifications_info,number_of_notifications=number_of_notifications)
 
 @app.route('/visit_subforum/<subforum_name>')
@@ -73,8 +77,7 @@ def visit_subforum(subforum_name):
 		
 	formatted_date_and_time_post_created = date_and_time_post_created.strftime("%d/%m/%Y %H:%M:%S")
 
-	notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-	number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+	notifications_info,number_of_notifications = getting_notification_details()
 	
 	return render_template("subforum.html", subforum_name=subforum_name ,formatted_date_and_time_post_created=formatted_date_and_time_post_created, collection_info=collection_info,notifications_info=notifications_info,number_of_notifications=number_of_notifications)
 
@@ -134,6 +137,10 @@ def login_account():
 					if check_password_hash(document["password"],password_for_login):
 						session["name"] = request.form.get("email_address_for_login")
 						session.permanent = True
+						db.forum_database.RegLoginList.update_one(
+							{ 'email': request.form.get("email_address_for_login") },
+							{ "$set": { 'last_seen': 'Online' } }
+						)
 						return redirect("/student_profile")
 			flash('Invalid email or password. Please try again.')
 			return redirect("/login_account")
@@ -164,8 +171,7 @@ def logout():
 def student_profile():
 	for document in db.forum_database.RegLoginList.find():
 		if document["email"] == session["name"]:
-			notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-			number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+			notifications_info,number_of_notifications = getting_notification_details()
 
 			number_of_posts = db.forum_database.ForumPostCollection.count_documents({ 'author_of_post': document["email"] })
 
@@ -201,8 +207,7 @@ def student_profile():
 def viewing_profile(student_profile_email):
 	for document in db.forum_database.RegLoginList.find():
 		if document["email"] == student_profile_email:
-			notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-			number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+			notifications_info,number_of_notifications = getting_notification_details()
 
 			number_of_posts = db.forum_database.ForumPostCollection.count_documents({ 'author_of_post': document["email"] })
 
@@ -254,8 +259,7 @@ def changing_profile_picture():
 
 @app.route('/render_forgot_password_template', methods =["GET", "POST"])
 def render_forgot_password_template():
-	notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-	number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+	notifications_info,number_of_notifications = getting_notification_details()
 	return render_template("forgot_password.html", notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 
 # Route created for forgot password
@@ -279,8 +283,7 @@ def forgot_password():
 @app.route('/render_forum_post/<subforum_name>', methods =["GET", "POST"])
 def render_forum_post(subforum_name):
 	if session.get("name"):
-		notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-		number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+		notifications_info,number_of_notifications = getting_notification_details()
 		return render_template("forum_post.html", subforum_name=subforum_name,notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 	elif not session.get("name"):
 		collection_info = db.forum_database.ForumPostCollection.find()
@@ -296,21 +299,15 @@ def view_topic(_id):
 		if str(document["_id"]) == _id:
 			post_title = document['title_of_post']
 			content_post = document['content_of_post']
+			subforum_name = document['subforum']
 			collection_info = list(db.forum_database.ForumPostCollection.find())
 
 			for user in user_info:
 				if user['email'] == document['author_of_post']:
 					registration_date_user = user['user_registered']
 					break
-			notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-			number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
-			return render_template("view_forum_post.html", _id=_id ,registration_date_user=registration_date_user, user_info=user_info, post_title=post_title ,content_post = content_post, collection_info=collection_info,notifications_info=notifications_info, number_of_notifications=number_of_notifications)
-	collection_info = list(db.forum_database.ForumPostCollection.find())
-
-	notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-	number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
-	return render_template("view_forum_post.html", _id=_id, user_info=user_info, post_title = post_title, content_post = content_post, collection_info=collection_info, notifications_info=notifications_info, number_of_notifications=number_of_notifications)
-
+			notifications_info,number_of_notifications = getting_notification_details()
+			return render_template("view_forum_post.html", _id=_id ,registration_date_user=registration_date_user, user_info=user_info, post_title=post_title ,content_post = content_post, collection_info=collection_info,notifications_info=notifications_info, number_of_notifications=number_of_notifications,subforum_name=subforum_name)
 
 # Route for rendering template that allows the user to re-enter the information that they want to update
 
@@ -319,8 +316,7 @@ def edit_topic(id_edit):
 	for document in db.forum_database.ForumPostCollection.find():
 		if str(document["_id"]) == id_edit:
 			subforum_name = document["subforum"]
-			notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-			number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+			notifications_info,number_of_notifications = getting_notification_details()
 			return render_template("update_post.html", document=document ,id_edit=id_edit, notifications_info=notifications_info, number_of_notifications=number_of_notifications,subforum_name=subforum_name)
 
 # Route for editing the topic in the database
@@ -641,7 +637,7 @@ def follow_user(student_profile_email):
 				{ "$set": { 'number_of_following':  number_of_following } }
 			)
 
-		return redirect('/student_profile')
+		return redirect('/viewing_profile/' + student_profile_email)
 	elif not session.get("name"):
 		return redirect('/login_account')
 
@@ -652,10 +648,11 @@ def follow_user(student_profile_email):
 def list_of_followers(student_email):
 	if session.get("name"):
 		registration_info = db.forum_database.RegLoginList.find()
-		notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-		number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+		registration_info_for_follower = list(db.forum_database.RegLoginList.find({}))
+
+		notifications_info,number_of_notifications = getting_notification_details()
 		
-		return render_template("list_of_followers.html", student_email=student_email, registration_info=registration_info, notifications_info=notifications_info, number_of_notifications=number_of_notifications)
+		return render_template("list_of_followers.html", student_email=student_email, registration_info=registration_info, notifications_info=notifications_info, number_of_notifications=number_of_notifications,registration_info_for_follower=registration_info_for_follower)
 	elif not session.get("name"):
 		return redirect('/login_account')
 
@@ -665,10 +662,11 @@ def list_of_followers(student_email):
 def list_of_following(student_email):
 	if session.get("name"):
 		registration_info = db.forum_database.RegLoginList.find()
+		registration_info_for_following = list(db.forum_database.RegLoginList.find({}))
+
 		db.forum_database.NotificationList.update_many({'username': session.get("name")}, {'$set': {'seen': True}})
-		notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-		number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
-		return render_template("list_of_following.html", student_email=student_email, registration_info=registration_info, notifications_info=notifications_info, number_of_notifications=number_of_notifications)
+		notifications_info,number_of_notifications = getting_notification_details()
+		return render_template("list_of_following.html", student_email=student_email, registration_info=registration_info, notifications_info=notifications_info, number_of_notifications=number_of_notifications,registration_info_for_following=registration_info_for_following)
 	elif not session.get("name"):
 		return redirect('/login_account')
 
@@ -756,8 +754,7 @@ def retrieve_messages(student_profile_email):
 @app.route('/render_admin_dashboard', methods =["GET", "POST"])
 def render_admin_dashboard():
 	suspicious_posts = db.forum_database.SuspiciousPostsList.find()
-	notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-	number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+	notifications_info,number_of_notifications = getting_notification_details()
 	return render_template("admin_dashboard.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications,suspicious_posts=suspicious_posts)
 
 # Render admin dashboard template page
@@ -790,14 +787,16 @@ def render_message_user_template(student_profile_email):
 
 	logged_in_user = logged_in_user_details["first_name"] + " " + logged_in_user_details["last_name"]
 
-	notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
-	number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
+	notifications_info,number_of_notifications = getting_notification_details()
 
 	message_list_info = db.forum_database.MessageList.find({"participants": {"$all": [session.get("name"), student_profile_email]}})
 
+	if message_list_info.count() == 0:
+		db.forum_database.MessageList.insert_one({"participants": [session.get("name"), student_profile_email], "messages": [] })
+
 	user_last_seen = user_details.get("last_seen")
 
-	if user_last_seen:
+	if user_last_seen != "Online":
 
 		current_time = datetime.now()
 		time_diff = current_time - user_last_seen
