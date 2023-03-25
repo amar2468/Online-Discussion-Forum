@@ -1,3 +1,4 @@
+# Project imports needed
 from flask_socketio import SocketIO
 import os
 from datetime import date, datetime
@@ -7,46 +8,40 @@ from werkzeug.utils import secure_filename
 from bson.objectid import ObjectId
 from flask_share import Share
 import db
-
 import nltk
-
 import string
-
 from nltk import pos_tag
-
 from collections import defaultdict
-
 from nltk.corpus import stopwords, wordnet
-
 from nltk.stem import WordNetLemmatizer
-
 from collections import defaultdict
-
 import pandas as pd
-
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import precision_score, recall_score, f1_score
-
 from imblearn.over_sampling import SMOTE
 
-
+# Download from nltk library the following:
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('averaged_perceptron_tagger')
+
+# Initialize the lemmatizer
 lemmatizer = WordNetLemmatizer()
 
+# Below is needed so that words are properly formatted based on wordnet
 tag_map = defaultdict(lambda : wordnet.NOUN)
 tag_map['J'] = wordnet.ADJ
 tag_map['V'] = wordnet.VERB
 tag_map['R'] = wordnet.ADV
 
-
+# Instance of share created to enable sharing
 share = Share()
 
+# Getting everything set up
 app = Flask(__name__)
 app.secret_key = '32892938832jfdjjkd2993nd'
 app.config["SESSION_TYPE"] = "filesystem"
@@ -54,20 +49,23 @@ app.config["SESSION_TYPE"] = "filesystem"
 share.init_app(app)
 
 socketio = SocketIO(app)
-	
+
+# Function which will retrieve the notifications in reverse order and the number of notifications. Those two things will be returned	
 def getting_notification_details():
 	notifications_info = db.forum_database.NotificationList.find().sort('_id', -1)
 	number_of_notifications = db.forum_database.NotificationList.count_documents({'username': session.get("name"), 'seen': False})
 
 	return notifications_info,number_of_notifications
 
-# Route for homepage which also checks whether the user is logged in or not
+# Route for homepage, which will present all of the subforums
 
 @app.route('/')
 def home():
 	subforum_info = db.forum_database.SubforumList.find()
 	notifications_info,number_of_notifications = getting_notification_details()
 	return render_template("home.html", subforum_info=subforum_info, notifications_info=notifications_info,number_of_notifications=number_of_notifications)
+
+# Route that will render the specific subforum
 
 @app.route('/visit_subforum/<subforum_name>')
 def visit_subforum(subforum_name):
@@ -201,7 +199,8 @@ def student_profile():
 			student_name = user_details["first_name"] + " " + user_details["last_name"]
 
 			return render_template("student_profile.html", document = document, notifications_info=notifications_info, number_of_notifications=number_of_notifications,total_number_of_posts_and_comments=total_number_of_posts_and_comments,student_name=student_name)
-# Route created for student profile
+
+# Route created to view a profile of a student
 
 @app.route('/viewing_profile/<student_profile_email>')
 def viewing_profile(student_profile_email):
@@ -262,7 +261,7 @@ def render_forgot_password_template():
 	notifications_info,number_of_notifications = getting_notification_details()
 	return render_template("forgot_password.html", notifications_info=notifications_info, number_of_notifications=number_of_notifications)
 
-# Route created for forgot password
+# Route created to update the password of the user
 
 @app.route('/forgot_password', methods =["GET", "POST"])
 def forgot_password():
@@ -278,7 +277,7 @@ def forgot_password():
 		)
 	return redirect("/student_profile")
 
-# Route for forum post render
+# Route for rendering the forum post template, which allows user to create a post
 
 @app.route('/render_forum_post/<subforum_name>', methods =["GET", "POST"])
 def render_forum_post(subforum_name):
@@ -320,6 +319,7 @@ def edit_topic(id_edit):
 			return render_template("update_post.html", document=document ,id_edit=id_edit, notifications_info=notifications_info, number_of_notifications=number_of_notifications,subforum_name=subforum_name)
 
 # Route for editing the topic in the database
+
 @app.route('/edit_forum_topic/<id_edit>', methods =["GET", "POST"])
 def edit_forum_topic(id_edit):
 
@@ -488,7 +488,7 @@ def dislike_a_reply(reply_id):
 
 	return redirect('/visit_subforum/' + subforum_name)
 
-# Route for dealing with forum post form
+# Route that will insert the forum post into the database, remove it completely, or send it to the admin dashboard
 
 @app.route('/forum_post', methods =["GET", "POST"])
 def forum_post():
@@ -572,7 +572,7 @@ def forum_post():
 	elif not session.get("name"):
 		return redirect('/visit_subforum/' + subforum_name)
 
-# Route for dealing with following user
+# Route that contains functionality that follows/unfollows a user
 
 @app.route('/follow_user/<student_profile_email>', methods =["GET", "POST"])
 def follow_user(student_profile_email):
@@ -670,6 +670,8 @@ def list_of_following(student_email):
 	elif not session.get("name"):
 		return redirect('/login_account')
 
+# Route that will add the comment into the comments section of a particular post
+
 @app.route('/reply_to_the_post/<post_id>', methods =["GET", "POST"])
 def reply_to_the_post(post_id):
 	if request.method == "POST":
@@ -702,6 +704,7 @@ def reply_to_the_post(post_id):
 	return redirect('/view_topic/' + post_id)
 
 # Counts the number of notifications that the user has seen
+
 @app.route('/update_notification_count', methods =["GET", "POST"])
 def update_notification_count():
 	if request.method == "POST":
@@ -751,19 +754,22 @@ def retrieve_messages(student_profile_email):
 	return jsonify(message_list)
 
 # Render admin dashboard template page
+
 @app.route('/render_admin_dashboard', methods =["GET", "POST"])
 def render_admin_dashboard():
 	suspicious_posts = db.forum_database.SuspiciousPostsList.find()
 	notifications_info,number_of_notifications = getting_notification_details()
 	return render_template("admin_dashboard.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications,suspicious_posts=suspicious_posts)
 
-# Render admin dashboard template page
+# Route that will remove the post that the admin wants to
+
 @app.route('/admin_delete_post/<post_id>', methods =["GET", "POST"])
 def admin_delete_post(post_id):
 	db.forum_database.SuspiciousPostsList.delete_one({"_id": ObjectId(post_id) })
 	return redirect("/render_admin_dashboard")
 
-# Render admin dashboard template page
+# Route that will approve a post that the admin wants to
+
 @app.route('/admin_approve_post/<post_id>', methods =["GET", "POST"])
 def admin_approve_post(post_id):
 	suspicious_post = db.forum_database.SuspiciousPostsList.find({"_id": ObjectId(post_id) })
@@ -776,6 +782,7 @@ def admin_approve_post(post_id):
 	return redirect("/render_admin_dashboard")
 
 # Chat functionality route
+
 @app.route('/render_message_user_template/<student_profile_email>', methods =["GET", "POST"])
 def render_message_user_template(student_profile_email):
 
