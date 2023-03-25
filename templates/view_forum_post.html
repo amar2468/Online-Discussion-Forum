@@ -197,7 +197,7 @@
 	{% endif %}
 
 	<div class="container-fluid mt-95">
-		<h1 style="font-size: 36px; font-weight: bold; color: #333;">{{ post_title }}</h1>
+		<h1 style="font-size: 36px; font-weight: bold; color: #333;"><a href="{{url_for('visit_subforum', subforum_name=subforum_name)}}"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>&nbsp;&nbsp;{{ post_title }}</h1>
 
 		<hr></hr>
 		 <div class="row">
