@@ -16,6 +16,8 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
 	<link rel="stylesheet" href="/static/css/custom_stylesheet.css">
 
 	<style>
@@ -23,6 +25,25 @@
 		{
 			background-color: #f4f7f6;
 		}
+
+		@media (max-width: 425px) {
+			#message_sent {
+				width:20px;
+			}
+		}
+
+		#submit_message_button
+		{
+			background: none;
+			border: none;
+			padding: 0;
+			margin: 0;
+			cursor: pointer;
+			font-size: 16px;
+			color: #333;
+			text-decoration: none;
+		}
+
 		.card 
 		{
 			background: #fff;
@@ -333,6 +354,7 @@
 	{% endif %}
 	<br><br>
 	{% if message_list_info.count() > 0 %}
+
 	<div class="container">
 	<div class="row clearfix">
 		<div class="col-lg-12">
@@ -384,9 +406,9 @@
 								<input id="recipient_email" type="hidden" name="recipient_email" value="{{ student_profile_email }}">
 								<input id="recipient_name" type="hidden" name="recipient_name" value="{{ student_name }}">
 								<input id="sender_email_address" type="hidden" name="sender_email_address" value="{{ session.get('name') }}">
-								<input id="message_sent" type="text" class="form-control" placeholder="Message" autocomplete="off">
-								<div class="input-group-prepend">
-									<button type="submit"><span class="input-group-text"><i class="fa fa-send"></i></span></button>
+								<input contenteditable="true" id="message_sent" type="text" class="form-control col-9 col-sm-11" placeholder="Message" autocomplete="off">&nbsp;&nbsp;
+								<div class="input-group-append">
+								  <button id="submit_message_button" type="submit" class="btn btn-primary" style="height: 38px;"><i class="fa fa-send"></i></button>
 								</div>
 							</div>
 						</form>
@@ -396,55 +418,19 @@
 		</div>
 	</div>
 	</div>
-	{% else %}
-
-	<div class="container">
-	<div class="row clearfix">
-		<div class="col-lg-12">
-			<div class="card chat-app">
-				<div class="chat">
-					<div class="chat-header clearfix">
-						<div class="row">
-							<div class="col-lg-12">
-								<a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-									<img id="user_profile_image_chat" src="{{url_for('static', filename=user_details.profile_picture_link)}}">
-								</a>
-								
-								<div class="chat-about">
-									<h6 class="m-b-0">{{ student_name }}</h6>
-									<small>Last seen: {{ time_since_last_seen }}</small>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="chat-history">
-						<ul class="m-b-0">
-
-							
-						</ul>
-					</div>
-
-					<div class="chat-message clearfix">
-						<div class="input-group mb-0">
-							<input id="message_sent" type="text" class="form-control" placeholder="Message">
-							<div class="input-group-prepend">
-								<button type="submit"><span class="input-group-text"><i class="fa fa-send"></i></span></button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	</div>
-
-
 
 	{% endif %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
 
 <script type="text/javascript">
+
+	$(document).ready(function() {
+		$('#message_sent').emojioneArea({
+			pickerPosition: 'bottom'
+		});
+	});
+	
     var socket = io.connect('http://' + document.domain + ':' + location.port);
 
     var current_user_email = "{{ session.get('name') }}";
