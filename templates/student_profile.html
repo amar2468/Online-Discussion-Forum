@@ -229,14 +229,15 @@
                                 </form>
 
                             </div>
+                            {% if document.user_type == "admin" %}
+                                <div class="form-outline mb-4">
+                            
+                                    <form action="/render_admin_dashboard" method="POST">
+                                        <button class="btn btn-primary btn-lg btn-block" type="submit">Admin Dashboard</button>
+                                    </form>
 
-                            <div class="form-outline mb-4">
-                        
-                                <form action="/render_admin_dashboard" method="POST">
-                                    <button class="btn btn-primary btn-lg btn-block" type="submit">Admin Dashboard</button>
-                                </form>
-
-                            </div>
+                                </div>
+                            {% endif %}
 
 
                         </div>
