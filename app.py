@@ -10,6 +10,7 @@ from flask_share import Share
 import db
 import nltk
 import string
+from jinja2 import TemplateError
 from nltk import pos_tag
 from collections import defaultdict
 from nltk.corpus import stopwords, wordnet
@@ -21,7 +22,6 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import precision_score, recall_score, f1_score
-from imblearn.over_sampling import SMOTE
 
 # Download from nltk library the following:
 nltk.download('punkt')
@@ -49,6 +49,19 @@ app.config["SESSION_TYPE"] = "filesystem"
 share.init_app(app)
 
 socketio = SocketIO(app)
+
+# If page not found, this will execute
+
+@app.errorhandler(404)
+def page_not_found(error):
+    notifications_info,number_of_notifications = getting_notification_details()
+    return render_template('404.html', notifications_info=notifications_info,number_of_notifications=number_of_notifications), 404
+
+# If template has issues, this will be executed below
+@app.errorhandler(TemplateError)
+def handle_template_error(error):
+    notifications_info,number_of_notifications = getting_notification_details()
+    return render_template("template_error.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications), 500
 
 # Function which will retrieve the notifications in reverse order and the number of notifications. Those two things will be returned	
 def getting_notification_details():
@@ -533,12 +546,10 @@ def forum_post():
 
 		X_train, X_test, y_train, y_test = train_test_split(suspicious_and_nonsuspicious_words_to_string, suspicious_and_nonsuspicious_words['tagging'], test_size=0.2, random_state=42) # splitting data into training and testing
 
-		vectorizer = CountVectorizer(stop_words='english', ngram_range=(1, 2)) # removing stop words from the data
+		vectorizer = CountVectorizer(stop_words='english', ngram_range=(1, 2))
 		X_train_vec = vectorizer.fit_transform(X_train)
 		X_test_vec = vectorizer.transform(X_test)
 
-		smote = SMOTE(random_state=42)
-		X_train_vec_balanced, y_train_balanced = smote.fit_resample(X_train_vec, y_train)
 
 		# vectorizing the post from the forum to see whether it is suspicious or not
 		user_forum_post_vectorized = vectorizer.transform([" ".join(words_lemmatized)])
