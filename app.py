@@ -78,6 +78,11 @@ def home():
 	notifications_info,number_of_notifications = getting_notification_details()
 	return render_template("home.html", subforum_info=subforum_info, notifications_info=notifications_info,number_of_notifications=number_of_notifications)
 
+@app.route('/faq')
+def faq():
+	notifications_info,number_of_notifications = getting_notification_details()
+	return render_template("faq.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications)
+
 # Route that will render the specific subforum
 
 @app.route('/visit_subforum/<subforum_name>')
