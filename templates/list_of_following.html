@@ -27,6 +27,11 @@
 			}
 		}
 
+		#image_container img {
+			max-width: 100%;
+			height: auto;
+		}
+
 	</style>
 
 </head>
@@ -125,23 +130,47 @@
 
 		{% if session.get("name") == student_email %}
 
-			<h3 style="color:black;text-align:center;margin-top: 100px;">You have not followed anyone yet</h3>
+		<div class="container py-5 h-80">
+		<div class="row d-flex justify-content-center align-items-center h-100">
+		<div class="col-16 col-md-12 col-lg-14 col-xl-10">
+		<div class="card shadow-2-strong" style="border-radius: 1rem;">
+		<div class="card-body p-2 text-center">
+
+			<h3 style="color:black;text-align:center;margin-top: 50px;">You have not followed anyone yet</h3>
 
 			<br><br>
 
 			<div id="image_container">
 				<img src="https://media.istockphoto.com/id/172444323/photo/dreams.jpg?s=612x612&w=0&k=20&c=GABvMLtLN7n6au7ASD0cWTCQT1VYgXDDmE5MeGphGf8=" alt="Man standing" style="border-radius: 50%;">
 			</div>
+
+		</div>
+		</div>
+		</div>
+		</div>
+		</div>
 
 		{% else %}
 
-			<h3 style="color:black;text-align:center;margin-top: 100px;">Sorry, this user has not followed anybody yet</h3>
+		<div class="container py-5 h-80">
+		<div class="row d-flex justify-content-center align-items-center h-100">
+		<div class="col-16 col-md-12 col-lg-14 col-xl-10">
+		<div class="card shadow-2-strong" style="border-radius: 1rem;">
+		<div class="card-body p-2 text-center">
+
+			<h3 style="color:black;text-align:center;margin-top: 50px;">Sorry, this user has not followed anybody yet</h3>
 			
-			<br><br>
+			<br>
 
 			<div id="image_container">
 				<img src="https://media.istockphoto.com/id/172444323/photo/dreams.jpg?s=612x612&w=0&k=20&c=GABvMLtLN7n6au7ASD0cWTCQT1VYgXDDmE5MeGphGf8=" alt="Man standing" style="border-radius: 50%;">
 			</div>
+
+		</div>
+		</div>
+		</div>
+		</div>
+		</div>
 		{% endif %}
 
 
