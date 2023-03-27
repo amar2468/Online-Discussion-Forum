@@ -70,6 +70,30 @@ def getting_notification_details():
 
 	return notifications_info,number_of_notifications
 
+# Check if users are mutually following each other
+
+def mutually_following(student_profile_email):
+
+	# Retrieve the information from the person who the user wants to chat with
+	other_user_details = db.forum_database.RegLoginList.find({"email": student_profile_email })
+
+	# Iterate through the other user's details and get the list of following and followers to see if they are mutually following
+	# each other
+
+	for document in other_user_details:
+		list_of_followers = document["list_of_followers"]
+		list_of_following = document["list_of_following"]
+
+	# If they are mutually following each other, return True
+
+	if session.get("name") in list_of_followers and session.get("name") in list_of_following:
+		return True
+	
+	# Otherwise, return False
+	
+	else:
+		return False
+
 # Route for homepage, which will present all of the subforums
 
 @app.route('/')
@@ -802,58 +826,68 @@ def admin_approve_post(post_id):
 @app.route('/render_message_user_template/<student_profile_email>', methods =["GET", "POST"])
 def render_message_user_template(student_profile_email):
 
-	user_details = db.forum_database.RegLoginList.find_one({"email": {"$eq": student_profile_email}})
+	# Call function to check if users are mutually following each other. Will return True or False
+	mutual = mutually_following(student_profile_email)
 
-	student_name = user_details["first_name"] + " " + user_details["last_name"]
+	# If users are mutually following each other
+	if mutual == True:
 
-	logged_in_user_details = db.forum_database.RegLoginList.find_one({"email": {"$eq": session.get("name")}})
+		user_details = db.forum_database.RegLoginList.find_one({"email": {"$eq": student_profile_email}})
 
-	logged_in_user = logged_in_user_details["first_name"] + " " + logged_in_user_details["last_name"]
+		student_name = user_details["first_name"] + " " + user_details["last_name"]
 
-	notifications_info,number_of_notifications = getting_notification_details()
+		logged_in_user_details = db.forum_database.RegLoginList.find_one({"email": {"$eq": session.get("name")}})
 
-	message_list_info = db.forum_database.MessageList.find({"participants": {"$all": [session.get("name"), student_profile_email]}})
+		logged_in_user = logged_in_user_details["first_name"] + " " + logged_in_user_details["last_name"]
 
-	if message_list_info.count() == 0:
-		db.forum_database.MessageList.insert_one({"participants": [session.get("name"), student_profile_email], "messages": [] })
+		notifications_info,number_of_notifications = getting_notification_details()
 
-	user_last_seen = user_details.get("last_seen")
+		message_list_info = db.forum_database.MessageList.find({"participants": {"$all": [session.get("name"), student_profile_email]}})
 
-	if user_last_seen != "Online":
+		if message_list_info.count() == 0:
+			db.forum_database.MessageList.insert_one({"participants": [session.get("name"), student_profile_email], "messages": [] })
 
-		current_time = datetime.now()
-		time_diff = current_time - user_last_seen
+		user_last_seen = user_details.get("last_seen")
 
-		if time_diff.days > 0:
-			if time_diff.days == 1:
-				time_since_last_seen = '1 day ago'
+		if user_last_seen != "Online":
+
+			current_time = datetime.now()
+			time_diff = current_time - user_last_seen
+
+			if time_diff.days > 0:
+				if time_diff.days == 1:
+					time_since_last_seen = '1 day ago'
+				else:
+					time_since_last_seen = f'{time_diff.days} days ago'
+
+			elif time_diff.seconds < 60:
+				time_since_last_seen = 'just now'
+
+			elif time_diff.seconds < 3600:
+
+				if time_diff.seconds >= 60 and time_diff.seconds <= 120:
+					time_since_last_seen = '1 minute ago'
+				else:
+					minutes = time_diff.seconds // 60
+					time_since_last_seen = f'{minutes} minutes ago'
+				
 			else:
-				time_since_last_seen = f'{time_diff.days} days ago'
+				if time_diff.seconds >= 3600 and time_diff.seconds <= 7200:
+					time_since_last_seen = '1 hour ago'
 
-		elif time_diff.seconds < 60:
-			time_since_last_seen = 'just now'
-
-		elif time_diff.seconds < 3600:
-
-			if time_diff.seconds >= 60 and time_diff.seconds <= 120:
-				time_since_last_seen = '1 minute ago'
-			else:
-				minutes = time_diff.seconds // 60
-				time_since_last_seen = f'{minutes} minutes ago'
-			
+				else:
+					hours = time_diff.seconds // 3600
+					time_since_last_seen = f'{hours} hours ago'
 		else:
-			if time_diff.seconds >= 3600 and time_diff.seconds <= 7200:
-				time_since_last_seen = '1 hour ago'
+			time_since_last_seen = 'Online'
 
-			else:
-				hours = time_diff.seconds // 3600
-				time_since_last_seen = f'{hours} hours ago'
+
+
+		return render_template("message_user_template.html", notifications_info=notifications_info, number_of_notifications=number_of_notifications, message_list_info=message_list_info,user_details=user_details,student_name=student_name,student_profile_email=student_profile_email, logged_in_user=logged_in_user,time_since_last_seen=time_since_last_seen)
+	
+	# If users are NOT mutually following each other.
 	else:
-		time_since_last_seen = 'Online'
-
-
-
-	return render_template("message_user_template.html", notifications_info=notifications_info, number_of_notifications=number_of_notifications, message_list_info=message_list_info,user_details=user_details,student_name=student_name,student_profile_email=student_profile_email, logged_in_user=logged_in_user,time_since_last_seen=time_since_last_seen)
+		return redirect("/")
 		
 
 def messageReceived(methods=['GET', 'POST']):
