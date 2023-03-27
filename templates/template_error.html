@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--  This file has been downloaded from bootdey.com @bootdey on twitter -->
+    <!--  All snippets are MIT license http://bootdey.com/license -->
+    <!--  Edited by : Amar Plakalo -->
+    <!--  Date: 07/11/2022 -->
+
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Online Discussion Forum | Template Not Found</title>
+	<link rel="shortcut icon" type="image/x-icon" href="/static/favicon-logo.PNG">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="/static/css/custom_stylesheet.css">
+
+</head>
+<body>
+
+
+	{% if session.get("name") %}
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+			<a class="navbar-brand" href="/">Student Discussion</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav">
+					<a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+					<a class="nav-item nav-link" href="/student_profile">Profile</a>
+					<a class="nav-item nav-link" href="/logout">Log Out</a>
+
+					<div class="dropdown">
+						<a class="nav-item nav-link" onclick="clicked_on_notifications()" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+							<i class="fas fa-bell small-icon"></i>
+							{% if number_of_notifications > 0 %}
+							<span id="number_of_notifications" class="badge rounded-pill badge-notification bg-danger">{{ number_of_notifications }}</span>
+							{% endif %}
+						</a>
+						{% if notifications_info.count() > 0 %}
+						<ul id="list_of_notifications" class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink" style="display:none;">
+						{% for notification in notifications_info %}
+							{% if notification.username == session.get("name") %}
+							{% if notification.seen is true %}
+								{% if notification.notification_type == 'follow' %}
+								<li id="seen_notifications">
+									<a class="dropdown-item" href="{{url_for('viewing_profile', student_profile_email=notification.username_of_follower)}}">{{ notification.content }}</a>
+								</li>
+								{% elif notification.notification_type == 'reply' %}
+								<li id="seen_notifications">
+									<a class="dropdown-item" href="{{url_for('view_topic', _id=notification.forum_post_id)}}">{{ notification.content }}</a>
+								</li>
+								{% elif notification.notification_type == 'like' %}
+								<li id="seen_notifications">
+									<a class="dropdown-item" href="{{url_for('view_topic', _id=notification.forum_post_id)}}">{{ notification.content }}</a>
+								</li>
+								{% endif %}
+							{% else %}
+								{% if notification.notification_type == 'follow' %}
+								<li id="unseen_notifications" style="background-color:#ADD8E6;">
+									<a class="dropdown-item" href="{{url_for('viewing_profile', student_profile_email=notification.username_of_follower)}}">{{ notification.content }}</a>
+								</li>
+								{% elif notification.notification_type == 'reply' %}
+								<li id="unseen_notifications" style="background-color:#ADD8E6;">
+									<a class="dropdown-item" href="{{url_for('view_topic', _id=notification.forum_post_id)}}">{{ notification.content }}</a>
+								</li>
+								{% elif notification.notification_type == 'like' %}
+								<li id="unseen_notifications" style="background-color:#ADD8E6;">
+									<a class="dropdown-item" href="{{url_for('view_topic', _id=notification.forum_post_id)}}">{{ notification.content }}</a>
+								</li>
+								{% endif %}
+							{% endif %}
+							{% endif %}
+						{% endfor %}
+						</ul>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+		</nav>
+
+	{% else %}
+
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+		<a class="navbar-brand" href="/">Student Discussion</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+			<div class="navbar-nav">
+				<a class="nav-item nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+				<a class="nav-item nav-link" href="/login_account">Sign In</a>
+				<a class="nav-item nav-link" href="/register_account">Register</a>
+			</div>
+		</div>
+
+		</nav>
+	{% endif %}
+
+    <section class="vh-100">
+    <div class="container py-5 h-80">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    <div class="card shadow-2-strong" style="border-radius: 1rem;">
+    <div class="card-body p-2 text-center">
+
+
+    <h1>Template Not Found</h1>
+    <br>
+    <p>The template could not be loaded.</p>
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    </section>
+
+	<script src="{{url_for('static', filename='main.js')}}"></script>
+</body>
+</html>
