@@ -65,6 +65,7 @@ def page_no(error):
     return render_template("template_error.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications), 400
 
 # If template has issues, this will be executed below
+
 @app.errorhandler(TemplateError)
 def handle_template_error(error):
     notifications_info,number_of_notifications = getting_notification_details()
@@ -105,6 +106,20 @@ def mutually_following(student_profile_email):
 def download_evidence(filename):
     path = os.path.join("static/", filename)
     return send_file(path, as_attachment=True)
+
+@app.route('/all_users_posts/<other_student_email>')
+def all_users_posts(other_student_email):
+	print(other_student_email)
+
+	notifications_info,number_of_notifications = getting_notification_details()
+
+	other_users_posts = db.forum_database.ForumPostCollection.find()
+	other_users_replies = list(db.forum_database.ForumPostCollection.find({}))
+	other_users_liked = list(db.forum_database.ForumPostCollection.find({}))
+
+	other_users_likes = db.forum_database.NotificationList.find()
+
+	return render_template("show_users_posts.html",other_users_posts=other_users_posts, other_student_email=other_student_email, other_users_replies=other_users_replies,other_users_liked=other_users_liked ,other_users_likes=other_users_likes,notifications_info=notifications_info,number_of_notifications=number_of_notifications)
 
 # Route for homepage, which will present all of the subforums
 
