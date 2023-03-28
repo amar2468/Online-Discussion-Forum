@@ -285,7 +285,7 @@
                                             </form>
                                         {% endif %}
                                         <br>
-                                        <form action="#" method="POST">
+                                        <form action="{{url_for('render_report_user_template', other_student_email=value)}}" method="POST">
                                             <button type="submit" id="report_user" name="report_user" class="btn btn-primary btn-lg btn-block" value="Report User">Report User</button>
                                         </form>
 
