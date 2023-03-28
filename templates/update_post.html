@@ -109,10 +109,13 @@
 
 
 
-	<div class="container bootdey">
-		<div class="row justify-content-center align-items-center">
-			<div class="col-md-8 col-sm-12">
-				<div class="well"> 
+    <section class="vh-100">
+		<div class="container py-5 h-80">
+		<div class="row d-flex justify-content-center align-items-center h-100">
+		<div class="col-12 col-md-8 col-lg-6 col-xl-5">
+		<div class="card shadow-2-strong" style="border-radius: 1rem;">
+		<div class="card-body p-2 text-center">
+
 					<form role="form" class="form-horizontal" action="{{url_for('edit_forum_topic', id_edit=id_edit)}}" method="POST">
 
                         <h4>Topic : Computer Science</h4>
@@ -125,17 +128,21 @@
                         <div style="padding:14px;" class="form-group">
                             <textarea placeholder="Your post goes here..." id ="post_content" name="post_content" class="form-control">{{ document.content_of_post }}</textarea>
                         </div>
-                        <div style="padding:14px;" class="form-group">
-                            <button type="submit" id="post_button" name="post_button" class="btn btn-success pull-left">Update Topic</button>
-                        </div>
-                        <div style="padding:14px;" class="form-group">
-                            <a class="btn btn-success pull-left" href="{{url_for('visit_subforum', subforum_name=subforum_name)}}">Cancel</a>
-                        </div>
+						<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px;">
+							<div style="padding:14px;" class="form-group">
+								<button type="submit" id="post_button" name="post_button" class="btn btn-success pull-left">Update Topic</button>
+							</div>
+							<div style="padding:14px;" class="form-group">
+								<a class="btn btn-success pull-left" href="{{url_for('visit_subforum', subforum_name=subforum_name)}}">Cancel</a>
+							</div>
+						</div>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
+	</div>
+	</section>
 
 	<script src="{{url_for('static', filename='main.js')}}"></script>
 </body>
