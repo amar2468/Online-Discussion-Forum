@@ -2,7 +2,7 @@
 from flask_socketio import SocketIO
 import os
 from datetime import date, datetime
-from flask import Flask, flash, render_template, request, redirect, session, jsonify
+from flask import Flask, flash, render_template, request, redirect, session, jsonify, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from bson.objectid import ObjectId
@@ -57,6 +57,13 @@ def page_not_found(error):
     notifications_info,number_of_notifications = getting_notification_details()
     return render_template('404.html', notifications_info=notifications_info,number_of_notifications=number_of_notifications), 404
 
+# Dealing with error code 400 below
+
+@app.errorhandler(400)
+def page_no(error):
+    notifications_info,number_of_notifications = getting_notification_details()
+    return render_template("template_error.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications), 400
+
 # If template has issues, this will be executed below
 @app.errorhandler(TemplateError)
 def handle_template_error(error):
@@ -90,9 +97,14 @@ def mutually_following(student_profile_email):
 		return True
 	
 	# Otherwise, return False
-	
+
 	else:
 		return False
+
+@app.route('/download_evidence/<filename>')
+def download_evidence(filename):
+    path = os.path.join("static/", filename)
+    return send_file(path, as_attachment=True)
 
 # Route for homepage, which will present all of the subforums
 
@@ -798,8 +810,9 @@ def retrieve_messages(student_profile_email):
 @app.route('/render_admin_dashboard', methods =["GET", "POST"])
 def render_admin_dashboard():
 	suspicious_posts = db.forum_database.SuspiciousPostsList.find()
+	reported_users = db.forum_database.ReportUserList.find()
 	notifications_info,number_of_notifications = getting_notification_details()
-	return render_template("admin_dashboard.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications,suspicious_posts=suspicious_posts)
+	return render_template("admin_dashboard.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications,suspicious_posts=suspicious_posts,reported_users=reported_users)
 
 # Route that will remove the post that the admin wants to
 
@@ -925,6 +938,48 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
 		db.forum_database.MessageList.update_one({'_id': specific_conversation['_id']}, {'$set': {'messages': specific_conversation['messages']}})
 
 	socketio.emit('my response', json, callback=messageReceived)
+
+@app.route('/render_report_user_template/<other_student_email>', methods =["GET", "POST"])
+def render_report_user_template(other_student_email):
+	if session.get("name"):
+		notifications_info,number_of_notifications = getting_notification_details()
+		return render_template("report_user.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications,other_student_email=other_student_email)
+	else:
+		return redirect("/login_account")
+	
+@app.route('/report_user', methods =["GET", "POST"])
+def report_user():
+	if session.get("name"):
+
+		other_student_email = request.form.get("reported_user")
+		reason_for_report = request.form.get("report_reason")
+		report_content = request.form.get("report_content")
+		evidence = request.files['evidence']
+
+		saving_evidence = secure_filename(evidence.filename)
+
+		if evidence.filename == "":
+			saving_evidence = ""
+		else:
+			evidence.save(os.path.join("static/", saving_evidence))
+
+		db.forum_database.ReportUserList.insert_one({'reported_user':other_student_email,'reporter':session.get("name"),'reason_for_report':reason_for_report,'description':report_content, 'evidence':saving_evidence})
+
+		session['form_processed'] = True
+
+		return redirect("/render_confirmation_report_user")
+	else:
+		return redirect("/login_account")
+
+
+@app.route('/render_confirmation_report_user', methods =["GET", "POST"])
+def render_confirmation_report_user():
+	if session.get('form_processed'):
+		session.pop('form_processed', None)
+		notifications_info,number_of_notifications = getting_notification_details()
+		return render_template("confirmation_of_report.html",notifications_info=notifications_info,number_of_notifications=number_of_notifications)
+	else:
+		return redirect("/")
 
 if __name__ == '__main__':
 	socketio.run(app, debug=True)
