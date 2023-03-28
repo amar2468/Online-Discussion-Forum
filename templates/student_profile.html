@@ -208,7 +208,7 @@
                             </div>
 
                             <div>
-                                <p class="form-control-lg" id="number_of_posts" style="color:#007bff;">Number of posts: {{ total_number_of_posts_and_comments }}</p>
+                                <p class="form-control-lg" id="number_of_posts" style="color:#007bff;"><a href="{{url_for('all_users_posts', other_student_email=value)}}">Number of posts: {{ total_number_of_posts_and_comments }}</a></p>
                             </div>
                 
                             <div class="form-outline mb-4">
@@ -266,13 +266,14 @@
 
                             </div>
 
-                            <div>
-                                <p class="form-control-lg" id="number_of_posts" style="color:#007bff;">Number of posts: {{ total_number_of_posts_and_comments }}</p>
-                            </div>
-
                             {% if session.get("name") %}
 
                                 {% if session.get("name") in document.list_of_followers %}
+                                
+                                    <div>
+                                        <a href="{{url_for('all_users_posts', other_student_email=value)}}"><p class="form-control-lg" id="number_of_posts" style="color:#007bff;">Number of posts: {{ total_number_of_posts_and_comments }}</p></a>
+                                    </div>
+
                                     <div class="form-outline mb-4">
                                         
                                         <form action="{{url_for('follow_user', student_profile_email=value)}}" method="POST">
@@ -291,6 +292,11 @@
 
                                     </div>
                                 {% else %}
+
+                                    <div>
+                                        <p class="form-control-lg" id="number_of_posts" style="color:#007bff;">Number of posts: {{ total_number_of_posts_and_comments }}</p>
+                                    </div>
+
                                     <div class="form-outline mb-4">
                                 
                                         <form action="{{url_for('follow_user', student_profile_email=value)}}" method="POST">
