@@ -90,7 +90,9 @@
                 <div class="card-body p-2 text-center d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
                   <div class="table-wrapper" style="flex: 1; overflow: auto; width: 100%;">
                     <h1>Admin Dashboard</h1>
-                    <br><br>
+					<br><br>
+					<h3>Suspicious Posts</h3>
+                    <br>
                     <h5>These are the posts that the system has detected as potentially suspicious</h5>
                     <br>
                     <table class="table table-bordered">
@@ -122,6 +124,42 @@
 						{% else %}
 							<tr>
 								<td colspan="7">No data available</td>
+							</tr>
+						{% endif %}
+                        
+                      </tbody>
+                    </table>
+
+					<br><br>
+					<h3>Reported Users</h3>
+                    <br>
+                    <h5>Below are the reported users</h5>
+                    <br>
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+						  <th scope="col">Reported User</th>
+						  <th scope="col">Reporter</th>
+                          <th scope="col">Reason for report</th>
+                          <th scope="col">Description</th>
+                          <th scope="col">Evidence</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+						{% if reported_users.count() > 0 %}
+							{% for report in reported_users %}
+							<tr>
+							<td>{{ report.reported_user }}</td>
+							<td>{{ report.reporter }}</td>
+							<td>{{ report.reason_for_report }}</td>
+							<td>{{ report.description }}</td>
+							<td><a href="{{ url_for('download_evidence', filename=report.evidence) }}"><i class="fa fa-download" aria-hidden="true"></i></a></td>
+							</tr>
+			
+							{% endfor %}
+						{% else %}
+							<tr>
+								<td colspan="5">No data available</td>
 							</tr>
 						{% endif %}
                         
