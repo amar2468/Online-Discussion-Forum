@@ -1,5 +1,6 @@
 # Project imports needed
 from flask_socketio import SocketIO
+from flask_recaptcha import ReCaptcha
 import os
 from datetime import date, datetime
 from flask import Flask, flash, render_template, request, redirect, session, jsonify, send_file
@@ -45,6 +46,9 @@ share = Share()
 app = Flask(__name__)
 app.secret_key = '32892938832jfdjjkd2993nd'
 app.config["SESSION_TYPE"] = "filesystem"
+app.config['RECAPTCHA_SITE_KEY'] = '6LdLq0AlAAAAAGwZYzeryQrqgn2oXOmhpsUjE1J5'
+app.config['RECAPTCHA_SECRET_KEY'] = '6LdLq0AlAAAAAEEcV6ZA-GXSwkE1lRS1W0bLMF_E'
+recaptcha = ReCaptcha(app)
 
 share.init_app(app)
 
@@ -162,29 +166,32 @@ def register_account():
 			bio = request.form.get("bio")
 			profile_pic = request.files['profile_picture_for_register']
 
-			if db.forum_database.RegLoginList.find_one({"email": {"$eq": email}}):
-				return redirect("/register_account")
-			else:
-				encrypted_password = generate_password_hash(passwd)
-
-				saving_profile_picture = secure_filename(profile_pic.filename)
-
-				if profile_pic.filename == "":
-					saving_profile_picture = secure_filename('360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg')
+			if recaptcha.verify():
+				if db.forum_database.RegLoginList.find_one({"email": {"$eq": email}}):
+					return redirect("/register_account")
 				else:
-					profile_pic.save(os.path.join("static/", saving_profile_picture))
+					encrypted_password = generate_password_hash(passwd)
 
-				date_registered = date.today()
+					saving_profile_picture = secure_filename(profile_pic.filename)
 
-				date_registered = date_registered.strftime("%d/%m/%Y")
+					if profile_pic.filename == "":
+						saving_profile_picture = secure_filename('360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg')
+					else:
+						profile_pic.save(os.path.join("static/", saving_profile_picture))
 
-				db.forum_database.RegLoginList.insert_one({"first_name": fname, "last_name":lname, "email":email, "user_type":'normal' ,"password": encrypted_password, "bio": bio ,"profile_picture_link": saving_profile_picture,'user_registered': date_registered, "list_of_followers": [], "number_of_followers":0, "list_of_following": [], "number_of_following":0})
-				
-				session["name"] = request.form.get("email_address_for_register")
+					date_registered = date.today()
 
-				session.permanent = True
-				
-				return redirect("/student_profile")
+					date_registered = date_registered.strftime("%d/%m/%Y")
+
+					db.forum_database.RegLoginList.insert_one({"first_name": fname, "last_name":lname, "email":email, "user_type":'normal' ,"password": encrypted_password, "bio": bio ,"profile_picture_link": saving_profile_picture,'user_registered': date_registered, "list_of_followers": [], "number_of_followers":0, "list_of_following": [], "number_of_following":0})
+					
+					session["name"] = request.form.get("email_address_for_register")
+
+					session.permanent = True
+					
+					return redirect("/student_profile")
+			else:
+				return redirect("/register_account")
 		else:
 			return render_template("RegisterAccount.html")
 	else:
