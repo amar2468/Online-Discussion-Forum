@@ -9,6 +9,10 @@ body
     color:#D1D1D1 !important;
 }
 
+.g-recaptcha 
+{
+    display: inline-block;
+}
 
 .error
 {
