@@ -116,7 +116,7 @@
 
 	{% if session.get("name") %}
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
 			<a class="navbar-brand" href="/">Student Discussion</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -130,7 +130,7 @@
 
 					<div class="dropdown">
 						<a class="nav-item nav-link" onclick="clicked_on_notifications()" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-							<i class="fas fa-bell small-icon"></i>
+							<i class="fas fa-bell small-icon" aria-label="Notification bell"></i>
 							{% if number_of_notifications > 0 %}
 							<span id="number_of_notifications" class="badge rounded-pill badge-notification bg-danger">{{ number_of_notifications }}</span>
 							{% endif %}
@@ -181,7 +181,7 @@
 	{% else %}
 
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
 		<a class="navbar-brand" href="/">Student Discussion</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -199,14 +199,14 @@
 	{% endif %}
 
 	<div class="container-fluid mt-95">
-		<h1 style="font-size: 36px; font-weight: bold; color: #333;"><a href="javascript:history.back()"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>&nbsp;&nbsp;{{ post_title }}</h1>
+		<h1 style="font-size: 36px; font-weight: bold; color: #333;"><a href="javascript:history.back()"><i class="fa fa-arrow-left" aria-label="Go back"></i></a>&nbsp;&nbsp;{{ post_title }}</h1>
 
 		<hr></hr>
 		 <div class="row">
 			 <div class="col-md-12">
 				 <div class="card mb-4">
 					 <div class="card-header">
-						 <div class="media flex-wrap w-100 align-items-center"> <img src="/static/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" class="d-block ui-w-40 rounded-circle" alt="">
+						 <div class="media flex-wrap w-100 align-items-center"> <img src="/static/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" class="d-block ui-w-40 rounded-circle" alt="User profile picture">
 							{% if collection_info|length > 0 %}
 								{% for document in collection_info %} 
 									{% if content_post == document.content_of_post %}
@@ -249,7 +249,7 @@
 								<div class="col-md-12">
 									<div class="card mb-4">
 										<div class="card-header">
-											<div class="media flex-wrap w-100 align-items-center"> <img src="/static/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" class="d-block ui-w-40 rounded-circle" alt="">
+											<div class="media flex-wrap w-100 align-items-center"> <img src="/static/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" class="d-block ui-w-40 rounded-circle" alt="User profile picture">
 
 												<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=reply.author_of_post)}}" data-abc="true">{{ reply.author_of_post }}</a>
 													<div class="text-muted small">{{ reply.timestamp_for_reply }}</div>
@@ -265,8 +265,8 @@
 										</div>
 										<div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
 											<div class="px-4 pt-3"> 
-												<a href="{{url_for('like_a_reply', reply_id=reply.id)}}" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-up"></i></span> </a>{{ reply.number_of_likes_for_reply }}
-												<a href="{{url_for('dislike_a_reply', reply_id=reply.id)}}" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"><span class="text-muted d-inline-flex align-items-center align-middle ml-4"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-down"></i></span> </span></a>{{ reply.number_of_dislikes_for_reply }}
+												<a href="{{url_for('like_a_reply', reply_id=reply.id)}}" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-up" aria-label="Like reply"></i></span> </a>{{ reply.number_of_likes_for_reply }}
+												<a href="{{url_for('dislike_a_reply', reply_id=reply.id)}}" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"><span class="text-muted d-inline-flex align-items-center align-middle ml-4"> &nbsp; <span class="align-middle"><i class="fa fa-thumbs-down" aria-label="Dislike reply"></i></span> </span></a>{{ reply.number_of_dislikes_for_reply }}
 											</div>
 										</div>
 									</div>
@@ -287,7 +287,7 @@
 			<div class="col-md-12">
 				<div class="card mb-4">
 					<div class="card-body">
-					   <textarea name="reply_content" id="reply_content"></textarea>
+					   <textarea name="reply_content" id="reply_content" aria-label="Enter your reply here"></textarea>
 					</div>
 					<div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
 						<div class="px-4 pt-3"> <button type="submit" class="btn btn-primary" onclick="return reply_to_post()"><i class="ion ion-md-create"></i>Reply</button> </div>

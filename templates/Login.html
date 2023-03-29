@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
     <head>
         <title>Online Discussion Forum | Login</title>
@@ -30,7 +30,7 @@
 
         {% if session.get("name") %}
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+                <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
                 <a class="navbar-brand" href="/">Student Discussion</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -49,7 +49,7 @@
         {% else %}
 
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+            <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
             <a class="navbar-brand" href="/">Student Discussion</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -82,12 +82,12 @@
                         <form action="{{ url_for("login_account")}}" onsubmit="return validate_login_form()" method="post" enctype="multipart/form-data">
             
                             <div class="form-outline mb-4">
-                                <input type="email" id="email_address_for_login" name="email_address_for_login" class="form-control form-control-lg" autocomplete="off" placeholder="Email" />
+                                <input type="email" id="email_address_for_login" name="email_address_for_login" class="form-control form-control-lg" autocomplete="off" alt="Email for login" placeholder="Email" />
                                 <p class="error email-error"></p>
                             </div>
                 
                             <div class="form-outline mb-4">
-                                <input type="password" id="user_password_for_login" name="user_password_for_login" class="form-control form-control-lg" autocomplete="off" placeholder="Password" />
+                                <input type="password" id="user_password_for_login" name="user_password_for_login" class="form-control form-control-lg" autocomplete="off" alt="Password for login" placeholder="Password" />
                                 <p class="error password-error"></p>
                             </div>
                 

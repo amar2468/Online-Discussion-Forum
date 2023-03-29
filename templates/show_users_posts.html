@@ -24,7 +24,7 @@
 
 	{% if session.get("name") %}
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
 			<a class="navbar-brand" href="/">Student Discussion</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -38,7 +38,7 @@
 
 					<div class="dropdown">
 					<a class="nav-item nav-link" onclick="clicked_on_notifications()" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-						<i class="fas fa-bell small-icon"></i>
+						<i class="fas fa-bell small-icon" aria-label="Notification bell"></i>
 						{% if number_of_notifications > 0 %}
 							<span id="number_of_notifications" class="badge rounded-pill badge-notification bg-danger">{{ number_of_notifications }}</span>
 						{% endif %}
@@ -89,7 +89,7 @@
 	{% else %}
 
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
 		<a class="navbar-brand" href="/">Student Discussion</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -135,10 +135,10 @@
 
                             <div class="col-md-8 mb-3 mb-sm-0" id="col_div_for_card">
                                 <h5 class="forum_post_title">
-                                    <a href="{{ url_for('view_topic', _id=post._id) }}" class="text-primary" id="title_of_forum_post">{{ post.title_of_post }}</a>
+                                    <a href="{{ url_for('view_topic', _id=post._id) }}" style="color: #005A61 !important;" class="text-primary" id="title_of_forum_post">{{ post.title_of_post }}</a>
                                 </h5>
-                                <p class="text-sm" style="color:black;"><span class="op-6">Posted</span> {{ post.time_stamp_when_post_created }} <span class="op-6">by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=post.author_of_post)}}">{{ post.author_of_post }}</a></p>
-                            <div class="text-sm op-5" style="color:black;"><a href="{{ url_for('visit_subforum', subforum_name=post.subforum) }}" class="text-primary" id="subforum_back"> Forum: {{ post.subforum }} </a></div><br>
+                                <p class="text-sm" style="color:black;"><span class="op-6">Posted</span> {{ post.time_stamp_when_post_created }} <span class="op-6">by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=post.author_of_post)}}" style="color: #005A61 !important;">{{ post.author_of_post }}</a></p>
+                            <div class="text-sm op-5" style="color:black;"><a href="{{ url_for('visit_subforum', subforum_name=post.subforum) }}" style="color: #005A61 !important;" class="text-primary" id="subforum_back"> Forum: {{ post.subforum }} </a></div><br>
                         </div>
                         </div>
                         <br>
@@ -160,12 +160,12 @@
 
                             <div class="col-md-8 mb-3 mb-sm-0" id="col_div_for_card">
                                 <h5 class="forum_post_title">
-                                    <a href="{{ url_for('view_topic', _id=post._id) }}" class="text-primary" id="title_of_forum_post">{{ post.title_of_post }}</a>
+                                    <a href="{{ url_for('view_topic', _id=post._id) }}" style="color: #005A61 !important;" class="text-primary" id="title_of_forum_post">{{ post.title_of_post }}</a>
                                 </h5>
-                                <p class="text-sm" style="color:black;"><span class="op-6">Posted</span> {{ comment.timestamp_for_reply }} <span class="op-6">by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=comment.author_of_post)}}">{{ comment.author_of_post }}</a></p>
+                                <p class="text-sm" style="color:black;"><span class="op-6">Posted</span> {{ comment.timestamp_for_reply }} <span class="op-6">by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=comment.author_of_post)}}" style="color: #005A61 !important;">{{ comment.author_of_post }}</a></p>
                                 <br>
                                 <p class="text-sm" style="color:black;">{{ comment.content_of_post }}</p>
-                            <div class="text-sm op-5" style="color:black;"><a href="{{ url_for('visit_subforum', subforum_name=post.subforum) }}" class="text-primary" id="subforum_back"> Forum: {{ post.subforum }} </a></div><br>
+                            <div class="text-sm op-5" style="color:black;"><a href="{{ url_for('visit_subforum', subforum_name=post.subforum) }}" style="color: #005A61 !important;" class="text-primary" id="subforum_back"> Forum: {{ post.subforum }} </a></div><br>
                         </div>
                         </div>
                         <br>
@@ -189,12 +189,12 @@
 
                                     {% if post._id|string == liked_post.forum_post_id %}
                                         <h5 class="forum_post_title">
-                                            <a href="{{ url_for('view_topic', _id=post._id) }}" class="text-primary" id="title_of_forum_post">{{ post.title_of_post }}</a>
+                                            <a href="{{ url_for('view_topic', _id=post._id) }}" style="color: #005A61 !important;" class="text-primary" id="title_of_forum_post">{{ post.title_of_post }}</a>
                                         </h5>
 
-                                        <p class="text-sm" style="color:black;"><span class="op-6">Posted</span> {{ post.timestamp_for_reply }} <span class="op-6">by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=post.author_of_post)}}">{{ post.author_of_post }}</a></p>
+                                        <p class="text-sm" style="color:black;"><span class="op-6">Posted</span> {{ post.timestamp_for_reply }} <span class="op-6">by</span> <a class="text-black" href="{{url_for('viewing_profile', student_profile_email=post.author_of_post)}}" style="color: #005A61 !important;">{{ post.author_of_post }}</a></p>
                                         <br>
-                                        <div class="text-sm op-5" style="color:black;"><a href="{{ url_for('visit_subforum', subforum_name=post.subforum) }}" class="text-primary" id="subforum_back"> Forum: {{ post.subforum }} </a></div><br>
+                                        <div class="text-sm op-5" style="color:black;"><a href="{{ url_for('visit_subforum', subforum_name=post.subforum) }}" style="color: #005A61 !important;" class="text-primary" id="subforum_back"> Forum: {{ post.subforum }} </a></div><br>
                                     {% endif %}
                                 {% endfor %}
                                 <p class="text-sm" style="color:black;">{{ liked_post.content }}</p>

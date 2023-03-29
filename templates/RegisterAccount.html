@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
     <head>
         
@@ -19,7 +19,7 @@
 
         {% if session.get("name") %}
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-                <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+                <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
                 <a class="navbar-brand" href="/">Student Discussion</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -38,7 +38,7 @@
         {% else %}
 
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+            <a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
             <a class="navbar-brand" href="/">Student Discussion</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -68,45 +68,45 @@
                         <form id="register_account_form" action="{{ url_for("register_account")}}" onsubmit="return validate_register_form()" method="post" enctype="multipart/form-data">
 
                             <div class="form-outline mb-4">
-                                <input type="text" id="first_name" name="first_name" class="form-control form-control-lg" placeholder="First Name" autocomplete="off">
+                                <input type="text" id="first_name" name="first_name" class="form-control form-control-lg" placeholder="First Name" autocomplete="off" alt="First Name">
                                 <p class="error name-error"></p>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="text" id="last_name" name="last_name" class="form-control form-control-lg" placeholder="Last Name" autocomplete="off">
+                                <input type="text" id="last_name" name="last_name" class="form-control form-control-lg" placeholder="Last Name" autocomplete="off" alt="Last Name">
                                 <p class="error lastname-error"></p>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="email" id="email_address_for_register" name="email_address_for_register" class="form-control form-control-lg" placeholder="Email" autocomplete="off">
+                                <input type="email" id="email_address_for_register" name="email_address_for_register" class="form-control form-control-lg" placeholder="Email" autocomplete="off" alt="Email">
                                 <p class="error email-error"></p>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="password" id="user_password_for_register" name="user_password_for_register" class="form-control form-control-lg" placeholder="Enter Password" autocomplete="off">
+                                <input type="password" id="user_password_for_register" name="user_password_for_register" class="form-control form-control-lg" placeholder="Enter Password" autocomplete="off" alt="Password">
                                 <p class="error password-error"></p>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <input type="password" id="confirm_password_for_register" name="confirm_password_for_register" class="form-control form-control-lg" placeholder="Confirm Password" autocomplete="off">
+                                <input type="password" id="confirm_password_for_register" name="confirm_password_for_register" class="form-control form-control-lg" placeholder="Confirm Password" autocomplete="off" alt="Confirm password">
                                 <p class="error confirmpass-error"></p>
                             </div>
 
                             <div class="form-outline mb-4">
-                                <textarea id="bio" name="bio" class="form-control form-control-lg" placeholder="Enter your bio here..." autocomplete="off"></textarea>
+                                <textarea id="bio" name="bio" class="form-control form-control-lg" aria-label="Enter your bio here" placeholder="Enter your bio here..." autocomplete="off"></textarea>
                                 <p class="error bio-error"></p>
                             </div>
 
 
                             <div class="form-outline mb-4">
                                 <label id="label_for_profile_pic_reg" for="profile_picture_for_register" class="form-control form-control-lg" style="text-align:left;">Choose your profile picture &nbsp;&nbsp; <span class="bi bi-upload"></span> </label>
-                                <input type="file" id="profile_picture_for_register" name="profile_picture_for_register" class="form-control form-control-lg" autocomplete="off" accept = "image/*" style="display:none;" onchange="file_uploaded(event)">
+                                <input type="file" id="profile_picture_for_register" name="profile_picture_for_register" class="form-control form-control-lg" alt="Profile picture" autocomplete="off" accept = "image/*" style="display:none;" onchange="file_uploaded(event)">
                                 <p class="upload file-uploaded"></p>
                             </div>
 
                             <div class="form-outline mb-4">
                                 <label for="check_age_for_register" class="form-control form-control-lg">Tick this box if you are over the age of 16</label>
-                                <input type="checkbox" id="check_age_for_register" name="check_age_for_register" class="form-control form-control-lg" value="Age">
+                                <input type="checkbox" id="check_age_for_register" name="check_age_for_register" class="form-control form-control-lg" value="Age" alt="Checking age">
                                 <p class="error checkbox-error"></p>
                             </div>
 

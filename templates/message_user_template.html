@@ -273,7 +273,7 @@
 
 	{% if session.get("name") %}
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
 			<a class="navbar-brand" href="/">Student Discussion</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -287,7 +287,7 @@
 
 					<div class="dropdown">
 						<a class="nav-item nav-link" onclick="clicked_on_notifications()" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-							<i class="fas fa-bell small-icon"></i>
+							<i class="fas fa-bell small-icon" aria-label="Notification bell"></i>
 							{% if number_of_notifications > 0 %}
 							<span id="number_of_notifications" class="badge rounded-pill badge-notification bg-danger">{{ number_of_notifications }}</span>
 							{% endif %}
@@ -338,7 +338,7 @@
 	{% else %}
 
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
 		<a class="navbar-brand" href="/">Student Discussion</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -366,7 +366,7 @@
 						<div class="row">
 							<div class="col-lg-12">
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-									<img id="user_profile_image_chat" src="{{url_for('static', filename=user_details.profile_picture_link)}}">
+									<img id="user_profile_image_chat" src="{{url_for('static', filename=user_details.profile_picture_link)}}" alt="Chat profile picture">
 								</a>
 
 								{% for conversation in message_list_info %}
@@ -408,7 +408,7 @@
 								<input id="recipient_email" type="hidden" name="recipient_email" value="{{ student_profile_email }}">
 								<input id="recipient_name" type="hidden" name="recipient_name" value="{{ student_name }}">
 								<input id="sender_email_address" type="hidden" name="sender_email_address" value="{{ session.get('name') }}">
-								<input contenteditable="true" id="message_sent" type="text" class="form-control col-9 col-sm-11" placeholder="Message" autocomplete="off">&nbsp;&nbsp;
+								<input contenteditable="true" id="message_sent" type="text" class="form-control col-9 col-sm-11" placeholder="Message" alt="Message box" autocomplete="off">&nbsp;&nbsp;
 								<div class="input-group-append">
 								  <button id="submit_message_button" type="submit" class="btn btn-primary" style="height: 38px;"><i class="fa fa-send"></i></button>
 								</div>

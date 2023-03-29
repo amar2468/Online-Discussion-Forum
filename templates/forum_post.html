@@ -24,7 +24,7 @@
 
 	{% if session.get("name") %}
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+			<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
 			<a class="navbar-brand" href="/">Student Discussion</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -38,7 +38,7 @@
 
 					<div class="dropdown">
 					<a class="nav-item nav-link" onclick="clicked_on_notifications()" id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-						<i class="fas fa-bell small-icon"></i>
+						<i class="fas fa-bell small-icon" aria-label="Notification bell"></i>
 						{% if number_of_notifications > 0 %}
 							<span id="number_of_notifications" class="badge rounded-pill badge-notification bg-danger">{{ number_of_notifications }}</span>
 						{% endif %}
@@ -89,7 +89,7 @@
 	{% else %}
 
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;"></img>&nbsp;&nbsp;</a>
+		<a href="/"><img src="/static/student-discussion-logo.png" style="height:75px;width:75px;" alt="Student Discussion logo"></img>&nbsp;&nbsp;</a>
 		<a class="navbar-brand" href="/">Student Discussion</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -117,15 +117,15 @@
 					<form role="form" class="form-horizontal" action="/forum_post" method="POST">
 						<h4>Topic : {{ subforum_name }}</h4>
 						<div style="padding:14px;" class="form-group">
-							<input type="text" id="name_of_subforum" name="name_of_subforum" autocomplete="off" value="{{ subforum_name }}" class="form-control" readonly="true">
+							<input type="text" id="name_of_subforum" name="name_of_subforum" alt="Name of subforum" autocomplete="off" value="{{ subforum_name }}" class="form-control" readonly="true">
 						</div>
 						
 						<div style="padding:14px;" class="form-group">
-							<input type="text" id="title_of_post" name="title_of_post" autocomplete="off" placeholder="Post title..." class="form-control">
+							<input type="text" id="title_of_post" name="title_of_post" alt="Title of post" autocomplete="off" placeholder="Post title..." class="form-control">
 						</div>
 						
 						<div style="padding:14px;" class="form-group">
-							<textarea placeholder="Your post goes here..." id ="post_content" name="post_content" class="form-control"></textarea>
+							<textarea placeholder="Your post goes here..." id ="post_content" name="post_content" class="form-control" aria-label="Enter your post here"></textarea>
 						</div>
 						<div style="display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 10px;">
 							<div style="padding:14px;" class="form-group">
