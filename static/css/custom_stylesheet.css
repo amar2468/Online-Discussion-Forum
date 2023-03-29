@@ -4,6 +4,12 @@ body
     color: #708090 !important;
 }
 
+.nav-item.nav-link
+{
+    color:#D1D1D1 !important;
+}
+
+
 .error
 {
     color: white;
