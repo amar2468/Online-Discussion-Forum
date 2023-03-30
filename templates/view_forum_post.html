@@ -206,10 +206,15 @@
 			 <div class="col-md-12">
 				 <div class="card mb-4">
 					 <div class="card-header">
-						 <div class="media flex-wrap w-100 align-items-center"> <img src="/static/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" class="d-block ui-w-40 rounded-circle" alt="User profile picture">
 							{% if collection_info|length > 0 %}
 								{% for document in collection_info %} 
 									{% if content_post == document.content_of_post %}
+										{% for user in another_user_info %}
+											{% if document.author_of_post == user.email %}
+												<div class="media flex-wrap w-100 align-items-center"> <img src="{{url_for('static', filename=user.profile_picture_link)}}" class="d-block ui-w-40 rounded-circle" alt="User profile picture">
+											{% endif %}
+										{% endfor %}
+										
 										<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=document.author_of_post)}}" data-abc="true">{{ document.author_of_post }}</a>
 											<div class="text-muted small">{{ document.time_stamp_when_post_created }}</div>
 										</div>
@@ -249,7 +254,11 @@
 								<div class="col-md-12">
 									<div class="card mb-4">
 										<div class="card-header">
-											<div class="media flex-wrap w-100 align-items-center"> <img src="/static/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" class="d-block ui-w-40 rounded-circle" alt="User profile picture">
+											{% for user in another_user_info_2 %}
+												{% if user.email == reply.author_of_post %}
+													<div class="media flex-wrap w-100 align-items-center"> <img src="{{url_for('static', filename=user.profile_picture_link)}}" class="d-block ui-w-40 rounded-circle" alt="User profile picture">
+												{% endif %}
+											{% endfor %}
 
 												<div class="media-body ml-3"> <a href="{{url_for('viewing_profile', student_profile_email=reply.author_of_post)}}" data-abc="true">{{ reply.author_of_post }}</a>
 													<div class="text-muted small">{{ reply.timestamp_for_reply }}</div>
