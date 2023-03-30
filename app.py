@@ -369,6 +369,8 @@ def render_forum_post(subforum_name):
 @app.route('/view_topic/<_id>')
 def view_topic(_id):
 	user_info = db.forum_database.RegLoginList.find()
+	another_user_info = db.forum_database.RegLoginList.find()
+	another_user_info_2 = list(db.forum_database.RegLoginList.find())
 
 	for document in db.forum_database.ForumPostCollection.find():
 		if str(document["_id"]) == _id:
@@ -382,7 +384,7 @@ def view_topic(_id):
 					registration_date_user = user['user_registered']
 					break
 			notifications_info,number_of_notifications = getting_notification_details()
-			return render_template("view_forum_post.html", _id=_id ,registration_date_user=registration_date_user, user_info=user_info, post_title=post_title ,content_post = content_post, collection_info=collection_info,notifications_info=notifications_info, number_of_notifications=number_of_notifications,subforum_name=subforum_name)
+			return render_template("view_forum_post.html", _id=_id ,registration_date_user=registration_date_user, another_user_info=another_user_info, another_user_info_2=another_user_info_2 ,user_info=user_info, post_title=post_title ,content_post = content_post, collection_info=collection_info,notifications_info=notifications_info, number_of_notifications=number_of_notifications,subforum_name=subforum_name)
 
 # Route for rendering template that allows the user to re-enter the information that they want to update
 
