@@ -122,7 +122,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <img id="user_profile_image" src="{{url_for('static', filename=value)}}" alt="Profile picture">
+                            <img id="user_profile_image" src="{{url_for('static', filename=value)}}" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/CCCCCC/000000?text=Image+Not+Found';" alt="Profile picture">
                         </tr>
                     {% endif %}
                 {% endif %}

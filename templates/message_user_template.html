@@ -366,7 +366,7 @@
 						<div class="row">
 							<div class="col-lg-12">
 								<a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-									<img id="user_profile_image_chat" src="{{url_for('static', filename=user_details.profile_picture_link)}}" alt="Chat profile picture">
+									<img id="user_profile_image_chat" src="{{url_for('static', filename=user_details.profile_picture_link)}}" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/CCCCCC/000000?text=Image+Not+Found';" alt="Chat profile picture">
 								</a>
 
 								{% for conversation in message_list_info %}
