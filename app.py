@@ -609,7 +609,7 @@ def forum_post():
 
 		# Training and testing code
 
-		X_train, X_test, y_train, y_test = train_test_split(suspicious_and_nonsuspicious_words_to_string, suspicious_and_nonsuspicious_words['tagging'], test_size=0.2, random_state=42) # splitting data into training and testing
+		X_train, X_test, y_train, y_test = train_test_split(suspicious_and_nonsuspicious_words_to_string, suspicious_and_nonsuspicious_words['tagging'], test_size=0.6, random_state=42) # splitting data into training and testing
 
 		vectorizer = CountVectorizer(stop_words='english', ngram_range=(1, 2))
 		X_train_vec = vectorizer.fit_transform(X_train)
