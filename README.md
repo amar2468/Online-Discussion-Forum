@@ -13,39 +13,39 @@ The first objective was to create a registration system that would allow the stu
 
 After registering, the student would automatically be logged in. If the student logged out and wanted to sign in, they would click on the “Sign In” option in the navbar and it would navigate them to the page below. The student needs to enter their email and password, which would be able to successfully sign them in.
 
-![capture123](https://github.com/amar2468/Online-Discussion-Forum/assets/63669768/0f246329-14f2-4ac3-bf73-dddeedbed781)
+![login_image](Assets/login.png)
 
 Once the student has signed in, they would be able to see their profile page, where their profile picture, their name and surname, the number of followers and people who they follow, and the ability to change profile picture and the password would be present.
 
-![capture123](https://github.com/amar2468/Online-Discussion-Forum/assets/63669768/dc249c59-6f79-4c34-9edb-7ce3418eb464)
+![profile_image](Assets/profile.png)
 
 If the student opts to change their password, they would land on the Password Reset page. In this page, they would enter the new password and confirm it again. Once that is entered, clicking on the “Change Password” button would change the password.
 
-![capture123](https://github.com/amar2468/Online-Discussion-Forum/assets/63669768/cfc7f3e1-7c39-41bc-a965-80a8e284fd87)
+![password_reset_image](Assets/password_reset.png)
 
 The topic that was created would be present in the homepage. As can be seen, each topic contains the title of the post, the username, the subforum where the topic was posted, the amount of likes and dislikes, the share option, and then the buttons to delete the topic and to edit the topic.
 
-![capture123](https://github.com/amar2468/Online-Discussion-Forum/assets/63669768/a3554247-6a8a-46f3-90ae-a2c4132e3878)
+![view_topics](Assets/view_topic.png)
 
 This shows the topic that the user created. It would contain the username, the date when the member joined the forum, the number of replies in the topic, the content of the post, and a button to reply to the post.
 
-![image](https://github.com/amar2468/Online-Discussion-Forum/assets/63669768/7122f843-e23e-47b4-bbc8-e336b99d9c99)
+![view_post](Assets/view_post.png)
 
 If the user clicked on the “Create a post” button, it would lead them to the page. In this page, the user enters the title of the post and the content. If they decide not to post the topic, they just click on the “cancel” button. Otherwise, they click on the “post” button.
 
-![image](https://github.com/amar2468/Online-Discussion-Forum/assets/63669768/e0838386-62b8-47de-9ed4-b9a71f7f8be4)
+![create_post](Assets/create_post.png)
 
 The user has provided with new functionality which will improve their overall experience on the forum. Now, the user can comment on an existing post that was created. What this means is that if a user has created a post (which is a question), the other user can now reply to that post.
 
-![image](https://github.com/amar2468/Online-Discussion-Forum/assets/63669768/c03cdf06-da26-47e0-8579-ac05e80d9dce)
+![comment_post](Assets/comment_post.png)
 
 The next functionality is the ability to share a post. The user can share the post that they created on LinkedIn, Twitter or Facebook. This can be very handy as a user can quickly show the post on a social media platform, which provides other users with easy access to the forum.
 
-![image](https://github.com/amar2468/Online-Discussion-Forum/assets/63669768/598516e2-a7e6-4012-905c-9e5839d19c1b)
+![share_post](Assets/share_post.png)
 
 Student Discussion will have a chat feature which will allow students to engage in a private conversation. Sometimes, a student may want to have a deeper conversation about a college topic with another student. Instead of commenting on a post and asking numerous questions about a certain issue that may require much more effort to communicate, it might be a good idea for them to chat privately using the chat feature, which allows the students to communicate in real time and receive messages as they are sent.
 
-![image](https://github.com/amar2468/Online-Discussion-Forum/assets/63669768/d0f3ea48-a3b9-4ba4-9e11-4fae7ad10f46)
+![chat_feature](Assets/chat_feature.png)
 
 **Complexity: Monitoring suspicious posts using Naive Bayes Classifier**
 
@@ -59,5 +59,5 @@ Even though the idea of the admin verifying the post to see if it is suspicious 
 
 The picture below shows the admin dashboard that contains an example of an abusive post that has been detected.
 
-![image](https://github.com/amar2468/Online-Discussion-Forum/assets/63669768/01a2226d-c305-4dd3-813b-b4639ca7ea10)
+![admin_dashboard](Assets/admin_dashboard.png)
 
