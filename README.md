@@ -9,7 +9,7 @@
 
 The first objective was to create a registration system that would allow the student to create an account and store the information from the registration in a MongoDB database. This MongoDB database would store the student information which would then be used to allow the student to login. In the registration part, the student enters their name and surname, their valid email address, a strong password consisting of at least 10 characters, the bio, a profile picture (if they don’t want to upload a profile picture, there is a default one that will be put in place), and they have to tick the box if they are over the age of 16. Once that is completed, they can click on the “Create Account” button.
 
-![capture123](https://github.com/amar2468/Online-Discussion-Forum/assets/63669768/d1d6be72-5408-4d6f-a534-32f377a7817f)
+![registration_image](Assets/registration.png)
 
 After registering, the student would automatically be logged in. If the student logged out and wanted to sign in, they would click on the “Sign In” option in the navbar and it would navigate them to the page below. The student needs to enter their email and password, which would be able to successfully sign them in.
 
